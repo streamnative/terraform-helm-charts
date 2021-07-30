@@ -58,12 +58,12 @@ resource "kubernetes_namespace" "operators" {
 }
 
 resource "helm_release" "operator_lifecycle_manager" {
-  atomic           = var.atomic
-  chart            = var.chart_repository != "" ? var.chart_repository : "${path.module}/chart"
-  cleanup_on_fail  = var.cleanup_on_fail
-  name             = var.release_name
-  namespace        = kubernetes_namespace.olm.id
-  timeout          = var.timeout 
+  atomic          = var.atomic
+  chart           = var.chart_repository != "" ? var.chart_repository : "${path.module}/chart"
+  cleanup_on_fail = var.cleanup_on_fail
+  name            = var.release_name
+  namespace       = kubernetes_namespace.olm.id
+  timeout         = var.timeout
 
   set {
     name  = "namespace"

@@ -29,13 +29,13 @@ terraform {
 }
 
 resource "helm_release" "olm_subscriptions" {
-  atomic           = var.atomic
-  chart            = "${path.module}/chart"
-  cleanup_on_fail  = var.cleanup_on_fail 
-  namespace        = var.namespace
-  name             = var.release_name
-  timeout          = var.timeout 
-  
+  atomic          = var.atomic
+  chart           = "${path.module}/chart"
+  cleanup_on_fail = var.cleanup_on_fail
+  namespace       = var.namespace
+  name            = var.release_name
+  timeout         = var.timeout
+
   set {
     name  = "catalog_namespace"
     value = var.catalog_namespace

@@ -18,9 +18,9 @@
 #
 
 variable "atomic" {
-  default = true
+  default     = true
   description = "Purge the chart on a failed installation. Default's to \"true\"."
-  type = bool
+  type        = bool
 }
 
 

@@ -29,14 +29,14 @@ terraform {
 }
 
 resource "helm_release" "pulsar_operator" {
-  atomic           = var.atomic
-  chart            = var.chart_name
-  cleanup_on_fail  = var.cleanup_on_fail
-  namespace        = var.namespace
-  name             = var.release_name
-  repository       = var.chart_repository
-  timeout          = var.timeout
-  version          = var.chart_version
+  atomic          = var.atomic
+  chart           = var.chart_name
+  cleanup_on_fail = var.cleanup_on_fail
+  namespace       = var.namespace
+  name            = var.release_name
+  repository      = var.chart_repository
+  timeout         = var.timeout
+  version         = var.chart_version
 
   dynamic "set" {
     for_each = var.settings

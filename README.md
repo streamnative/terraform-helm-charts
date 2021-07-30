@@ -15,7 +15,7 @@ provider "helm" {
 }
 
 module "pulsar_operator" {
-  source = "streamnative/charts/helm"
+  source = "streamnative/charts/helm//pulsar-operator"
 
   chart_name       = "pulsar-operator"
   chart_repository = "https://charts.streamnative.io"

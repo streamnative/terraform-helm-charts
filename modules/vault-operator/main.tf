@@ -29,14 +29,14 @@ terraform {
 }
 
 resource "helm_release" "vault_operator" {
-  atomic           = var.atomic 
-  chart            = var.chart_name
-  cleanup_on_fail  = var.cleanup_on_fail
-  name             = var.release_name
-  namespace        = var.namespace
-  repository       = var.chart_repository
-  timeout          = var.timeout
-  version          = var.chart_version
+  atomic          = var.atomic
+  chart           = var.chart_name
+  cleanup_on_fail = var.cleanup_on_fail
+  name            = var.release_name
+  namespace       = var.namespace
+  repository      = var.chart_repository
+  timeout         = var.timeout
+  version         = var.chart_version
 
   dynamic "set" {
     for_each = var.settings
