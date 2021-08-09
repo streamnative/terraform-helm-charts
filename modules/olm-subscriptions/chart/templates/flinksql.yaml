@@ -17,22 +17,16 @@
 # under the License.
 #
 
-{{- if and .Values.components.functionMesh }}
+{{- if and .Values.components.flinkSql }}
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: {{ .Values.functionMesh.name }}
+  name: {{ .Values.flinkSql.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.functionMesh.channel }}
-  config:
-    env:
-    - name: ENABLE_WEBHOOKS
-      value: "{{ .Values.functionMesh.config.enableWebhooks }}"
-    - name: ENABLE_FUNCTION_MESH_CONTROLLER
-      value: "{{ .Values.functionMesh.config.enableController }}"
-  installPlanApproval: {{ .Values.functionMesh.approval }}  
-  source: {{ .Values.functionMesh.source }}
+  channel: {{ .Values.flinkSql.channel }}
+  installPlanApproval: {{ .Values.flinkSql.approval }}  
+  source: {{ .Values.flinkSql.source }}
   sourceNamespace: {{ .Values.catalog_namespace }}
-  name: {{ .Values.functionMesh.name }}
+  name: {{ .Values.flinkSql.name }}
 {{- end }}
