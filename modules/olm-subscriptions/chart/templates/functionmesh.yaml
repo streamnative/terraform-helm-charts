@@ -28,9 +28,9 @@ spec:
   config:
     env:
     - name: ENABLE_WEBHOOKS
-      value: {{ .Values.functionMesh.config.enableWebhooks }}
+      value: "{{ .Values.functionMesh.config.enableWebhooks }}"
     - name: ENABLE_FUNCTION_MESH_CONTROLLER
-      value: {{ .Values.functionMesh.config.enableController }}
+      value: "{{ .Values.functionMesh.config.enableController }}"
   installPlanApproval: {{ .Values.functionMesh.approval }}  
   source: {{ .Values.functionMesh.source }}
   sourceNamespace: {{ .Values.catalog_namespace }}

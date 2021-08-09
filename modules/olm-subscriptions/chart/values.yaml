@@ -25,7 +25,7 @@ sn_image: ""
 
 components:
   bookkeeper: true
-  function-mesh: true
+  functionMesh: true
   prometheus: true
   pulsar: true
   zookeeper: true
