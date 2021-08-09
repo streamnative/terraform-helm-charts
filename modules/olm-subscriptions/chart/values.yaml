@@ -28,6 +28,8 @@ components:
   functionMesh: true
   prometheus: true
   pulsar: true
+  flink: true
+  flinkSql: true
   zookeeper: true
 
 bookkeeper:
@@ -35,6 +37,18 @@ bookkeeper:
   channel: stable
   source: sn-catalog
   name: bookkeeper-operator
+
+flink:
+  approval: Automatic
+  channel: stable
+  source: sn-catalog
+  name: flink-on-k8s-operator
+
+flinkSql:
+  approval: Automatic
+  channel: stable
+  source: sn-catalog
+  name: sql-operator
 
 functionMesh:
   approval: Automatic
