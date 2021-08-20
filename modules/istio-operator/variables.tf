@@ -23,23 +23,23 @@ variable "atomic" {
   type        = bool
 }
 
-variable "chart_name" {
-  default     = "istio-operator"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
+# variable "chart_name" {
+#   default     = "istio-operator"
+#   description = "The name of the Helm chart to install"
+#   type        = string
+# }
 
-variable "chart_repository" {
-  default     = "https://kubernetes-charts.banzaicloud.com"
-  description = "The repository containing the Helm chart to install"
-  type        = string
-}
+# variable "chart_repository" {
+#   default     = "https://kubernetes-charts.banzaicloud.com"
+#   description = "The repository containing the Helm chart to install"
+#   type        = string
+# }
 
-variable "chart_version" {
-  default     = "0.0.88"
-  description = "The version of the Helm chart to install"
-  type        = string
-}
+# variable "chart_version" {
+#   default     = "0.0.88"
+#   description = "The version of the Helm chart to install"
+#   type        = string
+# }
 
 variable "cleanup_on_fail" {
   default     = true
