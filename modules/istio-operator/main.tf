@@ -30,13 +30,13 @@ terraform {
 
 resource "helm_release" "istio_operator" {
   atomic          = var.atomic
-  chart           = var.chart_name
+  chart           = "${path.module}/chart" 
   cleanup_on_fail = var.cleanup_on_fail
   name            = var.release_name
   namespace       = var.namespace
-  repository      = var.chart_repository
+  # repository      = var.chart_repository
   timeout         = var.timeout
-  version         = var.chart_version
+  # version         = var.chart_version
 
   dynamic "set" {
     for_each = var.settings
