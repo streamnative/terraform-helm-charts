@@ -48,7 +48,7 @@ variable "cleanup_on_fail" {
 }
 
 variable "namespace" {
-  description = "The namespace used for the operator deployment"
+  description = "The namespace used for the helm release. The istio operator itself will be installed"
   type        = string
 }
 

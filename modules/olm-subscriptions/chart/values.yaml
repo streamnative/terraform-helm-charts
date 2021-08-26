@@ -21,7 +21,7 @@ catalog_namespace: olm
 install_namespace: sn-system
 operator_group: sn-operators
 
-sn_image: ""
+sn_registry: ""
 
 components:
   bookkeeper: true
