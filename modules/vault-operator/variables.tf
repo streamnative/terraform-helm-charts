@@ -42,7 +42,7 @@ variable "create_namespace" {
   type        = bool
 }
 variable "chart_version" {
-  default     = "1.13.0"
+  default     = "1.13.2"
   description = "The version of the Helm chart to install"
   type        = string
 }

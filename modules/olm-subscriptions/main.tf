@@ -49,8 +49,8 @@ resource "helm_release" "olm_subscriptions" {
   }
 
   set {
-    name  = "sn_image"
-    value = var.sn_image
+    name  = "sn_registry"
+    value = var.registry 
     type  = "string"
   }
 

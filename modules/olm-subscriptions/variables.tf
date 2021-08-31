@@ -53,8 +53,8 @@ variable "settings" {
   type        = map(any)
 }
 
-variable "sn_image" {
-  description = "The registry containing StreamNative's operator catalog image"
+variable "registry" {
+  description = "The registry containing StreamNative's operator catalog images"
   type        = string
 }
 

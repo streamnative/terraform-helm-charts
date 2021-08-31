@@ -1,8 +1,7 @@
-### Enable/Disable sub-module flags
-
-variable "disable_olm" {
-  default     = true
-  description = "Enables Operator Lifecycle Manager (OLM), and disables installing operators via Helm. OLM is disabled by default. Set to \"false\" to have OLM manage the operators."
+### Enable/Disable sub-modules
+variable "enable_olm" {
+  default     = false
+  description = "Enables Operator Lifecycle Manager (OLM), and disables installing operators via Helm. OLM is disabled by default. Set to \"true\" to have OLM manage the operators."
   type        = bool
 }
 
@@ -86,24 +85,6 @@ variable "function_mesh_operator_timeout" {
   type        = number
 }
 
-variable "istio_operator_chart_name" {
-  default     = "istio-operator"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "istio_operator_chart_repository" {
-  default     = "https://kubernetes-charts.banzaicloud.com"
-  description = "The repository containing the Helm chart to install"
-  type        = string
-}
-
-variable "istio_operator_chart_version" {
-  default     = "0.0.88"
-  description = "The version of the Helm chart to install"
-  type        = string
-}
-
 variable "istio_operator_cleanup_on_fail" {
   default     = true
   description = "Allow deletion of new resources created in this upgrade when upgrade fails"
@@ -111,7 +92,7 @@ variable "istio_operator_cleanup_on_fail" {
 }
 
 variable "istio_operator_namespace" {
-  default     = "istio-system"
+  default     = "kube-system"
   description = "The namespace used for the operator deployment"
   type        = string
 }
@@ -158,8 +139,9 @@ variable "olm_settings" {
   type        = map(any)
 }
 
-variable "olm_sn_image" {
-  description = "The registry containing StreamNative's operator catalog image"
+variable "olm_registry" {
+  default     = ""
+  description = "The registry containing StreamNative's operator catalog images"
   type        = string
 }
 
@@ -244,7 +226,7 @@ variable "pulsar_operator_cleanup_on_fail" {
 variable "pulsar_operator_namespace" {
   default     = "sn-system"
   description = "The namespace used for the operator deployment"
-  type	      = string
+  type        = string
 }
 
 variable "pulsar_operator_release_name" {
@@ -278,7 +260,7 @@ variable "vault_operator_chart_repository" {
 }
 
 variable "vault_operator_chart_version" {
-  default     = "1.13.0"
+  default     = "1.13.2"
   description = "The version of the Helm chart to install"
   type        = string
 }

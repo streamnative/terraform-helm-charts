@@ -24,7 +24,7 @@ metadata:
   namespace: {{ .Values.catalog_namespace }}
 spec:
   displayName: StreamNative Operators
-  image: {{ .Values.sn_image }}
+  image: {{ .Values.sn_registry }}
   publisher: StreamNative.io
   sourceType: grpc
   updateStrategy:

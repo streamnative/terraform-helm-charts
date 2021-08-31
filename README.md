@@ -8,28 +8,40 @@ The `main.tf` file in the root of this repository contains an example of how to 
 A simple example of how to use one of the modules is shown below:
 
 ```hcl
+data "aws_eks_cluster" "cluster" {
+  name = "my_eks_cluster_id"
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = "my_eks_cluster_id"
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+  insecure               = false
+  config_path            = "./my-eks-kube-config"
+}
+
 provider "helm" {
   kubernetes {
-    config_path = pathexpand("~/.kube/my-eks-cluster-config")
+    config_path = "./my-eks-kube-config"
   }
 }
 
-module "pulsar_operator" {
-  source = "streamnative/charts/helm//pulsar-operator"
+module "sn_bootstrap" {
+  source = "streamnative/charts/helm"
 
-  chart_name       = "pulsar-operator"
-  chart_repository = "https://charts.streamnative.io"
-  chart_version    = "0.7.2"
-  cleanup_on_fail  = true
-  namespace        = "pulsar-system"
-  release_name     = "pulsar-operator"
+  enable_vault_operator         = true
+  enable_function_mesh_operator = true
+  enable_istio_operator         = true
+  enable_prometheus_operator    = true
+  enable_pulsar_operator        = true
 
-  settings         = {
-	  "namespace" = "pulsar-system"
-	  "namespaceCreate" = "true"
-  }
-
-  timeout          = 300
+  depends_on = [
+    module.sn_cluster,
+  ]
 }
 ```
 
@@ -96,9 +108,6 @@ No resources.
 | <a name="input_function_mesh_operator_release_name"></a> [function\_mesh\_operator\_release\_name](#input\_function\_mesh\_operator\_release\_name) | The name of the helm release | `string` | `"function-mesh-operator"` | no |
 | <a name="input_function_mesh_operator_settings"></a> [function\_mesh\_operator\_settings](#input\_function\_mesh\_operator\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |
 | <a name="input_function_mesh_operator_timeout"></a> [function\_mesh\_operator\_timeout](#input\_function\_mesh\_operator\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `600` | no |
-| <a name="input_istio_operator_chart_name"></a> [istio\_operator\_chart\_name](#input\_istio\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `"istio-operator"` | no |
-| <a name="input_istio_operator_chart_repository"></a> [istio\_operator\_chart\_repository](#input\_istio\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `"https://kubernetes-charts.banzaicloud.com"` | no |
-| <a name="input_istio_operator_chart_version"></a> [istio\_operator\_chart\_version](#input\_istio\_operator\_chart\_version) | The version of the Helm chart to install | `string` | `"0.0.88"` | no |
 | <a name="input_istio_operator_cleanup_on_fail"></a> [istio\_operator\_cleanup\_on\_fail](#input\_istio\_operator\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails | `bool` | `true` | no |
 | <a name="input_istio_operator_namespace"></a> [istio\_operator\_namespace](#input\_istio\_operator\_namespace) | The namespace used for the operator deployment | `string` | `"istio-system"` | no |
 | <a name="input_istio_operator_release_name"></a> [istio\_operator\_release\_name](#input\_istio\_operator\_release\_name) | The name of the helm release | `string` | `"istio-operator"` | no |
@@ -108,7 +117,7 @@ No resources.
 | <a name="input_olm_namespace"></a> [olm\_namespace](#input\_olm\_namespace) | The namespace used by OLM and its resources | `string` | `"olm"` | no |
 | <a name="input_olm_operators_namespace"></a> [olm\_operators\_namespace](#input\_olm\_operators\_namespace) | The namespace where OLM will install the operators | `string` | `"operators"` | no |
 | <a name="input_olm_settings"></a> [olm\_settings](#input\_olm\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |
-| <a name="input_olm_sn_image"></a> [olm\_sn\_image](#input\_olm\_sn\_image) | The registry containing StreamNative's operator catalog image | `string` | n/a | yes |
+| <a name="input_olm_sn_image"></a> [olm\_sn\_image](#input\_olm\_sn\_image) | The registry containing StreamNative's operator catalog image | `string` | `""` | no |
 | <a name="input_olm_subscription_settings"></a> [olm\_subscription\_settings](#input\_olm\_subscription\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |
 | <a name="input_prometheus_operator_chart_name"></a> [prometheus\_operator\_chart\_name](#input\_prometheus\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `"kube-prometheus-stack"` | no |
 | <a name="input_prometheus_operator_chart_repository"></a> [prometheus\_operator\_chart\_repository](#input\_prometheus\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `"https://prometheus-community.github.io/helm-charts"` | no |
@@ -128,7 +137,7 @@ No resources.
 | <a name="input_pulsar_operator_timeout"></a> [pulsar\_operator\_timeout](#input\_pulsar\_operator\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `600` | no |
 | <a name="input_vault_operator_chart_name"></a> [vault\_operator\_chart\_name](#input\_vault\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `"vault-operator"` | no |
 | <a name="input_vault_operator_chart_repository"></a> [vault\_operator\_chart\_repository](#input\_vault\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `"https://kubernetes-charts.banzaicloud.com"` | no |
-| <a name="input_vault_operator_chart_version"></a> [vault\_operator\_chart\_version](#input\_vault\_operator\_chart\_version) | The version of the Helm chart to install | `string` | `"1.13.0"` | no |
+| <a name="input_vault_operator_chart_version"></a> [vault\_operator\_chart\_version](#input\_vault\_operator\_chart\_version) | The version of the Helm chart to install | `string` | `"1.13.2"` | no |
 | <a name="input_vault_operator_cleanup_on_fail"></a> [vault\_operator\_cleanup\_on\_fail](#input\_vault\_operator\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails | `bool` | `true` | no |
 | <a name="input_vault_operator_namespace"></a> [vault\_operator\_namespace](#input\_vault\_operator\_namespace) | The namespace used for the operator deployment | `string` | `"sn-system"` | no |
 | <a name="input_vault_operator_release_name"></a> [vault\_operator\_release\_name](#input\_vault\_operator\_release\_name) | The name of the helm release | `string` | `"vault-operator"` | no |
