@@ -114,3 +114,17 @@ module "vault_operator" {
   settings         = coalesce(var.vault_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
   timeout          = var.vault_operator_timeout
 }
+
+module "vector_agent" {
+  count  = var.enable_vector_agent ? 1 : 0
+  source = "./modules/vector-agent"
+
+  chart_name       = var.vector_agent_chart_name
+  chart_repository = var.vector_agent_chart_repository
+  chart_version    = var.vector_agent_chart_version
+  namespace        = var.vector_agent_namespace
+  release_name     = var.vector_agent_release_name
+  settings         = coalesce(var.vector_agent_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  timeout          = var.vector_agent_timeout
+  values           = coalesce(var.vector_agent_values, []) # The empty list is a placeholder value, reserved for future defaults
+}

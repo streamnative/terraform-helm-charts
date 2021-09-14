@@ -35,6 +35,12 @@ variable "enable_vault_operator" {
   type        = bool
 }
 
+variable "enable_vector_agent" {
+  default = true
+  description = "Enables the Vector Agent on the EKS cluster. Enabled by default, but must be passed a configuration in order to function"
+  type = bool
+}
+
 ### Sub-module Variables
 
 variable "function_mesh_operator_chart_name" {
@@ -295,3 +301,55 @@ variable "vault_operator_timeout" {
   type        = number
 }
 
+variable "vector_agent_chart_name" {
+  default     = "vector-agent"
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "vector_agent_chart_repository" {
+  default     = "https://helm.vector.dev"
+  description = "The repository containing the Helm chart to install. See https://github.com/timberio/vector/tree/master/distribution/helm/vector-agent for available configuration options"
+  type        = string
+}
+
+variable "vector_agent_create_namespace" {
+  default     = true
+  description = "Create a namespace for the operator. Defaults to \"true\", as it's recommended to install Vector into its own namespace"
+  type        = bool
+}
+
+variable "vector_agent_chart_version" {
+  default     = "0.17.0"
+  description = "The version of the Helm chart to install. See"
+  type        = string
+}
+
+variable "vector_agent_namespace" {
+  default     = "vector"
+  description = "The namespace used for the operator deployment. Defaults to \"vector\" (recommended)"
+  type        = string
+}
+
+variable "vector_agent_release_name" {
+  default     = "vector-agent"
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "vector_agent_settings" {
+  default     = {}
+  description = "Additional settings which will be passed to the Helm chart values"
+  type        = map(any)
+}
+
+variable "vector_agent_timeout" {
+  default     = 300
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "vector_agent_values" {
+  default = []
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
+}

@@ -50,7 +50,7 @@ resource "helm_release" "olm_subscriptions" {
 
   set {
     name  = "sn_registry"
-    value = var.registry 
+    value = var.registry
     type  = "string"
   }
 
