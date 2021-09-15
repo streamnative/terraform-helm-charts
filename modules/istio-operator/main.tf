@@ -34,7 +34,7 @@ resource "helm_release" "istio_operator" {
   cleanup_on_fail = var.cleanup_on_fail
   name            = var.release_name
   namespace       = var.namespace
-  timeout = var.timeout
+  timeout         = var.timeout
 
   dynamic "set" {
     for_each = var.settings
