@@ -36,9 +36,15 @@ variable "enable_vault_operator" {
 }
 
 variable "enable_vector_agent" {
-  default = true
+  default     = true
   description = "Enables the Vector Agent on the EKS cluster. Enabled by default, but must be passed a configuration in order to function"
-  type = bool
+  type        = bool
+}
+
+variable "enable_victoria_metrics" {
+  default     = true
+  description = "Enables the Victoria Metrics stack on the EKS cluster. Enabled by default"
+  type        = bool
 }
 
 ### Sub-module Variables
@@ -350,6 +356,59 @@ variable "vector_agent_timeout" {
 }
 
 variable "vector_agent_values" {
-  default = []
+  default     = []
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
+}
+
+variable "victoria_metrics_chart_name" {
+  default     = "victoria-metrics-k8s-stack"
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "victoria_metrics_chart_repository" {
+  default     = "https://victoriametrics.github.io/helm-charts/"
+  description = "The repository containing the Helm chart to install. See https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack for available configuration options"
+  type        = string
+}
+
+variable "victoria_metrics_create_namespace" {
+  default     = true
+  description = "Create a namespace for the operator. Defaults to \"true\""
+  type        = bool
+}
+
+variable "victoria_metrics_chart_version" {
+  default     = "0.4.5"
+  description = "The version of the Helm chart to install. See"
+  type        = string
+}
+
+variable "victoria_metrics_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the operator deployment"
+  type        = string
+}
+
+variable "victoria_metrics_release_name" {
+  default     = "vm-stack"
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "victoria_metrics_settings" {
+  default     = {}
+  description = "Additional settings which will be passed to the Helm chart values"
+  type        = map(any)
+}
+
+variable "victoria_metrics_timeout" {
+  default     = 300
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "victoria_metrics_values" {
+  default     = []
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
 }
