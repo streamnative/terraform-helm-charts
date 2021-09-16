@@ -39,6 +39,7 @@ module "sn_bootstrap" {
   enable_prometheus_operator    = true
   enable_pulsar_operator        = true
   enable_vector_agent           = true
+  enable_victoria_metrics       = true
 
   vector_agent_vaules           = [ file("${path.module}/my-vector-agent-values.yaml") ]
 
