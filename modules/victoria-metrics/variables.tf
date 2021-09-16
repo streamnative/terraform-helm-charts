@@ -25,25 +25,25 @@ variable "atomic" {
 
 
 variable "chart_name" {
-  default     = "vector-agent"
+  default     = "victoria-metrics-k8s-stack"
   description = "The name of the Helm chart to install"
   type        = string
 }
 
 variable "chart_repository" {
-  default     = "https://helm.vector.dev"
-  description = "The repository containing the Helm chart to install. See https://github.com/timberio/vector/tree/master/distribution/helm/vector-agent for available configuration options"
+  default     = "https://victoriametrics.github.io/helm-charts/"
+  description = "The repository containing the Helm chart to install. See https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack for available configuration options"
   type        = string
 }
 
 variable "create_namespace" {
   default     = true
-  description = "Create a namespace for the operator. Defaults to \"true\", as it's recommended to install Vector into its own namespace"
+  description = "Create a namespace for the operator. Defaults to \"true\""
   type        = bool
 }
 
 variable "chart_version" {
-  default     = "0.17.0"
+  default     = "0.4.5"
   description = "The version of the Helm chart to install. See"
   type        = string
 }
@@ -55,13 +55,13 @@ variable "cleanup_on_fail" {
 }
 
 variable "namespace" {
-  default     = "vector"
-  description = "The namespace used for the operator deployment. Defaults to \"vector\" (recommended)"
+  default     = "monitoring-system"
+  description = "The namespace used for the deployment. Defaults to \"monitoring-system\" (recommended)"
   type        = string
 }
 
 variable "release_name" {
-  default     = "vector-agent"
+  default     = "vm-stack"
   description = "The name of the helm release"
   type        = string
 }
