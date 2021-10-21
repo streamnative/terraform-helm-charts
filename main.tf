@@ -115,16 +115,40 @@ module "vault_operator" {
   timeout          = var.vault_operator_timeout
 }
 
+module "vector_agent" {
+  count  = var.enable_vector_agent ? 1 : 0
+  source = "./modules/vector-agent"
+
+  chart_name       = var.vector_agent_chart_name
+  chart_repository = var.vector_agent_chart_repository
+  chart_version    = var.vector_agent_chart_version
+  namespace        = var.vector_agent_namespace
+  release_name     = var.vector_agent_release_name
+  settings         = coalesce(var.vector_agent_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  timeout          = var.vector_agent_timeout
+}
+
 module "victoria_metrics" {
-  count  = var.enable_victoria_metrics ? 1 : 0
+  count  = var.enable_victoria_metrics_stack || var.enable_victoria_metrics_auth ? 1 : 0
   source = "./modules/victoria-metrics"
 
-  chart_name       = var.victoria_metrics_chart_name
   chart_repository = var.victoria_metrics_chart_repository
-  chart_version    = var.victoria_metrics_chart_version
-  namespace        = var.victoria_metrics_namespace
-  release_name     = var.victoria_metrics_release_name
-  settings         = coalesce(var.victoria_metrics_settings, {}) # The empty map is a placeholder value, reserved for future defaults
   timeout          = var.victoria_metrics_timeout
-  values           = coalesce(var.victoria_metrics_values, []) # The empty list is a placeholder value, reserved for future defaults
+
+  enable_vmauth  = var.enable_victoria_metrics_auth
+  enable_vmstack = var.enable_victoria_metrics_stack
+
+  vmstack_chart_name    = var.victoria_metrics_stack_chart_name
+  vmstack_chart_version = var.victoria_metrics_stack_chart_version
+  vmstack_namespace     = var.victoria_metrics_stack_namespace
+  vmstack_release_name  = var.victoria_metrics_stack_release_name
+  vmstack_settings      = coalesce(var.victoria_metrics_stack_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  vmstack_values        = var.victoria_metrics_stack_values                 # The empty list is a placeholder value, reserved for future defaults
+
+  vmauth_chart_name    = var.victoria_metrics_auth_chart_name
+  vmauth_chart_version = var.victoria_metrics_auth_chart_version
+  vmauth_namespace     = var.victoria_metrics_auth_namespace
+  vmauth_release_name  = var.victoria_metrics_auth_release_name
+  vmauth_settings      = coalesce(var.victoria_metrics_auth_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  vmauth_values        = var.victoria_metrics_auth_values                 # The empty list is a placeholder value, reserved for future defaults
 }
