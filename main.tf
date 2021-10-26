@@ -36,10 +36,25 @@ module "istio_operator" {
   source = "./modules/istio-operator"
 
   cleanup_on_fail = var.istio_operator_cleanup_on_fail
-  namespace       = var.istio_operator_namespace
-  release_name    = var.istio_operator_release_name
-  settings        = coalesce(var.istio_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  cluster_name    = var.istio_operator_cluster_name
+  mesh_id         = var.istio_operator_mesh_id
+  revision_tag    = var.istio_operator_revision_tag
   timeout         = var.istio_operator_timeout
+  trust_domain    = var.istio_operator_trust_domain
+
+  istio_chart_name       = var.istio_operator_chart_name
+  istio_chart_repository = var.istio_operator_chart_repository
+  istio_chart_version    = var.istio_operator_chart_version
+  istio_namespace        = var.istio_operator_namespace
+  istio_release_name     = var.istio_operator_release_name
+  istio_settings         = coalesce(var.istio_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+
+  kiali_chart_name       = var.kiali_operator_chart_name
+  kiali_chart_repository = var.kiali_operator_chart_repository
+  kiali_chart_version    = var.kiali_operator_chart_version
+  kiali_namespace        = var.kiali_operator_namespace
+  kiali_release_name     = var.kiali_operator_release_name
+  kiali_settings         = coalesce(var.kiali_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
 }
 
 module "olm" {

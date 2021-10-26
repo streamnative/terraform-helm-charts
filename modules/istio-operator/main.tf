@@ -29,15 +29,56 @@ terraform {
 }
 
 resource "helm_release" "istio_operator" {
+  count           = var.enable_istio_operator ? 1 : 0
   atomic          = var.atomic
-  chart           = "${path.module}/chart"
+  chart           = var.istio_chart_name
   cleanup_on_fail = var.cleanup_on_fail
-  name            = var.release_name
-  namespace       = var.namespace
+  name            = var.istio_release_name
+  namespace       = var.istio_namespace
   timeout         = var.timeout
+  repository      = var.istio_chart_repository
+  version         = var.istio_chart_version
+
+  values = [templatefile("${path.module}/values.yaml.tpl", {
+    cluster_name    = var.cluster_name
+    istio_namespace = var.istio_namespace
+    mesh_id         = var.mesh_id
+    revision_tag    = var.revision_tag
+    trust_domain    = var.trust_domain
+    })
+  ]
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = var.istio_settings
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+}
+
+resource "helm_release" "kiali_operator" {
+  count           = var.enable_kiali_operator ? 1 : 0
+  atomic          = var.atomic
+  chart           = var.kiali_chart_name
+  cleanup_on_fail = var.cleanup_on_fail
+  name            = var.kiali_release_name
+  namespace       = var.kiali_namespace
+  repository      = var.kiali_chart_repository
+  timeout         = var.timeout
+  version         = var.kiali_chart_version
+
+  set {
+    name  = "cr.create"
+    value = "true"
+  }
+  set {
+    name  = "cr.namespace"
+    value = var.kiali_namespace
+  }
+
+  dynamic "set" {
+    for_each = var.kiali_settings
     content {
       name  = set.key
       value = set.value

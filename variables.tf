@@ -108,6 +108,36 @@ variable "istio_operator_cleanup_on_fail" {
   type        = bool
 }
 
+variable "istio_operator_cluster_name" {
+  default     = null
+  description = "The name of the kubernetes cluster where Istio is being configured. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
+variable "istio_operator_chart_name" {
+  default     = "istio-operator"
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "istio_operator_chart_repository" {
+  default     = "https://stevehipwell.github.io/helm-charts/"
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "istio_operator_chart_version" {
+  default     = "2.3.4"
+  description = "The version of the Helm chart to install"
+  type        = string
+}
+
+variable "istio_operator_mesh_id" {
+  default     = null
+  description = "The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environments. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
 variable "istio_operator_namespace" {
   default     = "sn-system"
   description = "The namespace used for the operator deployment"
@@ -117,6 +147,12 @@ variable "istio_operator_namespace" {
 variable "istio_operator_release_name" {
   default     = "istio-operator"
   description = "The name of the helm release"
+  type        = string
+}
+
+variable "istio_operator_revision_tag" {
+  default     = "sn-stable"
+  description = "The revision tag value use for the Istio label \"istio.io/rev\"."
   type        = string
 }
 
@@ -132,10 +168,52 @@ variable "istio_operator_timeout" {
   type        = number
 }
 
+variable "istio_operator_trust_domain" {
+  default     = null
+  description = "The trust domain used for the Istio operator, which corresponds to the root of a system. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
 variable "olm_catalog_namespace" {
   default     = "olm"
   description = "The namespace used for the OLM catalog services"
   type        = string
+}
+
+variable "kiali_operator_chart_name" {
+  default     = "kiali-operator"
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "kiali_operator_chart_repository" {
+  default     = "https://kiali.org/helm-charts"
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "kiali_operator_chart_version" {
+  default     = "1.42.0"
+  description = "The version of the Helm chart to install"
+  type        = string
+}
+
+variable "kiali_operator_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the Kiali operator."
+  type        = string
+}
+
+variable "kiali_operator_release_name" {
+  default     = "kiali-operator"
+  description = "The name of the Kiali release"
+  type        = string
+}
+
+variable "kiali_operator_settings" {
+  default     = {}
+  description = "Additional settings which will be passed to the Helm chart values"
+  type        = map(any)
 }
 
 variable "olm_namespace" {
