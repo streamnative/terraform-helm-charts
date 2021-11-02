@@ -32,7 +32,7 @@ module "function_mesh_operator" {
 }
 
 module "istio_operator" {
-  count  = var.enable_istio_operator ? 1 : 0
+  count  = var.enable_istio_operator || var.enable_kiali_operator ? 1 : 0
   source = "./modules/istio-operator"
 
   cleanup_on_fail = var.istio_operator_cleanup_on_fail
@@ -42,6 +42,7 @@ module "istio_operator" {
   timeout         = var.istio_operator_timeout
   trust_domain    = var.istio_operator_trust_domain
 
+  enable_istio_operator  = var.enable_istio_operator
   istio_chart_name       = var.istio_operator_chart_name
   istio_chart_repository = var.istio_operator_chart_repository
   istio_chart_version    = var.istio_operator_chart_version
@@ -49,6 +50,7 @@ module "istio_operator" {
   istio_release_name     = var.istio_operator_release_name
   istio_settings         = coalesce(var.istio_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
 
+  enable_kiali_operator  = var.enable_kiali_operator
   kiali_chart_name       = var.kiali_operator_chart_name
   kiali_chart_repository = var.kiali_operator_chart_repository
   kiali_chart_version    = var.kiali_operator_chart_version

@@ -13,7 +13,13 @@ variable "enable_function_mesh_operator" {
 
 variable "enable_istio_operator" {
   default     = false
-  description = "Enables the Istio Operator. Set to \"true\" by default, but disabled if OLM is enabled."
+  description = "Enables the Istio Operator. Set to \"false\" by default."
+  type        = bool
+}
+
+variable "enable_kiali_operator" {
+  default     = false
+  description = "Enables the Kiali Operator. Set to \"false\" by default."
   type        = bool
 }
 

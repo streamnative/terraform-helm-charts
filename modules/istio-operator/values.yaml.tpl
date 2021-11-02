@@ -17,13 +17,14 @@ controlPlane:
           ISTIO_META_DNS_CAPTURE: "true"
           ISTIO_META_DNS_AUTO_ALLOCATE: "true"
     components:
-  #    cni:
-  #      enabled: true
+      cni:
+        enabled: true
       ingressGateways:
-        - namespace: ${istio_namespace} 
-          name: istio-ingressgateway
+        - name: istio-ingressgateway
+          namespace: ${istio_namespace} 
           enabled: true
           label:
+            cloud.streamnative.io/role: istio-gateway
             istio: ingressgateway
           k8s:
             service:
