@@ -64,8 +64,15 @@ variable "istio_chart_version" {
   type        = string
 }
 
-variable "istio_namespace" {
+variable "istio_watched_namespace" {
+  default     = "istio-system"
   description = "The namespace used for the Istio operator."
+  type        = string
+}
+
+variable "istio_operator_namespace" {
+  default     = "istio-operator"
+  description = "The namespace where the Istio Operator is installed."
   type        = string
 }
 
@@ -117,7 +124,19 @@ variable "kiali_settings" {
 }
 
 variable "mesh_id" {
-  description = "The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environments"
+  description = "The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environment"
+  type        = string
+}
+
+variable "network" {
+  default     = "network1"
+  description = "The network used for the Istio mesh"
+  type        = string
+}
+
+variable "profile" {
+  default     = "default"
+  description = "The path or name for an Istio profile to load. Set to the profile \"default\" if not specified."
   type        = string
 }
 

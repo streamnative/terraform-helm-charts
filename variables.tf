@@ -145,8 +145,20 @@ variable "istio_operator_mesh_id" {
 }
 
 variable "istio_operator_namespace" {
-  default     = "sn-system"
-  description = "The namespace used for the operator deployment"
+  default     = "istio-operator"
+  description = "The namespace used for the Istio operator deployment"
+  type        = string
+}
+
+variable "istio_operator_network" {
+  default     = "network1"
+  description = "The name of network used for the Istio deployment."
+  type        = string
+}
+
+variable "istio_operator_profile" {
+  default     = "default"
+  description = "The path or name for an Istio profile to load. Set to the profile \"default\" if not specified."
   type        = string
 }
 
@@ -177,6 +189,12 @@ variable "istio_operator_timeout" {
 variable "istio_operator_trust_domain" {
   default     = null
   description = "The trust domain used for the Istio operator, which corresponds to the root of a system. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
+variable "istio_watched_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for installing the Istio components, watched by the Istio operator"
   type        = string
 }
 

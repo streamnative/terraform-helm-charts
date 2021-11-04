@@ -38,17 +38,20 @@ module "istio_operator" {
   cleanup_on_fail = var.istio_operator_cleanup_on_fail
   cluster_name    = var.istio_operator_cluster_name
   mesh_id         = var.istio_operator_mesh_id
+  network         = var.istio_operator_network
+  profile         = var.istio_operator_profile
   revision_tag    = var.istio_operator_revision_tag
   timeout         = var.istio_operator_timeout
   trust_domain    = var.istio_operator_trust_domain
 
-  enable_istio_operator  = var.enable_istio_operator
-  istio_chart_name       = var.istio_operator_chart_name
-  istio_chart_repository = var.istio_operator_chart_repository
-  istio_chart_version    = var.istio_operator_chart_version
-  istio_namespace        = var.istio_operator_namespace
-  istio_release_name     = var.istio_operator_release_name
-  istio_settings         = coalesce(var.istio_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  enable_istio_operator    = var.enable_istio_operator
+  istio_chart_name         = var.istio_operator_chart_name
+  istio_chart_repository   = var.istio_operator_chart_repository
+  istio_chart_version      = var.istio_operator_chart_version
+  istio_watched_namespace  = var.istio_watched_namespace
+  istio_operator_namespace = var.istio_operator_namespace
+  istio_release_name       = var.istio_operator_release_name
+  istio_settings           = coalesce(var.istio_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
 
   enable_kiali_operator  = var.enable_kiali_operator
   kiali_chart_name       = var.kiali_operator_chart_name

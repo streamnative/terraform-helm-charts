@@ -28,23 +28,41 @@ terraform {
   }
 }
 
+resource "kubernetes_namespace" "istio_system" {
+  count = var.istio_watched_namespace == "istio-system" ? 1 : 0
+  metadata {
+    name = "istio-system"
+  }
+}
+
+resource "kubernetes_namespace" "istio_operator" {
+  count = var.istio_operator_namespace == "istio-operator" ? 1 : 0
+  metadata {
+    name = "istio-operator"
+  }
+}
+
+
 resource "helm_release" "istio_operator" {
   count           = var.enable_istio_operator ? 1 : 0
   atomic          = var.atomic
   chart           = var.istio_chart_name
   cleanup_on_fail = var.cleanup_on_fail
   name            = var.istio_release_name
-  namespace       = var.istio_namespace
+  namespace       = var.istio_operator_namespace == "istio-operator" ? kubernetes_namespace.istio_operator[0].metadata[0].name : var.istio_operator_namespace
   timeout         = var.timeout
   repository      = var.istio_chart_repository
   version         = var.istio_chart_version
 
   values = [templatefile("${path.module}/values.yaml.tpl", {
-    cluster_name    = var.cluster_name
-    istio_namespace = var.istio_namespace
-    mesh_id         = var.mesh_id
-    revision_tag    = var.revision_tag
-    trust_domain    = var.trust_domain
+    cluster_name       = var.cluster_name
+    mesh_id            = var.mesh_id
+    network            = var.network
+    revision_tag       = var.revision_tag
+    operator_namespace = var.istio_operator_namespace == "istio-operator" ? kubernetes_namespace.istio_operator[0].metadata[0].name : var.istio_operator_namespace
+    profile            = var.profile
+    trust_domain       = var.trust_domain
+    watched_namespace  = var.istio_watched_namespace == "istio-system" ? kubernetes_namespace.istio_system[0].metadata[0].name : var.istio_watched_namespace
     })
   ]
 
