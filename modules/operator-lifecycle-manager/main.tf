@@ -29,27 +29,17 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "2.2.0"
+      version = ">=2.6.1"
     }
   }
 }
 
 resource "kubernetes_namespace" "olm" {
+  count = var.create_olm_namespace ? 1 : 0
   metadata {
     name = var.olm_namespace
   }
 
-  lifecycle {
-    ignore_changes = [
-      metadata[0].labels
-    ]
-  }
-}
-
-resource "kubernetes_namespace" "operators" {
-  metadata {
-    name = var.olm_operators_namespace
-  }
   lifecycle {
     ignore_changes = [
       metadata[0].labels
@@ -62,24 +52,24 @@ resource "helm_release" "operator_lifecycle_manager" {
   chart           = var.chart_repository != "" ? var.chart_repository : "${path.module}/chart"
   cleanup_on_fail = var.cleanup_on_fail
   name            = var.release_name
-  namespace       = kubernetes_namespace.olm.id
+  namespace       = var.create_olm_namespace ? kubernetes_namespace.olm[0].id : var.olm_namespace
   timeout         = var.timeout
 
   set {
     name  = "namespace"
-    value = kubernetes_namespace.olm.id
+    value = var.create_olm_namespace ? kubernetes_namespace.olm[0].id : var.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "catalog_namespace"
-    value = kubernetes_namespace.olm.id
+    value = var.create_olm_namespace ? kubernetes_namespace.olm[0].id : var.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "operator_namespace"
-    value = kubernetes_namespace.operators.id
+    value = var.install_namespace
     type  = "string"
   }
 
