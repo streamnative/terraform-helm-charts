@@ -33,6 +33,6 @@ spec:
       value: "{{ .Values.functionMesh.config.enableController }}"
   installPlanApproval: {{ .Values.functionMesh.approval }}  
   source: {{ .Values.functionMesh.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.functionMesh.name }}
 {{- end }}

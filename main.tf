@@ -66,17 +66,17 @@ module "olm" {
   count  = var.enable_olm ? 1 : 0
   source = "./modules/operator-lifecycle-manager"
 
-  olm_namespace           = var.olm_namespace
-  olm_operators_namespace = var.olm_operators_namespace
-  settings                = coalesce(var.olm_settings, {}) # The empty map is a placeholder value, reserved for future defaults
+  install_namespace = var.olm_install_namespace
+  olm_namespace     = var.olm_namespace
+  settings          = coalesce(var.olm_settings, {}) # The empty map is a placeholder value, reserved for future defaults
 }
 
 module "olm_subscriptions" {
   count  = var.enable_olm ? 1 : 0
   source = "./modules/olm-subscriptions"
 
-  catalog_namespace = var.olm_catalog_namespace
-  namespace         = var.olm_namespace
+  olm_namespace     = var.olm_namespace
+  install_namespace = var.olm_install_namespace
   settings          = coalesce(var.olm_subscription_settings, {}) # The empty map is a placeholder value, reserved for future defaults
   registry          = var.olm_registry
 

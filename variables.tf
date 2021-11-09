@@ -56,10 +56,10 @@ variable "enable_victoria_metrics_stack" {
 variable "enable_victoria_metrics_auth" {
   default     = false
   description = "Enables the Victoria Metrics VMAuth on the EKS cluster. Disabled by default"
+  type        = bool
 }
 
 ### Sub-module Variables
-
 variable "function_mesh_operator_chart_name" {
   default     = "function-mesh-operator"
   description = "The name of the Helm chart to install"
@@ -184,7 +184,6 @@ variable "istio_operator_timeout" {
   default     = 200
   description = "Time in seconds to wait for any individual kubernetes operation"
   type        = number
-}
 
 variable "istio_operator_trust_domain" {
   default     = null
@@ -246,9 +245,9 @@ variable "olm_namespace" {
   type        = string
 }
 
-variable "olm_operators_namespace" {
-  default     = "operators"
-  description = "The namespace where OLM will install the operators"
+variable "olm_install_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for installing the operators managed by OLM"
   type        = string
 }
 

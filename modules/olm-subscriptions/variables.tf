@@ -23,12 +23,6 @@ variable "atomic" {
   type        = bool
 }
 
-variable "catalog_namespace" {
-  default     = "olm"
-  description = "The namespace used by OLM catalog services"
-  type        = string
-}
-
 variable "cleanup_on_fail" {
   default     = true
   description = "Allow deletion of new resources created in this upgrade when upgrade fails"
@@ -41,9 +35,15 @@ variable "release_name" {
   type        = string
 }
 
-variable "namespace" {
+variable "install_namespace" {
   default     = "sn-system"
-  description = "The namespace used for the Pulsar Operator deployment"
+  description = "The namespace used for installing the operators managed by OLM"
+  type        = string
+}
+
+variable "olm_namespace" {
+  default     = "olm"
+  description = "The namespace used by OLM and its resources"
   type        = string
 }
 
@@ -59,7 +59,7 @@ variable "registry" {
 }
 
 variable "timeout" {
-  default     = 600
+  default     = 300
   description = "Time in seconds to wait for any individual kubernetes operation"
   type        = number
 }
