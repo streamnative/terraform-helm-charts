@@ -184,6 +184,7 @@ variable "istio_operator_timeout" {
   default     = 200
   description = "Time in seconds to wait for any individual kubernetes operation"
   type        = number
+}
 
 variable "istio_operator_trust_domain" {
   default     = null
