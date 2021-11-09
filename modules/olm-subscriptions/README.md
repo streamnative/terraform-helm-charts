@@ -34,7 +34,7 @@ No modules.
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The namespace used for the Pulsar Operator deployment | `string` | `"sn-system"` | no |
 | <a name="input_release_name"></a> [release\_name](#input\_release\_name) | The name of the helm release | `string` | `"olm-subscriptions"` | no |
 | <a name="input_settings"></a> [settings](#input\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `{}` | no |
-| <a name="input_sn_image"></a> [sn\_image](#input\_sn\_image) | The registry containing StreamNative's operator catalog image | `string` | n/a | yes |
+| <a name="input_registry"></a> [registry](#input\_registry) | The registry containing StreamNative's operator catalog image | `string` | n/a | yes |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `600` | no |
 
 ## Outputs

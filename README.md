@@ -116,8 +116,8 @@ No resources.
 | <a name="input_istio_operator_release_name"></a> [istio\_operator\_release\_name](#input\_istio\_operator\_release\_name) | The name of the helm release | `string` | `"istio-operator"` | no |
 | <a name="input_istio_operator_settings"></a> [istio\_operator\_settings](#input\_istio\_operator\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |
 | <a name="input_istio_operator_timeout"></a> [istio\_operator\_timeout](#input\_istio\_operator\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `600` | no |
-| <a name="input_olm_catalog_namespace"></a> [olm\_catalog\_namespace](#input\_olm\_catalog\_namespace) | The namespace used for the OLM catalog services | `string` | `"olm"` | no |
-| <a name="input_olm_namespace"></a> [olm\_namespace](#input\_olm\_namespace) | The namespace used by OLM and its resources | `string` | `"olm"` | no |
+| <a name="input_olm_namespace"></a> [olm\_namespace](#input\_olm\_namespace) | The namespace used for the OLM and its resources  | `string` | `"olm"` | no |
+| <a name="input_sn_operator_namespace"></a> [sn\_operator\_namespace](#input\_sn\_operator\_namespace) | The namespace used for running SN operators | `string` | `"sn-system"` | no |
 | <a name="input_olm_operators_namespace"></a> [olm\_operators\_namespace](#input\_olm\_operators\_namespace) | The namespace where OLM will install the operators | `string` | `"operators"` | no |
 | <a name="input_olm_registry"></a> [olm\_registry](#input\_olm\_registry) | The registry containing StreamNative's operator catalog images | `string` | `""` | no |
 | <a name="input_olm_settings"></a> [olm\_settings](#input\_olm\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |

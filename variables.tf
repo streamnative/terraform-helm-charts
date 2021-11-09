@@ -132,21 +132,21 @@ variable "istio_operator_timeout" {
   type        = number
 }
 
-variable "olm_catalog_namespace" {
+variable "olm_namespace" {
   default     = "olm"
-  description = "The namespace used for the OLM catalog services"
+  description = "The namespace used for the OLM and its resources"
   type        = string
 }
 
-variable "olm_namespace" {
-  default     = "olm"
-  description = "The namespace used by OLM and its resources"
+variable "sn_operator_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for running SN operators"
   type        = string
 }
 
 variable "olm_operators_namespace" {
   default     = "operators"
-  description = "The namespace where OLM will install the operators"
+  description = "The namespace where OLM will install the global operatorgroup"
   type        = string
 }
 

@@ -55,8 +55,8 @@ module "olm_subscriptions" {
   count  = var.enable_olm ? 1 : 0
   source = "./modules/olm-subscriptions"
 
-  catalog_namespace = var.olm_catalog_namespace
-  namespace         = var.olm_namespace
+  catalog_namespace = var.olm_namespace
+  namespace         = var.sn_operator_namespace
   settings          = coalesce(var.olm_subscription_settings, {}) # The empty map is a placeholder value, reserved for future defaults
   registry          = var.olm_registry
 
