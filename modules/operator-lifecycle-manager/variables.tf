@@ -35,15 +35,21 @@ variable "cleanup_on_fail" {
   type        = bool
 }
 
-variable "olm_namespace" {
-  default     = "olm"
-  description = "The namespace used by OLM and its resources"
+variable "create_olm_namespace" {
+  default     = true
+  description = "Whether or not to create the namespace used for OLM and its resources. Defaults to \"true\"."
+  type        = bool
+}
+
+variable "install_namespace" {
+  default     = "sn-system"
+  description = "The namespace where OLM will install the operators."
   type        = string
 }
 
-variable "olm_operators_namespace" {
-  default     = "operators"
-  description = "The namespace where OLM will install the operators"
+variable "olm_namespace" {
+  default     = "olm"
+  description = "The namespace used by OLM and its resources"
   type        = string
 }
 

@@ -35,13 +35,8 @@ module "sn_bootstrap" {
 
   enable_vault_operator         = true
   enable_function_mesh_operator = true
-  enable_istio_operator         = true
   enable_prometheus_operator    = true
   enable_pulsar_operator        = true
-  enable_vector_agent           = true
-  enable_victoria_metrics       = true
-
-  vector_agent_vaules           = [ file("${path.module}/my-vector-agent-values.yaml") ]
 
 }
 ```
@@ -115,10 +110,24 @@ No resources.
 | <a name="input_function_mesh_operator_settings"></a> [function\_mesh\_operator\_settings](#input\_function\_mesh\_operator\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |
 | <a name="input_function_mesh_operator_timeout"></a> [function\_mesh\_operator\_timeout](#input\_function\_mesh\_operator\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `200` | no |
 | <a name="input_istio_operator_cleanup_on_fail"></a> [istio\_operator\_cleanup\_on\_fail](#input\_istio\_operator\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails | `bool` | `true` | no |
+| <a name="input_istio_operator_chart_name"></a> [istio\_operator\_chart\_name](#input\_istio\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `"istio-operator"` | no |
+| <a name="input_istio_operator_chart_repository"></a> [istio\_operator\_chart\_repository](#input\_istio\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `"https://stevehipwell.github.io/helm-charts/"` | no |
+| <a name="input_istio_operator_chart_version"></a> [istio\_operator\_chart\_version](#input\_istio\_operator\_chart\_version) | The version of the Helm chart to install | `string` | `"2.3.4"` | no |
+| <a name="input_istio_operator_cleanup_on_fail"></a> [istio\_operator\_cleanup\_on\_fail](#input\_istio\_operator\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails | `bool` | `true` | no |
+| <a name="input_istio_operator_cluster_name"></a> [istio\_operator\_cluster\_name](#input\_istio\_operator\_cluster\_name) | The name of the kubernetes cluster where Istio is being configured. This is required when "enable\_istio\_operator" is set to "true". | `string` | `null` | no |
+| <a name="input_istio_operator_mesh_id"></a> [istio\_operator\_mesh\_id](#input\_istio\_operator\_mesh\_id) | The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environments. This is required when "enable\_istio\_operator" is set to "true". | `string` | `null` | no |
 | <a name="input_istio_operator_namespace"></a> [istio\_operator\_namespace](#input\_istio\_operator\_namespace) | The namespace used for the operator deployment | `string` | `"sn-system"` | no |
 | <a name="input_istio_operator_release_name"></a> [istio\_operator\_release\_name](#input\_istio\_operator\_release\_name) | The name of the helm release | `string` | `"istio-operator"` | no |
+| <a name="input_istio_operator_revision_tag"></a> [istio\_operator\_revision\_tag](#input\_istio\_operator\_revision\_tag) | The revision tag value use for the Istio label "istio.io/rev". | `string` | `"sn-stable"` | no |
 | <a name="input_istio_operator_settings"></a> [istio\_operator\_settings](#input\_istio\_operator\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `null` | no |
 | <a name="input_istio_operator_timeout"></a> [istio\_operator\_timeout](#input\_istio\_operator\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `200` | no |
+| <a name="input_istio_operator_trust_domain"></a> [istio\_operator\_trust\_domain](#input\_istio\_operator\_trust\_domain) | The trust domain used for the Istio operator, which corresponds to the root of a system. This is required when "enable\_istio\_operator" is set to "true". | `string` | `null` | no |
+| <a name="input_kiali_operator_chart_name"></a> [kiali\_operator\_chart\_name](#input\_kiali\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `"kiali-operator"` | no |
+| <a name="input_kiali_operator_chart_repository"></a> [kiali\_operator\_chart\_repository](#input\_kiali\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `"https://kiali.org/helm-charts"` | no |
+| <a name="input_kiali_operator_chart_version"></a> [kiali\_operator\_chart\_version](#input\_kiali\_operator\_chart\_version) | The version of the Helm chart to install | `string` | `"1.42.0"` | no |
+| <a name="input_kiali_operator_namespace"></a> [kiali\_operator\_namespace](#input\_kiali\_operator\_namespace) | The namespace used for the Kiali operator. | `string` | `"sn-system"` | no |
+| <a name="input_kiali_operator_release_name"></a> [kiali\_operator\_release\_name](#input\_kiali\_operator\_release\_name) | The name of the Kiali release | `string` | `"kiali-operator"` | no |
+| <a name="input_kiali_operator_settings"></a> [kiali\_operator\_settings](#input\_kiali\_operator\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `{}` | no |
 | <a name="input_olm_install_namespace"></a> [olm\_install\_namespace](#input\_olm\_install\_namespace) | The namespace used for installing the operators managed by OLM | `string` | `"sn-system"` | no |
 | <a name="input_olm_namespace"></a> [olm\_namespace](#input\_olm\_namespace) | The namespace used by OLM and its resources | `string` | `"olm"` | no |
 | <a name="input_olm_registry"></a> [olm\_registry](#input\_olm\_registry) | The registry containing StreamNative's operator catalog images | `string` | `""` | no |
