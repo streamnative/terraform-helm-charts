@@ -3,13 +3,16 @@ A module that installs the Vector Agent for Kubernetes, via Helm. See the [offic
 
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.0.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider\_helm) | n/a |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | 2.2.0 |
 
 ## Modules
 
@@ -19,7 +22,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [helm_release.vector_agent](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.vector_agent](https://registry.terraform.io/providers/hashicorp/helm/2.2.0/docs/resources/release) | resource |
 
 ## Inputs
 
