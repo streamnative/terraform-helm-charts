@@ -17,7 +17,7 @@
 # under the License.
 #
 
-catalog_namespace: olm
+olm_namespace: olm
 install_namespace: sn-system
 operator_group: sn-operators
 

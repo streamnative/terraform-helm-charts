@@ -32,19 +32,19 @@ resource "helm_release" "olm_subscriptions" {
   atomic          = var.atomic
   chart           = "${path.module}/chart"
   cleanup_on_fail = var.cleanup_on_fail
-  namespace       = var.namespace
+  namespace       = var.olm_namespace
   name            = var.release_name
   timeout         = var.timeout
 
   set {
-    name  = "catalog_namespace"
-    value = var.catalog_namespace
+    name  = "olm_namespace"
+    value = var.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "install_namespace"
-    value = var.namespace
+    value = var.install_namespace
     type  = "string"
   }
 

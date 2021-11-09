@@ -50,10 +50,10 @@ variable "enable_victoria_metrics_stack" {
 variable "enable_victoria_metrics_auth" {
   default     = false
   description = "Enables the Victoria Metrics VMAuth on the EKS cluster. Disabled by default"
+  type        = bool
 }
 
 ### Sub-module Variables
-
 variable "function_mesh_operator_chart_name" {
   default     = "function-mesh-operator"
   description = "The name of the Helm chart to install"
@@ -132,21 +132,15 @@ variable "istio_operator_timeout" {
   type        = number
 }
 
-variable "olm_catalog_namespace" {
-  default     = "olm"
-  description = "The namespace used for the OLM catalog services"
-  type        = string
-}
-
 variable "olm_namespace" {
   default     = "olm"
   description = "The namespace used by OLM and its resources"
   type        = string
 }
 
-variable "olm_operators_namespace" {
-  default     = "operators"
-  description = "The namespace where OLM will install the operators"
+variable "olm_install_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for installing the operators managed by OLM"
   type        = string
 }
 

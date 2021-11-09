@@ -27,6 +27,6 @@ spec:
   channel: {{ .Values.bookkeeper.channel }}
   installPlanApproval: {{ .Values.bookkeeper.approval }}  
   source: {{ .Values.bookkeeper.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.bookkeeper.name }}
 {{- end }}
