@@ -86,7 +86,7 @@ module "olm_subscriptions" {
 }
 
 module "prometheus_operator" {
-  count  = var.enable_prometheus_operator == true && var.enable_olm == false ? 1 : 0
+  count  = var.enable_prometheus_operator == true ? 1 : 0
   source = "./modules/prometheus-operator"
 
   chart_name       = var.prometheus_operator_chart_name
@@ -96,13 +96,7 @@ module "prometheus_operator" {
   namespace        = var.prometheus_operator_namespace
   release_name     = var.prometheus_operator_release_name
 
-  settings = coalesce(var.prometheus_operator_settings, { # Defaults are set to the right. Passing input via var.prometheus_operator_settings will override
-    "alertmanager.enabled"     = "false"
-    "grafana.enabled"          = "false"
-    "kubeStateMetrics.enabled" = "false"
-    "nodeExporter.enabled"     = "false"
-    "prometheus.enabled"       = "false"
-  })
+  settings = coalesce(var.prometheus_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
 
   timeout = var.prometheus_operator_timeout
 }
