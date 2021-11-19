@@ -18,48 +18,70 @@
 #
 
 variable "atomic" {
-  default     = true
-  description = "Purge the chart on a failed installation. Default's to \"true\"."
-  type        = bool
+  default     = null
+  description = "Purge the chart on a failed installation."
 }
 
-variable "cleanup_on_fail" {
-  default     = true
-  description = "Allow deletion of new resources created in this upgrade when upgrade fails"
-  type        = bool
-}
-
-variable "release_name" {
-  default     = "olm-subscriptions"
-  description = "The name of the helm release"
+variable "chart_name" {
+  default     = null
+  description = "The name of the chart to install."
   type        = string
 }
 
+variable "chart_repository" {
+  default     = null
+  description = "The repository to install the chart from."
+  type        = string
+}
+
+variable "chart_version" {
+  default     = null
+  description = "The version of the chart to install."
+  type        = string
+}
+
+variable "cleanup_on_fail" {
+  default     = null
+  description = "Allow deletion of new resources created in this upgrade when upgrade fails."
+  type        = bool
+}
+
 variable "install_namespace" {
-  default     = "sn-system"
-  description = "The namespace used for installing the operators managed by OLM"
+  default     = null
+  description = "The namespace used for installing the operators managed by OLM."
   type        = string
 }
 
 variable "olm_namespace" {
   default     = "olm"
-  description = "The namespace used by OLM and its resources"
+  description = "The namespace used by OLM and its resources."
   type        = string
 }
 
 variable "settings" {
-  default     = {}
-  description = "Additional settings which will be passed to the Helm chart values"
+  default     = null
+  description = "Additional settings which will be passed to the Helm chart values."
   type        = map(any)
 }
 
 variable "registry" {
-  description = "The registry containing StreamNative's operator catalog images"
+  description = "The registry containing StreamNative's operator catalog images. This is required."
+  type        = string
+}
+
+variable "release_name" {
+  default     = null
+  description = "The name of the helm release."
   type        = string
 }
 
 variable "timeout" {
-  default     = 300
-  description = "Time in seconds to wait for any individual kubernetes operation"
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation."
   type        = number
+}
+
+variable "values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
 }

@@ -34,10 +34,26 @@ terraform {
   }
 }
 
-resource "kubernetes_namespace" "olm" {
-  count = var.create_olm_namespace ? 1 : 0
+locals {
+  atomic                   = var.atomic != null ? var.atomic : true
+  chart_name               = var.chart_name != null ? var.chart_name : ""
+  chart_repository         = var.chart_repository != null ? var.chart_repository : "${path.module}/chart"
+  chart_version            = var.chart_version != null ? var.chart_version : ""
+  cleanup_on_fail          = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  create_install_namespace = var.create_install_namespace != null ? var.create_install_namespace : true
+  create_olm_namespace     = var.create_olm_namespace != null ? var.create_olm_namespace : true
+  install_namespace        = var.install_namespace != null ? var.install_namespace : "operators"
+  olm_namespace            = var.olm_namespace != null ? var.olm_namespace : "olm"
+  release_name             = var.release_name != null ? var.release_name : "operator-lifecycle-manager"
+  settings                 = var.settings != null ? var.settings : {}
+  timeout                  = var.timeout != null ? var.timeout : 120
+  values                   = var.values != null ? var.values : []
+}
+
+resource "kubernetes_namespace" "olm_install" {
+  count = var.create_install_namespace ? 1 : 0
   metadata {
-    name = var.olm_namespace
+    name = local.install_namespace
   }
 
   lifecycle {
@@ -48,33 +64,36 @@ resource "kubernetes_namespace" "olm" {
 }
 
 resource "helm_release" "operator_lifecycle_manager" {
-  atomic          = var.atomic
-  chart           = var.chart_repository != "" ? var.chart_repository : "${path.module}/chart"
-  cleanup_on_fail = var.cleanup_on_fail
-  name            = var.release_name
-  namespace       = var.create_olm_namespace ? kubernetes_namespace.olm[0].id : var.olm_namespace
-  timeout         = var.timeout
+  atomic           = local.atomic
+  chart            = local.chart_repository
+  cleanup_on_fail  = local.cleanup_on_fail
+  create_namespace = local.create_olm_namespace
+  name             = local.release_name
+  namespace        = local.olm_namespace
+  timeout          = local.timeout
+  values           = local.values
+  version          = local.chart_version
 
   set {
     name  = "namespace"
-    value = var.create_olm_namespace ? kubernetes_namespace.olm[0].id : var.olm_namespace
+    value = local.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "catalog_namespace"
-    value = var.create_olm_namespace ? kubernetes_namespace.olm[0].id : var.olm_namespace
+    value = local.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "operator_namespace"
-    value = var.install_namespace
+    value = local.create_install_namespace ? kubernetes_namespace.olm_install[0].id : local.install_namespace
     type  = "string"
   }
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = local.settings
     content {
       name  = set.key
       value = set.value

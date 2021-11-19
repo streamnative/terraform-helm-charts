@@ -28,18 +28,35 @@ terraform {
   }
 }
 
+### Module defaults are managed below:
+locals {
+  atomic           = var.atomic != null ? var.atomic : true
+  chart_name       = var.chart_name != null ? var.chart_name : "function-mesh-operator"
+  chart_repository = var.chart_repository != null ? var.chart_repository : "https://charts.streamnative.io"
+  chart_version    = var.chart_version != null ? var.chart_version : "0.1.7"
+  cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  create_namespace = var.create_namespace != null ? var.create_namespace : true
+  namespace        = var.namespace != null ? var.namespace : "sn-system"
+  release_name     = var.release_name != null ? var.release_name : "function-mesh-operator"
+  settings         = var.settings != null ? var.settings : {}
+  timeout          = var.timeout != null ? var.timeout : 120
+  values           = var.values != null ? var.values : []
+}
+
 resource "helm_release" "function_mesh_operator" {
-  atomic          = var.atomic
-  chart           = var.chart_name
-  cleanup_on_fail = var.cleanup_on_fail
-  name            = var.release_name
-  namespace       = var.namespace
-  repository      = var.chart_repository
-  timeout         = var.timeout
-  version         = var.chart_version
+  atomic           = local.atomic
+  chart            = local.chart_name
+  cleanup_on_fail  = local.cleanup_on_fail
+  create_namespace = local.create_namespace
+  name             = local.release_name
+  namespace        = local.namespace
+  repository       = local.chart_repository
+  timeout          = local.timeout
+  version          = local.chart_version
+  values           = local.values
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = local.settings
     content {
       name  = set.key
       value = set.value
