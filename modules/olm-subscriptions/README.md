@@ -1,5 +1,45 @@
 # OLM Subscription Module	
-This module creates the OLM subscriptions necessary to manage the StreamNative, et al, Operators
+This module creates the OLM subscriptions necessary to manage the StreamNative Operators.
+
+## Using a private registry
+Here are the full instructions for enabling OLM and using it with Cloudsmith.
+
+1. Set the `olm_registry` input in the [terraform-helm-charts](https://github.com/streamnative/terraform-helm-charts) module to the `streamnative/operators` registry, then run `tf apply`:
+
+```hcl
+module "sn_bootstrap" {
+  source = "./terraform-helm-charts"   
+
+  enable_olm   = true
+  olm_registry = "docker.cloudsmith.io/streamnative/operators/registry/pulsar-operators:master"
+}
+```
+
+
+2. Get the entitlement token for the `streamnative/operators` registry in Cloudsmith, then create the k8s secret in the OLM namespace (`olm`) *and* the install namespace (`sn-system`). You have to do it in both namespaces since OLM doesn’t propagate secrets into the install namespace. You may need to bounce the catalog pods:
+
+``` bash
+$ kubectl create secret docker-registry cloudsmith --docker-server=docker.cloudsmith.io --docker-username=streamnative/operators --docker-password=<cloudsmith_entitlement_token> -n olm
+
+$ kubectl create secret docker-registry cloudsmith --docker-server=docker.cloudsmith.io --docker-username=streamnative/operators --docker-password=<cloudsmith_entitlement_token> -n sn-system
+```
+
+3. Edit the `*-operator-controller-manager` deployments that are crash looping in the `sn-system` namespace and set the `ImagePullSecret` under `spec.template.spec.` to: `-name: "cloudsmith"`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flink-operator-controller-manager
+  namespace: sn-system
+...
+...
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: cloudsmith
+```
 
 ## Requirements
 

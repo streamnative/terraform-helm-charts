@@ -22,6 +22,7 @@ install_namespace: sn-system
 operator_group: sn-operators
 
 sn_registry: ""
+sn_registry_secret: "cloudsmith"
 
 components:
   bookkeeper: true

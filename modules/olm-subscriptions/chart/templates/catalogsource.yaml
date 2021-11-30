@@ -30,6 +30,8 @@ spec:
   updateStrategy:
     registryPoll:
       interval: 10m0s
+  secrets:
+  - {{ .Values.sn_registry_secret }}
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
