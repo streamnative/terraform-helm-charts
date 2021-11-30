@@ -32,7 +32,7 @@ locals {
   atomic           = var.atomic != null ? var.atomic : true
   chart_name       = var.chart_name != null ? var.chart_name : "kube-prometheus-stack"
   chart_repository = var.chart_repository != null ? var.chart_repository : "https://prometheus-community.github.io/helm-charts"
-  chart_version    = var.chart_version != null ? var.chart_version : "20.0.1"
+  chart_version    = var.chart_version != null ? var.chart_version : "21.0.0"
   cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
   create_namespace = var.create_namespace != null ? var.create_namespace : true
   namespace        = var.namespace != null ? var.namespace : "monitoring"
