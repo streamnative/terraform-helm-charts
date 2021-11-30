@@ -26,7 +26,6 @@ controlPlane:
           enabled: true
           label:
             cloud.streamnative.io/role: istio-gateway
-            istio: ingressgateway
           k8s:
             service:
               ports:
