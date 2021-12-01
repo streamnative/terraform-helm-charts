@@ -1,4 +1,4 @@
-istioNamespace: ${watched_namespace}
+istioNamespace: ${istio_system_namespace}
 controlPlane:
   install: true
   spec:
@@ -6,7 +6,7 @@ controlPlane:
     revision: ${revision_tag}
     values:
       global:
-        istioNamespace: ${watched_namespace}
+        istioNamespace: ${istio_system_namespace}
         meshID: ${mesh_id}
         multiCluster:
           clusterName: ${cluster_name}
@@ -22,11 +22,10 @@ controlPlane:
         enabled: true
       ingressGateways:
         - name: istio-ingressgateway
-          namespace: ${watched_namespace} 
+          namespace: ${istio_system_namespace} 
           enabled: true
           label:
             cloud.streamnative.io/role: istio-gateway
-            istio: ingressgateway
           k8s:
             service:
               ports:

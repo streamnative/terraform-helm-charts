@@ -23,28 +23,45 @@ terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
-      version = "2.2.0"
+      version = ">=2.2.0"
     }
   }
 }
+locals {
+  atomic            = var.atomic != null ? var.atomic : true
+  chart_name        = var.chart_name != null ? var.chart_name : "${path.module}/chart"
+  chart_repository  = var.chart_repository != null ? var.chart_repository : null
+  chart_version     = var.chart_version != null ? var.chart_version : null
+  cleanup_on_fail   = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  install_namespace = var.install_namespace != null ? var.install_namespace : "sn-system"
+  olm_namespace     = var.olm_namespace != null ? var.olm_namespace : "olm"
+  release_name      = var.release_name != null ? var.release_name : "olm-subscriptions"
+  settings          = var.settings != null ? var.settings : {}
+  timeout           = var.timeout != null ? var.timeout : 120
+  values            = var.values != null ? var.values : []
+}
+
 
 resource "helm_release" "olm_subscriptions" {
-  atomic          = var.atomic
-  chart           = "${path.module}/chart"
-  cleanup_on_fail = var.cleanup_on_fail
-  namespace       = var.olm_namespace
-  name            = var.release_name
-  timeout         = var.timeout
+  atomic          = local.atomic
+  chart           = local.chart_name
+  cleanup_on_fail = local.cleanup_on_fail
+  namespace       = local.olm_namespace
+  name            = local.release_name
+  repository      = local.chart_repository
+  timeout         = local.timeout
+  version         = local.chart_version
+  values          = local.values
 
   set {
     name  = "olm_namespace"
-    value = var.olm_namespace
+    value = local.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "install_namespace"
-    value = var.install_namespace
+    value = local.install_namespace
     type  = "string"
   }
 
@@ -55,7 +72,7 @@ resource "helm_release" "olm_subscriptions" {
   }
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = local.settings
     content {
       name  = set.key
       value = set.value
