@@ -84,7 +84,7 @@ variable "create_istio_operator_namespace" {
 }
 
 variable "create_istio_system_namespace" {
-  default     = true
+  default     = false
   description = "Create a namespace where istio components will be installed."
   type        = bool
 }
@@ -96,7 +96,7 @@ variable "istio_operator_namespace" {
 }
 
 variable "istio_system_namespace" {
-  default     = "istio-system"
+  default     = "sn-system"
   description = "The namespace used for the Istio components."
   type        = string
 }
@@ -109,7 +109,7 @@ variable "create_kiali_operator_namespace" {
 }
 
 variable "kiali_namespace" {
-  default     = "istio-system"
+  default     = "sn-system"
   description = "The namespace used for the Kiali operator."
   type        = string
 }

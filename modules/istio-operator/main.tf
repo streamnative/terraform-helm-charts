@@ -49,7 +49,7 @@ locals {
   istio_settings                  = var.istio_settings != null ? var.istio_settings : {}
   istio_system_namespace          = var.istio_system_namespace != null ? var.istio_system_namespace : "istio-system"
   istio_trust_domain              = var.istio_trust_domain != null ? var.istio_trust_domain : "cluster.local"
-  istio_values                    = var.istio_values != null ? var.istio_values : null
+  istio_values                    = var.istio_values != null ? var.istio_values : []
 
   # Kiali Operator Settings
   create_kiali_cr                 = var.create_kiali_cr != null ? var.create_kiali_cr : true
@@ -88,7 +88,8 @@ resource "helm_release" "istio_operator" {
   timeout          = local.timeout
   repository       = local.istio_chart_repository
   version          = local.istio_chart_version
-  values = coalesce(local.istio_values, [templatefile("${path.module}/values.yaml.tpl", {
+  
+  values = coalescelist(local.istio_values, [templatefile("${path.module}/values.yaml.tpl", {
     cluster_name           = local.istio_cluster_name
     mesh_id                = local.istio_mesh_id
     network                = local.istio_network
