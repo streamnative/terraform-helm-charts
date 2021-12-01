@@ -52,16 +52,16 @@ locals {
   istio_values                    = var.istio_values != null ? var.istio_values : null
 
   # Kiali Operator Settings
-  create_kiali_cr          = var.create_kiali_cr != null ? var.create_kiali_cr : true
+  create_kiali_cr                 = var.create_kiali_cr != null ? var.create_kiali_cr : true
   create_kiali_operator_namespace = var.create_kiali_operator_namespace != null ? var.create_kiali_operator_namespace : true
-  kiali_chart_name         = var.kiali_chart_name != null ? var.kiali_chart_name : "kiali-operator"
-  kiali_chart_repository   = var.kiali_chart_repository != null ? var.kiali_chart_repository : "https://kiali.org/helm-charts"
-  kiali_chart_version      = var.kiali_chart_version != null ? var.kiali_chart_version : "1.43.0"
-  kiali_namespace          = var.kiali_namespace != null ? var.kiali_namespace : "kiali"
-  kiali_release_name       = var.kiali_release_name != null ? var.kiali_release_name : "kiali-operator"
-  kiali_settings           = var.kiali_settings != null ? var.kiali_settings : {}
-  kiali_operator_namespace = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
-  kiali_values             = var.kiali_values != null ? var.kiali_values : []
+  kiali_chart_name                = var.kiali_chart_name != null ? var.kiali_chart_name : "kiali-operator"
+  kiali_chart_repository          = var.kiali_chart_repository != null ? var.kiali_chart_repository : "https://kiali.org/helm-charts"
+  kiali_chart_version             = var.kiali_chart_version != null ? var.kiali_chart_version : "1.43.0"
+  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "kiali"
+  kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali-operator"
+  kiali_settings                  = var.kiali_settings != null ? var.kiali_settings : {}
+  kiali_operator_namespace        = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
+  kiali_values                    = var.kiali_values != null ? var.kiali_values : []
 }
 
 resource "kubernetes_namespace" "istio_system" {

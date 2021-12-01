@@ -1,11 +1,10 @@
 # terraform-helm-charts
-This repository contains Terraform managed Helm charts used by StreamNative Platform. For more information on the Helm provider for Terraform, please refer to the [official documentation](https://registry.terraform.io/providers/hashicorp/helm/latest/docs).
+This repository contains Terraform managed Helm charts used by StreamNative Platform, contained within the [modules](https://github.com/streamnative/terraform-helm-charts/tree/master/modules) directory. For more information on the Helm provider for Terraform, please refer to the [official documentation](https://registry.terraform.io/providers/hashicorp/helm/latest/docs).
 
 ## Example Usage
+The [submodules](https://github.com/streamnative/terraform-helm-charts/tree/master/modules) in this repo can be used in a standalone fashion. However, the root module (contained in the [root `main.tf` file](https://github.com/streamnative/terraform-helm-charts/blob/master/main.tf)) [composes](https://www.terraform.io/docs/language/modules/develop/composition.html) all of the submodules to be used in concert with eachother, depending on your configuration needs.
 
-The `main.tf` file in the root of this repository contains an example of how to use these modules. 
-
-A simple example of how to use one of the modules is shown below:
+Here is a simple example on how to use the root module in this repo for the common StreamNative Platform usecase. It will installs the Vault, Prometheus, Pulsar, and Function Mesh operators:
 
 ```hcl
 data "aws_eks_cluster" "cluster" {
@@ -21,7 +20,6 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
   insecure               = false
-  config_path            = "./my-eks-kube-config"
 }
 
 provider "helm" {
@@ -37,26 +35,68 @@ module "sn_bootstrap" {
   enable_function_mesh_operator = true
   enable_prometheus_operator    = true
   enable_pulsar_operator        = true
-
 }
 ```
 
-To apply the configuration above, initialize the Terraform from the example above:
+To apply the configuration above, simply run:
 
 ```shell
-terraform init
+terraform init && terraform apply
 ```
 
-Run a plan to validate what's being created:
+## Why are all the variable defaults null?
+The submodules contained in this repo are typically composed in the root module, and as such many of a submodules variables get duplicated in the root module. 
 
-```shell
-terraform plan
+This introduces a problem where we don't want to also duplicate default values in both places, i.e. managing a default value in the root module _and_ in the submodule, as they are difficult to synchronize and have historically drifted away from eachother.
+
+In a perfect world, the approach we would like to take is:
+
+- Have the root module's variables that map to a submodule's variables default to `null`
+- Have the submodule's variables default to their expected value
+
+However when we do this, the root module _overrides_ the submodule's default value with `null`, rather than respect it and treat `null` as an omission. This unfortuately is [expected behavior](https://github.com/hashicorp/terraform/issues/24142#issuecomment-646393631) in Terraform, where `null` is actually a valid value in some module configurations (instead of being "the absence of a value", like we want it to be and also like the Terraform documentation states).
+
+To work around this, we set the default values in _both_ the root module and submodules to `null`, then use a `locals()` configuration in the submodule to manage the expected default values. To illustrate, here is a simple example:
+
+Submodule: `streamnative/terraform-helm-charts/modules/submodule_a/main.tf`
+```hcl
+variable "input_1" {
+  default = null
+  type    = string
+}
+
+locals (
+  input_1 = var.input_1 != null ? : var.input_1 : "my_default_value" // This is where we set the default value
+)
+
+output "submodule_a" {
+  value = local.input_1
+}
 ```
 
-Apply the configuration:
-```shell
-terraform apply
+Root module: `streamnative/terraform-helm-charts/main.tf`
+```hcl
+variable "submodule_a_input_1" {
+  default = null
+}
+
+module "submodule_a" {
+  source = "./modules/submodule_a"
+
+  input_1 = var.submodule_a_input_1
+}
 ```
+
+And in a module composition, we could override the default value:
+```hcl
+module "terraform-helm-charts" {
+  source = "streamnative/terraform-helm-charts"
+
+  submodule_a_input = "my_custom_value" 
+}
+```
+
+While this pattern has [some limitations](https://github.com/hashicorp/terraform/issues/24142#issuecomment-938106778), it is a sufficient workaround for our (opinionated) needs in these modules.
 
 ## Requirements
 

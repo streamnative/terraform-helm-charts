@@ -32,11 +32,11 @@ locals {
   atomic           = var.atomic != null ? var.atomic : true
   chart_name       = var.chart_name != null ? var.chart_name : "vector-agent"
   chart_repository = var.chart_repository != null ? var.chart_repository : "https://helm.vector.dev"
-  chart_version    = var.chart_version != null ? var.chart_version : "0.17.0"
+  chart_version    = var.chart_version != null ? var.chart_version : "0.18.1"
   cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
 
   create_namespace = var.create_namespace != null ? var.create_namespace : true
-  namespace        = var.namespace != null ? var.namespace : "vector"
+  namespace        = var.namespace != null ? var.namespace : "sn-system"
   release_name     = var.release_name != null ? var.release_name : "vector-agent"
   settings         = var.settings != null ? var.settings : {}
   timeout          = var.timeout != null ? var.timeout : 120

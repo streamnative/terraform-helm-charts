@@ -37,8 +37,8 @@ locals {
   create_vmstack_namespace = var.create_vmstack_namespace != null ? var.create_vmstack_namespace : true
   vmstack_chart_name       = var.vmstack_chart_name != null ? var.vmstack_chart_name : "victoria-metrics-k8s-stack"
   vmstack_chart_repository = var.vmstack_chart_repository != null ? var.vmstack_chart_repository : "https://victoriametrics.github.io/helm-charts/"
-  vmstack_chart_version    = var.vmstack_chart_version != null ? var.vmstack_chart_version : "0.4.5"
-  vmstack_namespace        = var.vmstack_namespace != null ? var.vmstack_namespace : "monitoring"
+  vmstack_chart_version    = var.vmstack_chart_version != null ? var.vmstack_chart_version : "0.5.9"
+  vmstack_namespace        = var.vmstack_namespace != null ? var.vmstack_namespace : "sn-system"
   vmstack_release_name     = var.vmstack_release_name != null ? var.vmstack_release_name : "vmstack"
   vmstack_settings         = var.vmstack_settings != null ? var.vmstack_settings : {}
   vmstack_values           = var.vmstack_values != null ? var.vmstack_values : []
@@ -47,8 +47,8 @@ locals {
   create_vmauth_namespace = var.create_vmauth_namespace != null ? var.create_vmauth_namespace : true
   vmauth_chart_name       = var.vmauth_chart_name != null ? var.vmauth_chart_name : "victoria-metrics-auth"
   vmauth_chart_repository = var.vmauth_chart_repository != null ? var.vmauth_chart_repository : "https://victoriametrics.github.io/helm-charts/"
-  vmauth_chart_version    = var.vmauth_chart_version != null ? var.vmauth_chart_version : "0.2.31"
-  vmauth_namespace        = var.vmauth_namespace != null ? var.vmauth_namespace : "monitoring"
+  vmauth_chart_version    = var.vmauth_chart_version != null ? var.vmauth_chart_version : "0.2.33"
+  vmauth_namespace        = var.vmauth_namespace != null ? var.vmauth_namespace : "sn-system"
   vmauth_release_name     = var.vmauth_release_name != null ? var.vmauth_release_name : "vmauth"
   vmauth_settings         = var.vmauth_settings != null ? var.vmauth_settings : {}
   vmauth_values           = var.vmauth_values != null ? var.vmauth_values : []
