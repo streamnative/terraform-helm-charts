@@ -57,6 +57,35 @@ resource "helm_release" "istio_operator" {
   }
 }
 
+locals {
+  kiali_values = {
+    cr = {
+      create = true
+      namespace = var.kiali_namespace
+      spec = {
+        deployment = {
+          accessible_namespaces = ["**"]
+        }
+        istio_labels = {
+          app_label_name = "service.istio.io/canonical-name"
+          version_label_name = "service.istio.io/canonical-revision"
+        }
+        kiali_feature_flags = {
+          istio_injection_action = false
+          istio_upgrade_action = false
+        }
+        external_services = {
+          istio = {
+            config_map_name = "istio-${var.revision_tag}"
+            istiod_deployment_name = "istiod-${var.revision_tag}"
+            root_namespace = var.istio_namespace
+          }
+        }
+      }
+    }
+  }
+}
+
 resource "helm_release" "kiali_operator" {
   count           = var.enable_kiali_operator ? 1 : 0
   atomic          = var.atomic
@@ -67,15 +96,7 @@ resource "helm_release" "kiali_operator" {
   repository      = var.kiali_chart_repository
   timeout         = var.timeout
   version         = var.kiali_chart_version
-
-  set {
-    name  = "cr.create"
-    value = "true"
-  }
-  set {
-    name  = "cr.namespace"
-    value = var.kiali_namespace
-  }
+  values          = [yamlencode(local.kiali_values)]
 
   dynamic "set" {
     for_each = var.kiali_settings
