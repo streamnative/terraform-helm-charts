@@ -94,6 +94,23 @@ module "olm_subscriptions" {
   ]
 }
 
+module "otel_collector" {
+  count  = var.enable_otel_collector ? 1 : 0
+  source = "./modules/otel-collector"
+
+  chart_name       = var.otel_collector_chart_name
+  chart_repository = var.otel_collector_chart_repository
+  chart_version    = var.otel_collector_chart_version
+  create_namespace = var.create_otel_collector_namespace
+  cloud_provider   = var.otel_collector_cloud_provider
+  namespace        = var.otel_collector_namespace
+  image_version    = var.otel_collector_image_version
+  release_name     = var.otel_collector_release_name
+  settings         = var.otel_collector_settings
+  timeout          = var.otel_collector_timeout
+  values           = var.otel_collector_values
+}
+
 module "prometheus_operator" {
   count  = var.enable_prometheus_operator == true ? 1 : 0
   source = "./modules/prometheus-operator"
