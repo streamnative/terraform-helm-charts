@@ -8,6 +8,9 @@ A Prometheus Adapter to bridge HPA controller and Prometheus.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_metric_server_namespace"></a> [metric\_server\_namespace](#input\_metric\_server\_namespace) | Namespace to deploy custom metric server(prometheus adapter). | `string` | `sn-system` | no |
+| <a name="input_cert_manager_namespace"></a> [cert\_manager\_namespace](#input\_cert\_manager\_namespace) | Namespace where cert manager is deployed. | `string` | `cert-manager` | no |
+| <a name="input_scaling_prometheus_namespace"></a> [scaling\_prometheus\_namespace](#input\_scaling\_prometheus\_namespace) | Namespace to deploy prometheus for prometheus used for scarping metrics for HPA. | `string` | `sn-system` | no |
 | <a name="input_scaling_prometheus_version"></a> [scaling\_prometheus\_version](#input\_scaling\_prometheus\_version) | Version of prometheus used for scarping metrics for HPA. | `string` | `v2.19.2` | no |
 | <a name="input_scaling_prometheus_scrape_interval"></a> [scaling\_prometheus\_scrape\_interval](#input\_scaling\_prometheus\_scrape\_interval) | Scrape interval for prometheus used for scarping metrics for HPA. | `string` | `15s` | no |
 | <a name="input_scaling_prometheus_evaluation_interval"></a> [scaling\_prometheus\_evaluation\_interval](#input\_scaling\_prometheus\_evaluation\_interval) | Evaluation interval for prometheus used for scarping metrics for HPA. | `string` | `30s` | no |

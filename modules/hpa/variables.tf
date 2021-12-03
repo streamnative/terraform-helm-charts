@@ -31,7 +31,7 @@ variable "cert_manager_namespace" {
 
 variable "scaling_prometheus_namespace" {
   default     = "sn-system"
-  description = "Namespace to deploy scaling prometheus."
+  description = "Namespace to deploy prometheus for prometheus used for scarping metrics for HPA."
   type        = string
 }
 
