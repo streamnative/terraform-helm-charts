@@ -52,6 +52,12 @@ variable "enable_victoria_metrics_auth" {
   description = "Enables the Victoria Metrics VMAuth on the EKS cluster. Disabled by default"
 }
 
+### Top-level Variables
+variable "service_domain" {
+  description = "The DNS domain for service endpoints (ingress)"
+  type        = string
+}
+
 ### Sub-module Variables
 
 variable "function_mesh_operator_chart_name" {

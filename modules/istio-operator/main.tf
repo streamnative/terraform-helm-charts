@@ -58,13 +58,16 @@ resource "helm_release" "istio_operator" {
 }
 
 locals {
-  kiali_values = {
+  kiali_operator_values = {
     cr = {
       create = true
       namespace = var.kiali_namespace
       spec = {
         deployment = {
           accessible_namespaces = ["**"]
+          ingress = {
+            enabled = false
+          }
         }
         istio_labels = {
           app_label_name = "service.istio.io/canonical-name"
@@ -96,7 +99,7 @@ resource "helm_release" "kiali_operator" {
   repository      = var.kiali_chart_repository
   timeout         = var.timeout
   version         = var.kiali_chart_version
-  values          = [yamlencode(local.kiali_values)]
+  values          = [yamlencode(local.kiali_operator_values)]
 
   dynamic "set" {
     for_each = var.kiali_settings
@@ -105,4 +108,34 @@ resource "helm_release" "kiali_operator" {
       value = set.value
     }
   }
+}
+
+locals {
+  kiali_values = {
+    fullnameOverride = "kiali"
+    # gatewaySelector = {
+    #   "cloud.streamnative.io/role" = "ingressgateway"
+    # }
+    gatewayTls       = {
+      mode           = "SIMPLE"
+      credentialName = "tls-istio-gateway"
+    }
+    gatewayHosts     = var.kiali_gateway_hosts
+    kialiSelector    = {
+      "app.kubernetes.io/name"     = "kiali"
+      "app.kubernetes.io/instance" = "kiali"
+    }
+    kialiHost        = "kiali.${var.kiali_namespace}.svc.cluster.local"
+  }
+}
+
+resource "helm_release" "kiali" {
+  count           = var.enable_kiali_operator ? 1 : 0
+  name            = "kiali"
+  namespace       = var.kiali_namespace
+  chart           = "${path.module}/charts/kiali"
+  atomic          = var.atomic
+  cleanup_on_fail = var.cleanup_on_fail
+  timeout         = var.timeout
+  values          = [yamlencode(local.kiali_values)]
 }

@@ -54,6 +54,7 @@ module "istio_operator" {
   kiali_chart_version    = var.kiali_operator_chart_version
   kiali_namespace        = var.kiali_operator_namespace
   kiali_release_name     = var.kiali_operator_release_name
+  kiali_gateway_hosts    = ["kiali.${var.service_domain}"]
   kiali_settings         = coalesce(var.kiali_operator_settings, {}) # The empty map is a placeholder value, reserved for future defaults
 }
 

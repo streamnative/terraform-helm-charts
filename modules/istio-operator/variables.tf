@@ -110,6 +110,12 @@ variable "kiali_release_name" {
   type        = string
 }
 
+variable "kiali_gateway_hosts" {
+  default     = []
+  description = "The external FQDN(s) to expose Kiali on"
+  type        = list(string)
+}
+
 variable "kiali_settings" {
   default     = {}
   description = "Additional settings which will be passed to the Helm chart values. See https://github.com/kiali/helm-charts/blob/v1.42/kiali-operator/values.yaml for available options"

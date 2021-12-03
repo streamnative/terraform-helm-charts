@@ -1,0 +1,49 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "kiali.fullname" . }}
+  labels:
+  {{- include "kiali.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- if empty .Values.gatewaySelector }}
+    istio: ingressgateway
+    {{- else }}
+    {{- toYaml .Values.gatewaySelector | nindent 4 }}
+    {{- end }}
+  servers:
+  - port:
+      number: 443
+      name: https-kiali
+      protocol: HTTPS
+    tls:
+      {{- toYaml .Values.gatewayTls | nindent 6 }}
+    hosts: {{ toYaml .Values.gatewayHosts | nindent 6 }}
+    
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "kiali.fullname" . }}
+spec:
+  hosts: {{ toYaml .Values.gatewayHosts | nindent 4 }}
+  gateways:
+  - {{ include "kiali.fullname" . }}
+  http:
+  - route:
+    - destination:
+        host: {{ .Values.kialiHost }}
+        port:
+          number: 20001
+          
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "kiali.fullname" . }}
+spec:
+  rules:
+    - {}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.kialiSelector | nindent 6 }}
