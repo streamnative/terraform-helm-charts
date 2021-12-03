@@ -17,6 +17,24 @@
 # under the License.
 #
 
+variable "metric_server_namespace" {
+  default     = "sn-system"
+  description = "Namespace to deploy custom metric server(prometheus adapter)."
+  type        = string
+}
+
+variable "cert_manager_namespace" {
+  default     = "cert-manager"
+  description = "Namespace where cert manager is deployed."
+  type        = string
+}
+
+variable "scaling_prometheus_namespace" {
+  default     = "sn-system"
+  description = "Namespace to deploy scaling prometheus."
+  type        = string
+}
+
 variable "scaling_prometheus_version" {
   default     = "v2.19.2"
   description = "Version of prometheus used for scarping metrics for HPA."

@@ -92,11 +92,8 @@ resource "kubernetes_manifest" "serviceaccount_sn_system_scaling_prometheus" {
     "apiVersion" = "v1"
     "kind" = "ServiceAccount"
     "metadata" = {
-      "annotations" = {
-        "iam.gke.io/gcp-service-account" = "pulsar-prometheus@sncloud-dev-zxc.iam.gserviceaccount.com"
-      }
       "name" = "scaling-prometheus"
-      "namespace" = "sn-system"
+      "namespace" = var.scaling_prometheus_namespace
     }
   }
 }
@@ -117,7 +114,7 @@ resource "kubernetes_manifest" "clusterrolebinding_scaling_prometheus" {
       {
         "kind" = "ServiceAccount"
         "name" = "scaling-prometheus"
-        "namespace" = "sn-system"
+        "namespace" = var.scaling_prometheus_namespace
       },
     ]
   }
@@ -134,7 +131,7 @@ resource "kubernetes_manifest" "secret_sn_system_scaling_conf" {
     "kind" = "Secret"
     "metadata" = {
       "name" = "scaling-conf"
-      "namespace" = "sn-system"
+      "namespace" = var.scaling_prometheus_namespace
     }
     "stringData" = {
       "scrape.yaml" = <<-EOT
@@ -200,7 +197,7 @@ resource "kubernetes_manifest" "prometheus_sn_system_scaling_prometheus" {
     "kind" = "Prometheus"
     "metadata" = {
       "name" = "scaling-prometheus"
-      "namespace" = "sn-system"
+      "namespace" = var.scaling_prometheus_namespace
     }
     "spec" = {
       "additionalScrapeConfigs" = {
@@ -246,7 +243,7 @@ resource "kubernetes_manifest" "service_sn_system_scaling_prometheus" {
     "kind" = "Service"
     "metadata" = {
       "name" = "scaling-prometheus"
-      "namespace" = "sn-system"
+      "namespace" = var.scaling_prometheus_namespace
     }
     "spec" = {
       "ports" = [
@@ -300,7 +297,7 @@ resource "kubernetes_manifest" "secret_issuer_cert" {
     "kind" = "Secret"
     "metadata" = {
       "name" = "issuer-cert"
-      "namespace" = "cert-manager"
+      "namespace" = var.cert_manager_namespace
     }
     "stringData" = {
       "tls.crt" = tls_self_signed_cert.issuer_cert.cert_pem,
@@ -334,14 +331,14 @@ resource "kubernetes_manifest" "clusterissuer_ca_issuer" {
   ]
 }
 
-# cert for kube-aggregator to use for communicating with prometheus adapter
+# cert for kube-aggregator to use for communicating with custom metric server
 resource "kubernetes_manifest" "certificate_sn_system_custom_metrics_server" {
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
     "kind" = "Certificate"
     "metadata" = {
       "name" = "custom-metrics-server"
-      "namespace" = "sn-system"
+      "namespace" = var.metric_server_namespace
     }
     "spec" = {
       "dnsNames" = [
@@ -369,7 +366,7 @@ resource "kubernetes_manifest" "serviceaccount_sn_system_custom_metrics_apiserve
     "kind" = "ServiceAccount"
     "metadata" = {
       "name" = "custom-metrics-apiserver"
-      "namespace" = "sn-system"
+      "namespace" = var.metric_server_namespace
     }
   }
 }
@@ -390,7 +387,7 @@ resource "kubernetes_manifest" "clusterrolebinding_custom_metrics_system_auth_de
       {
         "kind" = "ServiceAccount"
         "name" = "custom-metrics-apiserver"
-        "namespace" = "sn-system"
+        "namespace" = var.metric_server_namespace
       },
     ]
   }
@@ -448,7 +445,7 @@ resource "kubernetes_manifest" "rolebinding_kube_system_custom_metrics_auth_read
     "kind" = "RoleBinding"
     "metadata" = {
       "name" = "custom-metrics-auth-reader"
-      "namespace" = "kube-system"
+      "namespace" = var.metric_server_namespace
     }
     "roleRef" = {
       "apiGroup" = "rbac.authorization.k8s.io"
@@ -459,7 +456,7 @@ resource "kubernetes_manifest" "rolebinding_kube_system_custom_metrics_auth_read
       {
         "kind" = "ServiceAccount"
         "name" = "custom-metrics-apiserver"
-        "namespace" = "sn-system"
+        "namespace" = var.metric_server_namespace
       },
     ]
   }
@@ -508,7 +505,7 @@ resource "kubernetes_manifest" "clusterrolebinding_custom_metrics_resource_reade
       {
         "kind" = "ServiceAccount"
         "name" = "custom-metrics-apiserver"
-        "namespace" = "sn-system"
+        "namespace" = var.metric_server_namespace
       },
     ]
   }
@@ -523,7 +520,7 @@ resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
         "app" = "custom-metrics-apiserver"
       }
       "name" = "custom-metrics-apiserver"
-      "namespace" = "sn-system"
+      "namespace" = var.metric_server_namespace
     }
     "spec" = {
       "replicas" = 1
@@ -547,7 +544,7 @@ resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
                 "--tls-cert-file=/var/run/serving-cert/serving.crt",
                 "--tls-private-key-file=/var/run/serving-cert/serving.key",
                 "--logtostderr=true",
-                "--prometheus-url=http://scaling-prometheus.sn-system.svc.cluster.local:9090/",
+                "--prometheus-url=http://scaling-prometheus.${var.scaling_prometheus_namespace}.svc.cluster.local:9090/",
                 "--metrics-relist-interval=1m",
                 "--v=6",
                 "--config=/etc/adapter/config.yaml",
@@ -619,7 +616,7 @@ resource "kubernetes_manifest" "service_sn_system_custom_metrics_apiserver" {
     "kind" = "Service"
     "metadata" = {
       "name" = "custom-metrics-apiserver"
-      "namespace" = "sn-system"
+      "namespace" = var.metric_server_namespace
     }
     "spec" = {
       "ports" = [
@@ -649,7 +646,7 @@ resource "kubernetes_manifest" "apiservice_v1beta1_custom_metrics_k8s_io" {
       "insecureSkipTLSVerify" = true
       "service" = {
         "name" = "custom-metrics-apiserver"
-        "namespace" = "sn-system"
+        "namespace" = var.metric_server_namespace
       }
       "version" = "v1beta1"
       "versionPriority" = 100
@@ -670,7 +667,7 @@ resource "kubernetes_manifest" "apiservice_v1beta2_custom_metrics_k8s_io" {
       "insecureSkipTLSVerify" = true
       "service" = {
         "name" = "custom-metrics-apiserver"
-        "namespace" = "sn-system"
+        "namespace" = var.metric_server_namespace
       }
       "version" = "v1beta2"
       "versionPriority" = 200
@@ -751,7 +748,7 @@ resource "kubernetes_manifest" "configmap_sn_system_adapter_config" {
     "kind" = "ConfigMap"
     "metadata" = {
       "name" = "adapter-config"
-      "namespace" = "sn-system"
+      "namespace" = var.metric_server_namespace
     }
   }
 }
