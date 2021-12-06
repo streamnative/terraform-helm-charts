@@ -27,6 +27,6 @@ spec:
   channel: {{ .Values.flinkSql.channel }}
   installPlanApproval: {{ .Values.flinkSql.approval }}  
   source: {{ .Values.flinkSql.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flinkSql.name }}
 {{- end }}

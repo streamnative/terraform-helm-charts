@@ -21,7 +21,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: sn-catalog
-  namespace: {{ .Values.catalog_namespace }}
+  namespace: {{ .Values.olm_namespace }}
 spec:
   displayName: StreamNative Operators
   image: {{ .Values.sn_registry }}
@@ -30,12 +30,14 @@ spec:
   updateStrategy:
     registryPoll:
       interval: 10m0s
+  secrets:
+  - {{ .Values.sn_registry_secret }}
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: sn-function-mesh-catalog
-  namespace: {{ .Values.catalog_namespace }}
+  namespace: {{ .Values.olm_namespace }}
 spec:
   displayName: StreamNative Function Mesh Catalog
   image: streamnative/function-mesh-catalog:latest

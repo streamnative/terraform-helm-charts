@@ -1,15 +1,16 @@
+istioNamespace: ${istio_system_namespace}
 controlPlane:
   install: true
   spec:
+    profile: ${profile}
+    revision: ${revision_tag}
     values:
       global:
-        istioNamespace: ${istio_namespace}
+        istioNamespace: ${istio_system_namespace}
         meshID: ${mesh_id}
         multiCluster:
           clusterName: ${cluster_name}
-        network: network1 # should this be a parameter?
-    revision: ${revision_tag}
-    profile: default # should this be a parameter?
+        network: ${network}
     meshConfig:
       trustDomain: ${trust_domain}
       defaultConfig:
@@ -17,14 +18,14 @@ controlPlane:
           ISTIO_META_DNS_CAPTURE: "true"
           ISTIO_META_DNS_AUTO_ALLOCATE: "true"
     components:
-  #    cni:
-  #      enabled: true
+      cni:
+        enabled: true
       ingressGateways:
-        - namespace: ${istio_namespace} 
-          name: istio-ingressgateway
+        - name: istio-ingressgateway
+          namespace: ${istio_system_namespace} 
           enabled: true
           label:
-            istio: ingressgateway
+            cloud.streamnative.io/role: istio-gateway
           k8s:
             service:
               ports:
@@ -43,6 +44,3 @@ controlPlane:
                 - port: 9093
                   targetPort: 9093
                   name: tls-kafka
-istioNamespace: ${istio_namespace}
-podLabels: 
-  istio.io/rev: ${revision_tag}

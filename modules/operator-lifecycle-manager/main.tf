@@ -25,31 +25,37 @@ terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
-      version = "2.2.0"
+      version = ">=2.2.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "2.2.0"
+      version = ">=2.6.1"
     }
   }
 }
 
-resource "kubernetes_namespace" "olm" {
-  metadata {
-    name = var.olm_namespace
-  }
-
-  lifecycle {
-    ignore_changes = [
-      metadata[0].labels
-    ]
-  }
+locals {
+  atomic                   = var.atomic != null ? var.atomic : true
+  chart_name               = var.chart_name != null ? var.chart_name : ""
+  chart_repository         = var.chart_repository != null ? var.chart_repository : "${path.module}/chart"
+  chart_version            = var.chart_version != null ? var.chart_version : ""
+  cleanup_on_fail          = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  create_install_namespace = var.create_install_namespace != null ? var.create_install_namespace : true
+  create_olm_namespace     = var.create_olm_namespace != null ? var.create_olm_namespace : true
+  install_namespace        = var.install_namespace != null ? var.install_namespace : "operators"
+  olm_namespace            = var.olm_namespace != null ? var.olm_namespace : "olm"
+  release_name             = var.release_name != null ? var.release_name : "operator-lifecycle-manager"
+  settings                 = var.settings != null ? var.settings : {}
+  timeout                  = var.timeout != null ? var.timeout : 120
+  values                   = var.values != null ? var.values : []
 }
 
-resource "kubernetes_namespace" "operators" {
+resource "kubernetes_namespace" "olm_install" {
+  count = var.create_install_namespace ? 1 : 0
   metadata {
-    name = var.olm_operators_namespace
+    name = local.install_namespace
   }
+
   lifecycle {
     ignore_changes = [
       metadata[0].labels
@@ -58,33 +64,36 @@ resource "kubernetes_namespace" "operators" {
 }
 
 resource "helm_release" "operator_lifecycle_manager" {
-  atomic          = var.atomic
-  chart           = var.chart_repository != "" ? var.chart_repository : "${path.module}/chart"
-  cleanup_on_fail = var.cleanup_on_fail
-  name            = var.release_name
-  namespace       = kubernetes_namespace.olm.id
-  timeout         = var.timeout
+  atomic           = local.atomic
+  chart            = local.chart_repository
+  cleanup_on_fail  = local.cleanup_on_fail
+  create_namespace = local.create_olm_namespace
+  name             = local.release_name
+  namespace        = local.olm_namespace
+  timeout          = local.timeout
+  values           = local.values
+  version          = local.chart_version
 
   set {
     name  = "namespace"
-    value = kubernetes_namespace.olm.id
+    value = local.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "catalog_namespace"
-    value = kubernetes_namespace.olm.id
+    value = local.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "operator_namespace"
-    value = kubernetes_namespace.operators.id
+    value = local.create_install_namespace ? kubernetes_namespace.olm_install[0].id : local.install_namespace
     type  = "string"
   }
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = local.settings
     content {
       name  = set.key
       value = set.value
