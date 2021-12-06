@@ -169,6 +169,12 @@ variable "kiali_gateway_hosts" {
   type        = list(string)
 }
 
+variable "kiali_gateway_tls_secret" {
+  default     = null
+  description = "The name of the TLS secret to use at the gateway.  The secret must be located in the Istio gateway's namespace."
+  type        = string
+}
+
 variable "kiali_settings" {
   default     = {}
   description = "Additional settings which will be passed to the Helm chart values. See https://github.com/kiali/helm-charts/blob/v1.42/kiali-operator/values.yaml for available options"
@@ -209,6 +215,11 @@ variable "kiali_operator_namespace" {
   default     = null
   description = "The namespace used for the Kiali operator."
   type        = string
+}
+
+variable "kiali_operator_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
 }
 
 variable "kiali_values" {

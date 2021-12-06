@@ -36,7 +36,6 @@ module "istio_operator" {
   count  = var.enable_istio_operator || var.enable_kiali_operator ? 1 : 0
   source = "./modules/istio-operator"
 
-
   create_istio_system_namespace   = var.create_istio_system_namespace
   create_istio_operator_namespace = var.create_istio_operator_namespace
   create_kiali_cr                 = var.create_kiali_cr
@@ -65,7 +64,7 @@ module "istio_operator" {
   kiali_settings                  = var.kiali_operator_settings
   kiali_operator_namespace        = var.kiali_operator_namespace
   kiali_values                    = var.kiali_operator_values
-  kiali_gateway_hosts             = ["kiali.${var.service_domain}"]
+  kiali_gateway_hosts             = var.kiali_gateway_hosts
   timeout                         = var.istio_operator_timeout
 }
 

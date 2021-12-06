@@ -58,10 +58,13 @@ locals {
   kiali_chart_repository          = var.kiali_chart_repository != null ? var.kiali_chart_repository : "https://kiali.org/helm-charts"
   kiali_chart_version             = var.kiali_chart_version != null ? var.kiali_chart_version : "1.43.0"
   kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "kiali"
-  kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali-operator"
+  kiali_operator_release_name     = var.kiali_operator_release_name != null ? var.kiali_operator_release_name : "kiali-operator"
   kiali_settings                  = var.kiali_settings != null ? var.kiali_settings : {}
   kiali_operator_namespace        = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
   kiali_values                    = var.kiali_values != null ? var.kiali_values : []
+  kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali"
+  kiali_gateway_hosts             = var.kiali_gateway_hosts != null ? var.kiali_gateway_hosts : []
+  kiali_gateway_tls_secret        = var.kiali_gateway_tls_secret != null ? var.kiali_gateway_tls_secret : "tls-istio-gateway"
 }
 
 resource "kubernetes_namespace" "istio_system" {
@@ -133,7 +136,7 @@ locals {
           istio = {
             config_map_name = "istio-${local.istio_revision_tag}"
             istiod_deployment_name = "istiod-${local.istio_revision_tag}"
-            root_namespace = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.kiali_namespace
+            root_namespace = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
           }
         }
       }
@@ -147,7 +150,7 @@ resource "helm_release" "kiali_operator" {
   chart            = local.kiali_chart_name
   cleanup_on_fail  = local.cleanup_on_fail
   create_namespace = local.create_kiali_operator_namespace
-  name             = local.kiali_release_name
+  name             = local.kiali_operator_release_name
   namespace        = local.kiali_operator_namespace
   repository       = local.kiali_chart_repository
   timeout          = local.timeout
@@ -164,31 +167,30 @@ resource "helm_release" "kiali_operator" {
 }
 
 locals {
-  kiali_values = {
-    fullnameOverride = "kiali"
-    # gatewaySelector = {
-    #   "cloud.streamnative.io/role" = "ingressgateway"
-    # }
+  kiali_values = var.kiali_values != null ? var.kiali_values : yamlencode({
+    gatewaySelector = {
+      "cloud.streamnative.io/role" = "ingressgateway"
+    }
     gatewayTls       = {
       mode           = "SIMPLE"
-      credentialName = "tls-istio-gateway"
+      credentialName = local.kiali_gateway_tls_secret
     }
-    gatewayHosts     = var.kiali_gateway_hosts
+    gatewayHosts     = local.kiali_gateway_hosts
     kialiSelector    = {
-      "app.kubernetes.io/name"     = "kiali"
-      "app.kubernetes.io/instance" = "kiali"
+      "app.kubernetes.io/name"     = "kiali" # A constant
+      "app.kubernetes.io/instance" = "kiali" # Kiali CR name
     }
-    kialiHost        = "kiali.${var.kiali_namespace}.svc.cluster.local"
-  }
+    kialiHost        = "kiali.${local.kiali_namespace}.svc.cluster.local"
+  })
 }
 
 resource "helm_release" "kiali" {
   count           = var.enable_kiali_operator ? 1 : 0
-  name            = "kiali"
-  namespace       = var.kiali_namespace
+  name            = local.kiali_release_name
+  namespace       = local.kiali_operator_namespace
   chart           = "${path.module}/charts/kiali"
-  atomic          = var.atomic
-  cleanup_on_fail = var.cleanup_on_fail
-  timeout         = var.timeout
-  values          = [yamlencode(local.kiali_values)]
+  atomic          = local.atomic
+  cleanup_on_fail = local.cleanup_on_fail
+  timeout         = local.timeout
+  values          = [local.kiali_values]
 }
