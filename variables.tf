@@ -448,12 +448,6 @@ variable "olm_subscription_values" {
 #######
 ### OpenTelemetry Collector Settings
 #######
-variable "enable_otel_collector_relay" {
-  default     = null
-  description = "Enable OpenTelemetry's relay configmap into the cloud provider's tracing system. When setting this to true, you must also declare the \"otel_collector_cloud_provider\" input variable."
-  type        = bool
-}
-
 variable "otel_collector_chart_name" {
   default     = null
   description = "The name of the helm chart to install."
@@ -469,12 +463,6 @@ variable "otel_collector_chart_repository" {
 variable "otel_collector_chart_version" {
   default     = null
   description = "The version of the helm chart to install."
-  type        = string
-}
-
-variable "otel_collector_cloud_provider" {
-  default     = null
-  description = "The cloud provider to use for the OpenTelemetry Collector deployment. This is required when \"enable_otel_collector\" is set to \"true\"."
   type        = string
 }
 

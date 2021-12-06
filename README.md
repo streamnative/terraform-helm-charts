@@ -199,7 +199,6 @@ No resources.
 | <a name="input_otel_collector_chart_name"></a> [otel\_collector\_chart\_name](#input\_otel\_collector\_chart\_name) | The name of the helm chart to install. | `string` | `null` | no |
 | <a name="input_otel_collector_chart_repository"></a> [otel\_collector\_chart\_repository](#input\_otel\_collector\_chart\_repository) | The repository containing the helm chart to install. | `string` | `null` | no |
 | <a name="input_otel_collector_chart_version"></a> [otel\_collector\_chart\_version](#input\_otel\_collector\_chart\_version) | The version of the helm chart to install. | `string` | `null` | no |
-| <a name="input_otel_collector_cloud_provider"></a> [otel\_collector\_cloud\_provider](#input\_otel\_collector\_cloud\_provider) | The cloud provider to use for the OpenTelemetry Collector deployment. This is required when "enable\_otel\_collector" is set to "true". | `string` | `null` | no |
 | <a name="input_otel_collector_image_version"></a> [otel\_collector\_image\_version](#input\_otel\_collector\_image\_version) | The version of the OpenTelemetry Collector image to use. | `string` | `null` | no |
 | <a name="input_otel_collector_namespace"></a> [otel\_collector\_namespace](#input\_otel\_collector\_namespace) | The namespace used for the Otel Collector. | `string` | `"sn-system"` | no |
 | <a name="input_otel_collector_release_name"></a> [otel\_collector\_release\_name](#input\_otel\_collector\_release\_name) | The name of the Helm release. | `string` | `null` | no |

@@ -102,8 +102,6 @@ module "otel_collector" {
   chart_repository = var.otel_collector_chart_repository
   chart_version    = var.otel_collector_chart_version
   create_namespace = var.create_otel_collector_namespace
-  cloud_provider   = var.otel_collector_cloud_provider
-  enable_relay     = var.enable_otel_collector_relay
   namespace        = var.otel_collector_namespace
   image_version    = var.otel_collector_image_version
   release_name     = var.otel_collector_release_name

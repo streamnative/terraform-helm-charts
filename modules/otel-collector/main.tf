@@ -28,116 +28,8 @@ terraform {
   }
 }
 
-
-
 ### Module defaults are managed below:
 locals {
-  aws_relay_conf = {
-    exporters = {
-      awsxray = {
-        index_all_attributes = true
-      }
-    }
-    extensions = {
-      health_check = {}
-    }
-    processors = {
-      batch = {}
-      memory_limiter = {
-        ballast_size_mib = 100
-        check_interval   = "5s"
-        limit_mib        = 200
-        spike_limit_mib  = 62
-      }
-    }
-    receivers = {
-      otlp = {
-        protocols = {
-          grpc = null
-          http = null
-        }
-      }
-    }
-    service = {
-      extensions = [
-        "health_check"
-      ]
-      pipelines = {
-        traces = {
-          exporters = [
-            "awsxray"
-          ]
-          processors = [
-            "memory_limiter",
-            "batch"
-          ],
-          receivers = [
-            "otlp"
-          ]
-        }
-      }
-    }
-  }
-
-  gcp_relay_conf = {
-    exporters = {
-      googlecloud = {}
-    }
-    extensions = {
-      health_check = {}
-    }
-    processors = {
-      batch = {}
-      memory_limiter = {
-        ballast_size_mib = 100
-        check_interval   = "5s"
-        limit_mib        = 200
-        spike_limit_mib  = 62
-      }
-    }
-    receivers = {
-      otlp = {
-        protocols = {
-          grpc = null
-          http = null
-        }
-      }
-    }
-    service = {
-      extensions = [
-        "health_check"
-      ]
-      pipelines = {
-        traces = {
-          receivers = [
-            "otlp"
-          ]
-          processors = [
-            "memory_limiter",
-            "batch"
-          ]
-          exporters = [
-            "googlecloud"
-          ]
-        }
-        metrics = {
-          receivers = [
-            "otlp"
-          ]
-          processors = [
-            "memory_limiter",
-            "batch"
-          ]
-          exporters = [
-            "googlecloud"
-          ]
-        }
-      }
-    }
-  }
-
-  relay_config = var.cloud_provider == "aws" ? local.aws_relay_conf : (var.cloud_provider == "gcp" ? local.gcp_relay_conf : null)
-
   atomic           = var.atomic != null ? var.atomic : true
   chart_name       = var.chart_name != null ? var.chart_name : "opentelemetry-collector"
   chart_repository = var.chart_repository != null ? var.chart_repository : "https://open-telemetry.github.io/opentelemetry-helm-charts"
@@ -174,11 +66,6 @@ locals {
           memory = "256M"
         }
       }
-      # configOverride = {
-      #   data = {
-      #     relay = local.relay_config // Helm fails to apply this when set. Hence the `otel_relay_configmap` resource below.
-      #   }
-      # }
     }
   })
 }
@@ -200,26 +87,6 @@ resource "helm_release" "helm_chart" {
     content {
       name  = set.key
       value = set.value
-    }
-  }
-}
-
-# Optionally enable a relay configuration for the collector.
-resource "kubernetes_manifest" "otel_relay_configmap" {
-  count = var.enable_relay == true && var.cloud_provider != null ? 1 : 0
-  manifest = {
-    apiVersion = "v1"
-    data = {
-      relay = yamlencode(local.relay_config)
-    }
-    kind = "ConfigMap"
-    metadata = {
-      labels = {
-        "app.kubernetes.io/instance" = "opentelemtry-collector"
-        "app.kubernetes.io/name"     = "opentelemetry-collector"
-      }
-      name      = "opentelemetry-collector"
-      namespace = local.namespace
     }
   }
 }

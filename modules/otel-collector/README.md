@@ -15,7 +15,6 @@ While this pattern has [some limitations](https://github.com/hashicorp/terraform
 | Name | Version |
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.2.0 |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
 
 ## Modules
 
@@ -26,7 +25,6 @@ No modules.
 | Name | Type |
 |------|------|
 | [helm_release.helm_chart](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [kubernetes_manifest.otel_relay_configmap](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 
 ## Inputs
 
@@ -37,9 +35,7 @@ No modules.
 | <a name="input_chart_repository"></a> [chart\_repository](#input\_chart\_repository) | The repository containing the Helm chart to install. Defaults are configured in the locals block of this module's main.tf file. | `string` | `null` | no |
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | The version of the Helm chart to install. Defaults are configured in the locals block of this module's main.tf file. | `string` | `null` | no |
 | <a name="input_cleanup_on_fail"></a> [cleanup\_on\_fail](#input\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails. Defaults are configured in the locals block of this module's main.tf file. | `bool` | `null` | no |
-| <a name="input_cloud_provider"></a> [cloud\_provider](#input\_cloud\_provider) | The name of the cloud provider hosting the Kubernetes cluster, which is then used to apply the appropriate settubgs for OpenTelemetry's relay configmap into the cloud provider's tracing system. Required when using this module. Valid options are "aws" or "gcp". | `string` | `null` | no |
 | <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | Create a namespace for the deployment. Defaults are configured in the locals block of this module's main.tf file. | `bool` | `null` | no |
-| <a name="input_enable_relay"></a> [enable\_relay](#input\_enable\_relay) | Enable OpenTelemetry's relay configmap into the cloud provider's tracing system. When setting this to true, you must also declare the "cloud\_provider" input variable. Defaults are configured in the locals block of this module's main.tf file. | `bool` | `null` | no |
 | <a name="input_image_version"></a> [image\_version](#input\_image\_version) | The image tag of the OpenTelemetry Collector to be used by the Helm install. Defaults are configured in the locals block of this module's main.tf file. | `string` | `null` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The namespace used for the operator deployment. Defaults are configured in the locals block of this module's main.tf file. | `string` | `null` | no |
 | <a name="input_release_name"></a> [release\_name](#input\_release\_name) | The name of the helm release. Defaults are configured in the locals block of this module's main.tf file. | `string` | `null` | no |

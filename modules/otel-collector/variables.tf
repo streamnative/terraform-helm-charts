@@ -54,26 +54,9 @@ variable "cleanup_on_fail" {
   type        = bool
 }
 
-variable "cloud_provider" {
-  default     = null
-  description = "The name of the cloud provider hosting the Kubernetes cluster, which is then used to apply the appropriate settubgs for OpenTelemetry's relay configmap into the cloud provider's tracing system. Required when using this module. Valid options are \"aws\" or \"gcp\"."
-  type        = string
-
-  validation {
-    condition     = can(regex("^(aws|gcp)$", var.cloud_provider))
-    error_message = "Value must be \"aws\" or \"gcp\"."
-  }
-}
-
 variable "create_namespace" {
   default     = null
   description = "Create a namespace for the deployment. Defaults are configured in the locals block of this module's main.tf file."
-  type        = bool
-}
-
-variable "enable_relay" {
-  default     = null
-  description = "Enable OpenTelemetry's relay configmap into the cloud provider's tracing system. When setting this to true, you must also declare the \"cloud_provider\" input variable. Defaults are configured in the locals block of this module's main.tf file."
   type        = bool
 }
 
@@ -82,7 +65,6 @@ variable "image_version" {
   description = "The image tag of the OpenTelemetry Collector to be used by the Helm install. Defaults are configured in the locals block of this module's main.tf file."
   type        = string
 }
-
 
 variable "namespace" {
   default     = null
