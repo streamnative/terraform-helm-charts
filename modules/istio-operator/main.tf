@@ -116,7 +116,7 @@ locals {
   kiali_operator_values = var.kiali_operator_values != null ? var.kiali_operator_values : yamlencode({
     cr = {
       create = local.create_kiali_cr
-      namespace = local.kiali_operator_namespace
+      namespace = local.kiali_namespace
       spec = {
         deployment = {
           accessible_namespaces = ["**"]
