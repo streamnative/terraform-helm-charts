@@ -38,7 +38,7 @@ locals {
   create_istio_operator_namespace = var.create_istio_operator_namespace != null ? var.create_istio_operator_namespace : true
   istio_chart_name                = var.istio_chart_name != null ? var.istio_chart_name : "istio-operator"
   istio_chart_repository          = var.istio_chart_repository != null ? var.istio_chart_repository : "https://stevehipwell.github.io/helm-charts/"
-  istio_chart_version             = var.istio_chart_version != null ? var.istio_chart_version : "2.3.5"
+  istio_chart_version             = var.istio_chart_version != null ? var.istio_chart_version : "2.4.0"
   istio_cluster_name              = var.istio_cluster_name != null ? var.istio_cluster_name : null
   istio_mesh_id                   = var.istio_mesh_id != null ? var.istio_mesh_id : null
   istio_network                   = var.istio_network != null ? var.istio_network : "network1"
@@ -54,14 +54,13 @@ locals {
   # Kiali Operator Settings
   create_kiali_cr                 = var.create_kiali_cr != null ? var.create_kiali_cr : true
   create_kiali_operator_namespace = var.create_kiali_operator_namespace != null ? var.create_kiali_operator_namespace : true
-  kiali_chart_name                = var.kiali_chart_name != null ? var.kiali_chart_name : "kiali-operator"
-  kiali_chart_repository          = var.kiali_chart_repository != null ? var.kiali_chart_repository : "https://kiali.org/helm-charts"
-  kiali_chart_version             = var.kiali_chart_version != null ? var.kiali_chart_version : "1.43.0"
-  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "kiali"
+  kiali_operator_chart_name                = var.kiali_operator_chart_name != null ? var.kiali_operator_chart_name : "kiali-operator"
+  kiali_operator_chart_repository          = var.kiali_operator_chart_repository != null ? var.kiali_operator_chart_repository : "https://kiali.org/helm-charts"
+  kiali_operator_chart_version             = var.kiali_operator_chart_version != null ? var.kiali_operator_chart_version : "1.44.0"
   kiali_operator_release_name     = var.kiali_operator_release_name != null ? var.kiali_operator_release_name : "kiali-operator"
-  kiali_settings                  = var.kiali_settings != null ? var.kiali_settings : {}
+  kiali_operator_settings                  = var.kiali_operator_settings != null ? var.kiali_operator_settings : {}
   kiali_operator_namespace        = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
-  kiali_values                    = var.kiali_values != null ? var.kiali_values : []
+  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "kiali"
   kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali"
   kiali_gateway_hosts             = var.kiali_gateway_hosts != null ? var.kiali_gateway_hosts : []
   kiali_gateway_tls_secret        = var.kiali_gateway_tls_secret != null ? var.kiali_gateway_tls_secret : "tls-istio-gateway"
@@ -147,18 +146,18 @@ locals {
 resource "helm_release" "kiali_operator" {
   count            = var.enable_kiali_operator ? 1 : 0
   atomic           = local.atomic
-  chart            = local.kiali_chart_name
+  chart            = local.kiali_operator_chart_name
   cleanup_on_fail  = local.cleanup_on_fail
   create_namespace = local.create_kiali_operator_namespace
   name             = local.kiali_operator_release_name
   namespace        = local.kiali_operator_namespace
-  repository       = local.kiali_chart_repository
+  repository       = local.kiali_operator_chart_repository
   timeout          = local.timeout
-  version          = local.kiali_chart_version
+  version          = local.kiali_operator_chart_version
   values          = [local.kiali_operator_values]
 
   dynamic "set" {
-    for_each = local.kiali_settings
+    for_each = local.kiali_operator_settings
     content {
       name  = set.key
       value = set.value

@@ -91,7 +91,7 @@ variable "function_mesh_operator_namespace" {
 
 ### Istio
 variable "create_istio_operator_namespace" {
-  default     = false
+  default     = true
   description = "Create a namespace for the deployment. Defaults to \"true\"."
   type        = bool
 }
@@ -103,7 +103,7 @@ variable "create_istio_system_namespace" {
 }
 
 variable "istio_operator_namespace" {
-  default     = "sn-system"
+  default     = "istio-operator"
   description = "The namespace used for the Istio operator deployment"
   type        = string
 }
@@ -116,7 +116,7 @@ variable "istio_system_namespace" {
 
 ### Kiali
 variable "create_kiali_operator_namespace" {
-  default     = false
+  default     = true
   description = "Create a namespace for the deployment."
   type        = bool
 }
@@ -128,7 +128,7 @@ variable "kiali_namespace" {
 }
 
 variable "kiali_operator_namespace" {
-  default     = "sn-system"
+  default     = "kiali-operator"
   description = "The namespace used for the Kiali operator deployment"
   type        = string
 }
@@ -288,11 +288,7 @@ variable "function_mesh_operator_values" {
 #######
 ### Istio Settings
 #######
-variable "istio_operator_cluster_name" {
-  default     = null
-  description = "The name of the kubernetes cluster where Istio is being configured. This is required when \"enable_istio_operator\" is set to \"true\"."
-  type        = string
-}
+
 
 variable "istio_operator_chart_name" {
   default     = null
@@ -312,19 +308,25 @@ variable "istio_operator_chart_version" {
   type        = string
 }
 
-variable "istio_operator_mesh_id" {
+variable "istio_mesh_id" {
   default     = null
   description = "The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environments. This is required when \"enable_istio_operator\" is set to \"true\"."
   type        = string
 }
 
-variable "istio_operator_network" {
+variable "istio_cluster_name" {
+  default     = null
+  description = "The name of the kubernetes cluster where Istio is being configured. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
+variable "istio_network" {
   default     = null
   description = "The name of network used for the Istio deployment."
   type        = string
 }
 
-variable "istio_operator_profile" {
+variable "istio_profile" {
   default     = null
   description = "The path or name for an Istio profile to load. Set to the profile \"default\" if not specified."
   type        = string
@@ -336,7 +338,7 @@ variable "istio_operator_release_name" {
   type        = string
 }
 
-variable "istio_operator_revision_tag" {
+variable "istio_revision_tag" {
   default     = null
   description = "The revision tag value use for the Istio label \"istio.io/rev\". Defaults to \"sn-stable\"."
   type        = string
@@ -354,7 +356,7 @@ variable "istio_operator_timeout" {
   type        = number
 }
 
-variable "istio_operator_trust_domain" {
+variable "istio_trust_domain" {
   default     = null
   description = "The trust domain used for the Istio operator, which corresponds to the root of a system. This is required when \"enable_istio_operator\" is set to \"true\"."
   type        = string
@@ -410,7 +412,7 @@ variable "kiali_operator_values" {
 }
 
 variable "kiali_gateway_hosts" {
-  default     = ["kiali.${var.service_domain}"]
+  default     = null
   description = "A list of external FQDN(s) to expose Kiali on."
   type        = list(string)
 }
