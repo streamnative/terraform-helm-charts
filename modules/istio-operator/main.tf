@@ -90,7 +90,7 @@ resource "helm_release" "istio_operator" {
   timeout          = local.timeout
   repository       = local.istio_chart_repository
   version          = local.istio_chart_version
-  
+
   values = coalescelist(local.istio_values, [templatefile("${path.module}/values.yaml.tpl", {
     cluster_name           = local.istio_cluster_name
     mesh_id                = local.istio_mesh_id
