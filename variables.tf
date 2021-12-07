@@ -23,6 +23,12 @@ variable "enable_kiali_operator" {
   type        = bool
 }
 
+variable "enable_otel_collector" {
+  default     = false
+  description = "Enables Open Telemetry. Set to \"false\" by default."
+  type        = bool
+}
+
 variable "enable_prometheus_operator" {
   default     = true
   description = "Enables the Prometheus Operator and other components via kube-stack-prometheus. Set to \"true\" by default."
@@ -142,6 +148,19 @@ variable "olm_install_namespace" {
 variable "olm_namespace" {
   default     = "olm"
   description = "The namespace used by OLM and its resources"
+  type        = string
+}
+
+### Otel
+variable "create_otel_collector_namespace" {
+  default     = null
+  description = "Wether or not to create the namespace used for the Otel Collector."
+  type        = bool
+}
+
+variable "otel_collector_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the Otel Collector."
   type        = string
 }
 
@@ -422,6 +441,56 @@ variable "olm_subscription_settings" {
 }
 
 variable "olm_subscription_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### OpenTelemetry Collector Settings
+#######
+variable "otel_collector_chart_name" {
+  default     = null
+  description = "The name of the helm chart to install."
+  type        = string
+}
+
+variable "otel_collector_chart_repository" {
+  default     = null
+  description = "The repository containing the helm chart to install."
+  type        = string
+}
+
+variable "otel_collector_chart_version" {
+  default     = null
+  description = "The version of the helm chart to install."
+  type        = string
+}
+
+variable "otel_collector_image_version" {
+  default     = null
+  description = "The version of the OpenTelemetry Collector image to use."
+  type        = string
+}
+
+variable "otel_collector_release_name" {
+  default     = null
+  description = "The name of the Helm release."
+  type        = string
+}
+
+variable "otel_collector_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "otel_collector_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "otel_collector_values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
 }

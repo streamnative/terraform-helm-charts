@@ -118,6 +118,7 @@ No providers.
 | <a name="module_istio_operator"></a> [istio\_operator](#module\_istio\_operator) | ./modules/istio-operator | n/a |
 | <a name="module_olm"></a> [olm](#module\_olm) | ./modules/operator-lifecycle-manager | n/a |
 | <a name="module_olm_subscriptions"></a> [olm\_subscriptions](#module\_olm\_subscriptions) | ./modules/olm-subscriptions | n/a |
+| <a name="module_otel_collector"></a> [otel\_collector](#module\_otel\_collector) | ./modules/otel-collector | n/a |
 | <a name="module_prometheus_operator"></a> [prometheus\_operator](#module\_prometheus\_operator) | ./modules/prometheus-operator | n/a |
 | <a name="module_pulsar_operator"></a> [pulsar\_operator](#module\_pulsar\_operator) | ./modules/pulsar-operator | n/a |
 | <a name="module_vault_operator"></a> [vault\_operator](#module\_vault\_operator) | ./modules/vault-operator | n/a |
@@ -134,11 +135,12 @@ No resources.
 |------|-------------|------|---------|:--------:|
 | <a name="input_create_function_mesh_operator_namespace"></a> [create\_function\_mesh\_operator\_namespace](#input\_create\_function\_mesh\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
 | <a name="input_create_istio_operator_namespace"></a> [create\_istio\_operator\_namespace](#input\_create\_istio\_operator\_namespace) | Create a namespace for the deployment. Defaults to "true". | `bool` | `false` | no |
-| <a name="input_create_istio_system_namespace"></a> [create\_istio\_system\_namespace](#input\_create\_istio\_system\_namespace) | Create a namespace where istio components will be installed. | `bool` | `true` | no |
+| <a name="input_create_istio_system_namespace"></a> [create\_istio\_system\_namespace](#input\_create\_istio\_system\_namespace) | Create a namespace where istio components will be installed. | `bool` | `false` | no |
 | <a name="input_create_kiali_cr"></a> [create\_kiali\_cr](#input\_create\_kiali\_cr) | Create a Kiali CR for the Kiali deployment. | `bool` | `null` | no |
 | <a name="input_create_kiali_operator_namespace"></a> [create\_kiali\_operator\_namespace](#input\_create\_kiali\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
 | <a name="input_create_olm_install_namespace"></a> [create\_olm\_install\_namespace](#input\_create\_olm\_install\_namespace) | Create a namespace for the deployment. Defaults to "true". | `bool` | `false` | no |
 | <a name="input_create_olm_namespace"></a> [create\_olm\_namespace](#input\_create\_olm\_namespace) | Whether or not to create the namespace used for OLM and its resources. Defaults to "true". | `bool` | `true` | no |
+| <a name="input_create_otel_collector_namespace"></a> [create\_otel\_collector\_namespace](#input\_create\_otel\_collector\_namespace) | Wether or not to create the namespace used for the Otel Collector. | `bool` | `null` | no |
 | <a name="input_create_prometheus_operator_namespace"></a> [create\_prometheus\_operator\_namespace](#input\_create\_prometheus\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `null` | no |
 | <a name="input_create_pulsar_operator_namespace"></a> [create\_pulsar\_operator\_namespace](#input\_create\_pulsar\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
 | <a name="input_create_vault_operator_namespace"></a> [create\_vault\_operator\_namespace](#input\_create\_vault\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
@@ -149,6 +151,7 @@ No resources.
 | <a name="input_enable_istio_operator"></a> [enable\_istio\_operator](#input\_enable\_istio\_operator) | Enables the Istio Operator. Set to "false" by default. | `bool` | `false` | no |
 | <a name="input_enable_kiali_operator"></a> [enable\_kiali\_operator](#input\_enable\_kiali\_operator) | Enables the Kiali Operator. Set to "false" by default. | `bool` | `false` | no |
 | <a name="input_enable_olm"></a> [enable\_olm](#input\_enable\_olm) | Enables Operator Lifecycle Manager (OLM), and disables installing operators via Helm. OLM is disabled by default. Set to "true" to have OLM manage the operators. | `bool` | `false` | no |
+| <a name="input_enable_otel_collector"></a> [enable\_otel\_collector](#input\_enable\_otel\_collector) | Enables Open Telemetry. Set to "false" by default. | `bool` | `false` | no |
 | <a name="input_enable_prometheus_operator"></a> [enable\_prometheus\_operator](#input\_enable\_prometheus\_operator) | Enables the Prometheus Operator and other components via kube-stack-prometheus. Set to "true" by default. | `bool` | `true` | no |
 | <a name="input_enable_pulsar_operator"></a> [enable\_pulsar\_operator](#input\_enable\_pulsar\_operator) | Enables the Pulsar Operator on the EKS cluster. Enabled by default, but disabled if var.disable\_olm is set to `true` | `bool` | `true` | no |
 | <a name="input_enable_vault_operator"></a> [enable\_vault\_operator](#input\_enable\_vault\_operator) | Enables Hashicorp Vault on the EKS cluster. | `bool` | `true` | no |
@@ -177,8 +180,8 @@ No resources.
 | <a name="input_istio_operator_timeout"></a> [istio\_operator\_timeout](#input\_istio\_operator\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `null` | no |
 | <a name="input_istio_operator_trust_domain"></a> [istio\_operator\_trust\_domain](#input\_istio\_operator\_trust\_domain) | The trust domain used for the Istio operator, which corresponds to the root of a system. This is required when "enable\_istio\_operator" is set to "true". | `string` | `null` | no |
 | <a name="input_istio_operator_values"></a> [istio\_operator\_values](#input\_istio\_operator\_values) | Additional key value settings which will be passed to the Helm chart values, e.g. { "namespace" = "kube-system" }. | `any` | `null` | no |
-| <a name="input_istio_system_namespace"></a> [istio\_system\_namespace](#input\_istio\_system\_namespace) | The namespace used for the Istio components. | `string` | `"istio-system"` | no |
-| <a name="input_kiali_namespace"></a> [kiali\_namespace](#input\_kiali\_namespace) | The namespace used for the Kiali operator. | `string` | `"istio-system"` | no |
+| <a name="input_istio_system_namespace"></a> [istio\_system\_namespace](#input\_istio\_system\_namespace) | The namespace used for the Istio components. | `string` | `"sn-system"` | no |
+| <a name="input_kiali_namespace"></a> [kiali\_namespace](#input\_kiali\_namespace) | The namespace used for the Kiali operator. | `string` | `"sn-system"` | no |
 | <a name="input_kiali_operator_chart_name"></a> [kiali\_operator\_chart\_name](#input\_kiali\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `null` | no |
 | <a name="input_kiali_operator_chart_repository"></a> [kiali\_operator\_chart\_repository](#input\_kiali\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `null` | no |
 | <a name="input_kiali_operator_chart_version"></a> [kiali\_operator\_chart\_version](#input\_kiali\_operator\_chart\_version) | The version of the Helm chart to install. Set to the submodule default. | `string` | `null` | no |
@@ -193,6 +196,15 @@ No resources.
 | <a name="input_olm_subscription_settings"></a> [olm\_subscription\_settings](#input\_olm\_subscription\_settings) | Additional key value settings which will be passed to the Helm chart values, e.g. { "namespace" = "kube-system" }. | `map(any)` | `null` | no |
 | <a name="input_olm_subscription_values"></a> [olm\_subscription\_values](#input\_olm\_subscription\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")`. | `any` | `null` | no |
 | <a name="input_olm_values"></a> [olm\_values](#input\_olm\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")`. | `any` | `null` | no |
+| <a name="input_otel_collector_chart_name"></a> [otel\_collector\_chart\_name](#input\_otel\_collector\_chart\_name) | The name of the helm chart to install. | `string` | `null` | no |
+| <a name="input_otel_collector_chart_repository"></a> [otel\_collector\_chart\_repository](#input\_otel\_collector\_chart\_repository) | The repository containing the helm chart to install. | `string` | `null` | no |
+| <a name="input_otel_collector_chart_version"></a> [otel\_collector\_chart\_version](#input\_otel\_collector\_chart\_version) | The version of the helm chart to install. | `string` | `null` | no |
+| <a name="input_otel_collector_image_version"></a> [otel\_collector\_image\_version](#input\_otel\_collector\_image\_version) | The version of the OpenTelemetry Collector image to use. | `string` | `null` | no |
+| <a name="input_otel_collector_namespace"></a> [otel\_collector\_namespace](#input\_otel\_collector\_namespace) | The namespace used for the Otel Collector. | `string` | `"sn-system"` | no |
+| <a name="input_otel_collector_release_name"></a> [otel\_collector\_release\_name](#input\_otel\_collector\_release\_name) | The name of the Helm release. | `string` | `null` | no |
+| <a name="input_otel_collector_settings"></a> [otel\_collector\_settings](#input\_otel\_collector\_settings) | Additional key value settings which will be passed to the Helm chart values, e.g. { "namespace" = "kube-system" }. | `map(any)` | `null` | no |
+| <a name="input_otel_collector_timeout"></a> [otel\_collector\_timeout](#input\_otel\_collector\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `null` | no |
+| <a name="input_otel_collector_values"></a> [otel\_collector\_values](#input\_otel\_collector\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")`. | `any` | `null` | no |
 | <a name="input_prometheus_operator_chart_name"></a> [prometheus\_operator\_chart\_name](#input\_prometheus\_operator\_chart\_name) | The name of the Helm chart to install | `string` | `null` | no |
 | <a name="input_prometheus_operator_chart_repository"></a> [prometheus\_operator\_chart\_repository](#input\_prometheus\_operator\_chart\_repository) | The repository containing the Helm chart to install | `string` | `null` | no |
 | <a name="input_prometheus_operator_chart_version"></a> [prometheus\_operator\_chart\_version](#input\_prometheus\_operator\_chart\_version) | The version of the Helm chart to install. Set to the submodule default. | `string` | `null` | no |
