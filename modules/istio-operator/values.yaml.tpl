@@ -11,6 +11,13 @@ controlPlane:
         multiCluster:
           clusterName: ${cluster_name}
         network: ${network}
+      sidecarInjectorWebhook:
+        neverInjectSelector:
+          # kube-prometheus-stack
+          ## Admission Webhook jobs do not terminate as expected with istio-proxy
+          - matchExpressions:
+            - {key: app, operator: In, values: [kube-prometheus-stack-admission-create,kube-prometheus-stack-admission-patch]}
+
     meshConfig:
       trustDomain: ${trust_domain}
       defaultConfig:
@@ -25,7 +32,7 @@ controlPlane:
           namespace: ${istio_system_namespace} 
           enabled: true
           label:
-            cloud.streamnative.io/role: istio-gateway
+            cloud.streamnative.io/role: "istio-ingressgateway"
           k8s:
             service:
               ports:

@@ -60,7 +60,7 @@ locals {
   kiali_operator_release_name     = var.kiali_operator_release_name != null ? var.kiali_operator_release_name : "kiali-operator"
   kiali_operator_settings                  = var.kiali_operator_settings != null ? var.kiali_operator_settings : {}
   kiali_operator_namespace        = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
-  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "kiali"
+  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "sn-system"
   kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali"
   kiali_gateway_hosts             = var.kiali_gateway_hosts != null ? var.kiali_gateway_hosts : []
   kiali_gateway_tls_secret        = var.kiali_gateway_tls_secret != null ? var.kiali_gateway_tls_secret : "tls-istio-gateway"
@@ -163,12 +163,16 @@ resource "helm_release" "kiali_operator" {
       value = set.value
     }
   }
+
+  depends_on = [
+    resource.helm_release.istio_operator
+  ]
 }
 
 locals {
   kiali_values = var.kiali_values != null ? var.kiali_values : yamlencode({
     gatewaySelector = {
-      "cloud.streamnative.io/role" = "ingressgateway"
+      "cloud.streamnative.io/role" = "istio-ingressgateway"
     }
     gatewayTls       = {
       mode           = "SIMPLE"
@@ -186,10 +190,14 @@ locals {
 resource "helm_release" "kiali" {
   count           = var.enable_kiali_operator ? 1 : 0
   name            = local.kiali_release_name
-  namespace       = local.kiali_operator_namespace
+  namespace       = local.kiali_namespace
   chart           = "${path.module}/charts/kiali"
   atomic          = local.atomic
   cleanup_on_fail = local.cleanup_on_fail
   timeout         = local.timeout
   values          = [local.kiali_values]
+
+  depends_on = [
+    resource.helm_release.kiali_operator
+  ]
 }

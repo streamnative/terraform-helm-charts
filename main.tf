@@ -111,6 +111,14 @@ module "otel_collector" {
   values           = var.otel_collector_values
 }
 
+locals {
+  prometheus_operator_values = var.prometheus_operator_values != null ? var.prometheus_operator_values : [yamlencode({
+    grafana = {
+      enabled = false
+    }
+  })]
+}
+
 module "prometheus_operator" {
   count  = var.enable_prometheus_operator == true ? 1 : 0
   source = "./modules/prometheus-operator"
@@ -123,7 +131,7 @@ module "prometheus_operator" {
   release_name     = var.prometheus_operator_release_name
   settings         = var.prometheus_operator_settings
   timeout          = var.prometheus_operator_timeout
-  values           = var.prometheus_operator_values
+  values           = local.prometheus_operator_values
 }
 
 module "pulsar_operator" {
