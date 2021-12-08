@@ -430,12 +430,6 @@ variable "kiali_operator_values" {
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
 }
 
-variable "kiali_gateway_hosts" {
-  default     = null
-  description = "A list of external FQDN(s) to expose Kiali on."
-  type        = list(string)
-}
-
 #######
 ### OLM Settings
 #######

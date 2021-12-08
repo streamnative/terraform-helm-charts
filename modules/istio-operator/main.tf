@@ -63,7 +63,7 @@ locals {
   kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "sn-system"
   kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali"
   kiali_gateway_hosts             = var.kiali_gateway_hosts != null ? var.kiali_gateway_hosts : []
-  kiali_gateway_tls_secret        = var.kiali_gateway_tls_secret != null ? var.kiali_gateway_tls_secret : "tls-istio-gateway"
+  kiali_gateway_tls_secret        = var.kiali_gateway_tls_secret != null ? var.kiali_gateway_tls_secret : "kiali"
 }
 
 resource "kubernetes_namespace" "istio_system" {
@@ -109,6 +109,34 @@ resource "helm_release" "istio_operator" {
       value = set.value
     }
   }
+}
+
+locals {
+  mesh_values = yamlencode({
+    ingressGateway = {
+      tlsCertificate = {
+        name = var.istio_gateway_certificate_name
+        secretName = var.istio_gateway_certificate_name
+        dnsNames = var.istio_gateway_certificate_hosts
+        issuerRef = var.istio_gateway_certificate_issuer
+      }
+    }
+  })
+}
+
+resource "helm_release" "mesh" {
+  count           = var.enable_istio_operator ? 1 : 0
+  atomic          = local.atomic
+  name            = "mesh"
+  namespace       = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
+  chart           = "${path.module}/charts/mesh"
+  cleanup_on_fail = local.cleanup_on_fail
+  timeout         = local.timeout
+  values          = [local.mesh_values]
+
+  depends_on = [
+    resource.helm_release.istio_operator
+  ]
 }
 
 locals {
@@ -165,7 +193,7 @@ resource "helm_release" "kiali_operator" {
   }
 
   depends_on = [
-    resource.helm_release.istio_operator
+    resource.helm_release.mesh
   ]
 }
 

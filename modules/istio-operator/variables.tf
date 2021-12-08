@@ -90,6 +90,28 @@ variable "istio_network" {
   type        = string
 }
 
+variable "istio_gateway_certificate_name" {
+  default     = null
+  description = "The certificate name for Istio gateway TLS."
+  type        = string
+}
+
+variable "istio_gateway_certificate_hosts" {
+  default     = []
+  description = "The certificate host(s) for the Istio gateway TLS certificate."
+  type        = list(string)
+}
+
+variable "istio_gateway_certificate_issuer" {
+  default     = null
+  description = "The certificate issuer for the Istio gateway TLS certificate."
+  type        = object({
+    group = string
+    kind = string
+    name = string
+  })
+}
+
 variable "istio_operator_namespace" {
   default     = null
   description = "The namespace where the Istio Operator is installed."

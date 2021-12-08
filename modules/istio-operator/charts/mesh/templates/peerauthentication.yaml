@@ -1,0 +1,13 @@
+# Mesh-wide configuration: Enforce strict mTLS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default-strict
+  {{- if .Values.rootNamespace }}
+  namespace: {{ .Values.rootNamespace }}
+  {{- end }}
+  labels:
+  {{- include "mesh.labels" . | nindent 4 }}
+spec:
+  mtls:
+    mode: STRICT

@@ -55,7 +55,15 @@ module "istio_operator" {
   istio_settings                  = var.istio_operator_settings
   istio_system_namespace          = var.istio_system_namespace
   istio_trust_domain              = var.istio_trust_domain
+  istio_gateway_certificate_name  = "istio-ingressgateway-tls"
+  istio_gateway_certificate_hosts = ["*.${var.service_domain}"]
+  istio_gateway_certificate_issuer = {
+      group = "cert-manager.io"
+      kind = "ClusterIssuer"
+      name = "external"
+  }
   istio_values                    = var.istio_operator_values
+
   kiali_operator_chart_name       = var.kiali_operator_chart_name
   kiali_operator_chart_repository = var.kiali_operator_chart_repository
   kiali_operator_chart_version    = var.kiali_operator_chart_version
@@ -64,7 +72,8 @@ module "istio_operator" {
   kiali_operator_settings         = var.kiali_operator_settings
   kiali_operator_values           = var.kiali_operator_values
   kiali_namespace                 = var.kiali_namespace
-  kiali_gateway_hosts             = var.kiali_gateway_hosts != null ? var.kiali_gateway_hosts : ["kiali.${var.service_domain}"]
+  kiali_gateway_hosts             = ["kiali.${var.service_domain}"]
+  kiali_gateway_tls_secret        = "istio-ingressgateway-tls"
   timeout                         = var.istio_operator_timeout
 }
 
