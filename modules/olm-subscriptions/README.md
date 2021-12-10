@@ -36,6 +36,12 @@ No modules.
 | <a name="input_settings"></a> [settings](#input\_settings) | Additional settings which will be passed to the Helm chart values | `map(any)` | `{}` | no |
 | <a name="input_sn_image"></a> [sn\_image](#input\_sn\_image) | The registry containing StreamNative's operator catalog image | `string` | n/a | yes |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Time in seconds to wait for any individual kubernetes operation | `number` | `600` | no |
+| <a name="input_enable_sn_operator"></a> [enable\_sn\_operator](#input\_enable\_sn\_operator) | Whether to enable SN Operator | `bool` | `"false"` | no |
+| <a name="input_sn_operator_registry"></a> [sn\_operator\_registry](#input\_sn\_operator\_registry) | SN Operator's registry | `string` | `""` | no |
+| <a name="input_sn_operator_registry_username"></a> [sn\_operator\_registry\_username](#input\_sn\_operator\_registry\_username) | SN Operator's registry username | `string` | `""` | no |
+| <a name="input_sn_operator_registry_credential"></a> [sn\_operator\_registry\_credential](#input\_sn\_operator\_registry\_credential) | SN Operator's registry password | `string` | `""` | no |
+| <a name="input_sn_operator_catalog_sa"></a> [sn\_operator\_catalog\_sa](#input\_sn\_operator\_catalog\_sa) | OLM catalog's service account to grant SN Operator registry access | `string` | `""` | no |
+| <a name="input_sn_operator_controller_sa"></a> [sn\_operator\_controller\_sa](#input\_sn\_operator\_controller\_sa) | SN Operator's service account to grant SN Operator registry access | `string` | `""` | no |
 
 ## Outputs
 

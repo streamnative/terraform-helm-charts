@@ -47,12 +47,6 @@ variable "namespace" {
   type        = string
 }
 
-variable "olm_namespace" {
-  default     = "olm"
-  description = "The namespace where olm is installed"
-  type        = string
-}
-
 variable "settings" {
   default     = {}
   description = "Additional settings which will be passed to the Helm chart values"
@@ -77,26 +71,31 @@ variable "enable_sn_operator" {
 }
 
 variable "sn_operator_registry" {
+  default     = ""
   description = "SN Operator's registry."
   type        = string
 }
 
 variable "sn_operator_registry_username" {
+  default     = ""
   description = "SN Operator's registry username."
   type        = string
 }
 
 variable "sn_operator_registry_credential" {
+  default     = ""
   description = "SN Operator's registry password."
   type        = string
 }
 
 variable "sn_operator_catalog_sa" {
-  description = "olm catalog's service account"
+  default     = ""
+  description = "OLM catalog's service account"
   type        = string
 }
 
 variable "sn_operator_controller_sa" {
+  default     = ""
   description = "SN Operator's service account"
   type        = string
 }
