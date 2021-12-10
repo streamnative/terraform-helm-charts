@@ -22,6 +22,7 @@ install_namespace: sn-system
 operator_group: sn-operators
 
 sn_registry: ""
+sn_operator_registry: ""
 
 components:
   bookkeeper: true
@@ -31,6 +32,7 @@ components:
   flink: true
   flinkSql: true
   zookeeper: true
+  sn_operator: false
 
 bookkeeper:
   approval: Automatic
@@ -76,3 +78,9 @@ zookeeper:
   channel: stable
   source: sn-catalog
   name: zookeeper-operator
+
+sn_operator:
+  approval: Automatic
+  channel: alpha
+  source: sn-operator-catalog
+  name: sn-operator

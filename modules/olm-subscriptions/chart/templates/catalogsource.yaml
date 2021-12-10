@@ -44,4 +44,17 @@ spec:
   updateStrategy:
     registryPoll:
       interval: 10m0s
-  
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: sn-operator-catalog
+  namespace: {{ .Values.catalog_namespace }}
+spec:
+  displayName: SN Operator Catalog
+  image: {{ .Values.sn_operator_registry }}
+  publisher: StreamNative.io
+  sourceType: grpc
+  updateStrategy:
+    registryPoll:
+      interval: 10m0s

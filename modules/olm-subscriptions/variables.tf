@@ -47,6 +47,12 @@ variable "namespace" {
   type        = string
 }
 
+variable "olm_namespace" {
+  default     = "olm"
+  description = "The namespace where olm is installed"
+  type        = string
+}
+
 variable "settings" {
   default     = {}
   description = "Additional settings which will be passed to the Helm chart values"
@@ -63,3 +69,35 @@ variable "timeout" {
   description = "Time in seconds to wait for any individual kubernetes operation"
   type        = number
 }
+
+variable "enable_sn_operator" {
+  default     = false
+  description = "Whether to enable en operator."
+  type        = bool
+}
+
+variable "sn_operator_registry" {
+  description = "SN Operator's registry."
+  type        = string
+}
+
+variable "sn_operator_registry_username" {
+  description = "SN Operator's registry username."
+  type        = string
+}
+
+variable "sn_operator_registry_credential" {
+  description = "SN Operator's registry password."
+  type        = string
+}
+
+variable "sn_operator_catalog_sa" {
+  description = "olm catalog's service account"
+  type        = string
+}
+
+variable "sn_operator_controller_sa" {
+  description = "SN Operator's service account"
+  type        = string
+}
+

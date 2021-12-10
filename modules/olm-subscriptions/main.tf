@@ -54,6 +54,18 @@ resource "helm_release" "olm_subscriptions" {
     type  = "string"
   }
 
+  set {
+    name  = "sn_operator_registry"
+    value = var.sn_operator_registry
+    type  = "string"
+  }
+
+  set {
+    name  = "components.sn_operator"
+    value = var.enable_sn_operator
+    type  = "string"
+  }
+
   dynamic "set" {
     for_each = var.settings
     content {
@@ -61,4 +73,64 @@ resource "helm_release" "olm_subscriptions" {
       value = set.value
     }
   }
+}
+
+resource "null_resource" "olm_cloudsmith_secret" {
+  count = var.enable_sn_operator ? 1 : 0
+  triggers = {
+    namespace = var.namespace
+    sn_operator_registry_username = var.sn_operator_registry_username
+    sn_operator_registry_credential = var.sn_operator_registry_credential
+  }
+  provisioner "local-exec" {
+    command = "kubectl create secret docker-registry cloudsmith-access -n ${var.namespace} --docker-server=docker.cloudsmith.io --docker-username=${var.sn_operator_registry_username} --docker-password=${var.sn_operator_registry_credential}"
+  }
+  depends_on = [
+    helm_release.olm_subscriptions
+  ]
+}
+
+resource "null_resource" "patch_olm_sa" {
+  count = var.enable_sn_operator ? 1 : 0
+  triggers = {
+    olm_namespace = var.olm_namespace
+    sn_operator_catalog_sa = var.sn_operator_catalog_sa
+  }
+  provisioner "local-exec" {
+    command = "kubectl patch serviceaccount ${var.sn_operator_catalog_sa} -n ${var.olm_namespace} -p '{\"imagePullSecrets\": [{\"name\": \"cloudsmith-access\"}]}'"
+  }
+  depends_on = [
+    helm_release.olm_subscriptions,
+    null_resource.olm_cloudsmith_secret
+  ]
+}
+
+resource "null_resource" "controller_manager_cloudsmith_secret" {
+  count = var.enable_sn_operator ? 1 : 0
+  triggers = {
+    olm_namespace = var.olm_namespace
+    sn_operator_registry_username = var.sn_operator_registry_username
+    sn_operator_registry_credential = var.sn_operator_registry_credential
+  }
+  provisioner "local-exec" {
+    command = "kubectl create secret docker-registry cloudsmith-access -n ${var.olm_namespace} --docker-server=docker.cloudsmith.io --docker-username=${var.sn_operator_registry_username} --docker-password=${var.sn_operator_registry_credential}"
+  }
+  depends_on = [
+    helm_release.olm_subscriptions
+  ]
+}
+
+resource "null_resource" "patch_controllermanager__sa" {
+  count = var.enable_sn_operator ? 1 : 0
+  triggers = {
+    namespace = var.namespace
+    sn_operator_controller_sa = var.sn_operator_controller_sa
+  }
+  provisioner "local-exec" {
+    command = "kubectl patch serviceaccount ${var.sn_operator_controller_sa} -n ${var.namespace} -p '{\"imagePullSecrets\": [{\"name\": \"cloudsmith-access\"}]}'"
+  }
+  depends_on = [
+    helm_release.olm_subscriptions,
+    null_resource.manager_cloudsmith_secret
+  ]
 }
