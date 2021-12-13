@@ -72,7 +72,8 @@ variable "enable_victoria_metrics_auth" {
 #######
 
 variable "service_domain" {
-  description = "The DNS domain for external service endpoints"
+  default     = null
+  description = "The DNS domain for external service endpoints. This must be set when enabling Istio or else the deployment will fail."
   type        = string
 }
 
