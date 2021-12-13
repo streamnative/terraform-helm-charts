@@ -1,5 +1,5 @@
 # vector-agent
-A module that installs the Vitcoria Metrics Stack on Kubernetes via Helm. Refer to the [official documentation](https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack) for more information.
+A module that installs the Victoria Metrics Stack on Kubernetes via Helm. Refer to the [official documentation](https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack) for more information.
 
 ## Requirements
 

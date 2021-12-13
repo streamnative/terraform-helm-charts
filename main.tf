@@ -45,25 +45,35 @@ module "istio_operator" {
   istio_chart_name                = var.istio_operator_chart_name
   istio_chart_repository          = var.istio_operator_chart_repository
   istio_chart_version             = var.istio_operator_chart_version
-  istio_cluster_name              = var.istio_operator_cluster_name
-  istio_mesh_id                   = var.istio_operator_mesh_id
-  istio_network                   = var.istio_operator_network
+  istio_cluster_name              = var.istio_cluster_name
+  istio_mesh_id                   = var.istio_mesh_id
+  istio_network                   = var.istio_network
   istio_operator_namespace        = var.istio_operator_namespace
-  istio_profile                   = var.istio_operator_profile
+  istio_profile                   = var.istio_profile
   istio_release_name              = var.istio_operator_release_name
-  istio_revision_tag              = var.istio_operator_revision_tag
+  istio_revision_tag              = var.istio_revision_tag
   istio_settings                  = var.istio_operator_settings
   istio_system_namespace          = var.istio_system_namespace
-  istio_trust_domain              = var.istio_operator_trust_domain
+  istio_trust_domain              = var.istio_trust_domain
+  istio_gateway_certificate_name  = "istio-ingressgateway-tls"
+  istio_gateway_certificate_hosts = ["*.${var.service_domain}"]
+  istio_gateway_certificate_issuer = {
+      group = "cert-manager.io"
+      kind = "ClusterIssuer"
+      name = "external"
+  }
   istio_values                    = var.istio_operator_values
-  kiali_chart_name                = var.kiali_operator_chart_name
-  kiali_chart_repository          = var.kiali_operator_chart_repository
-  kiali_chart_version             = var.kiali_operator_chart_version
-  kiali_namespace                 = var.kiali_namespace
-  kiali_release_name              = var.kiali_operator_release_name
-  kiali_settings                  = var.kiali_operator_settings
+
+  kiali_operator_chart_name       = var.kiali_operator_chart_name
+  kiali_operator_chart_repository = var.kiali_operator_chart_repository
+  kiali_operator_chart_version    = var.kiali_operator_chart_version
+  kiali_operator_release_name     = var.kiali_operator_release_name
   kiali_operator_namespace        = var.kiali_operator_namespace
-  kiali_values                    = var.kiali_operator_values
+  kiali_operator_settings         = var.kiali_operator_settings
+  kiali_operator_values           = var.kiali_operator_values
+  kiali_namespace                 = var.kiali_namespace
+  kiali_gateway_hosts             = ["kiali.${var.service_domain}"]
+  kiali_gateway_tls_secret        = "istio-ingressgateway-tls"
   timeout                         = var.istio_operator_timeout
 }
 
@@ -110,6 +120,14 @@ module "otel_collector" {
   values           = var.otel_collector_values
 }
 
+locals {
+  prometheus_operator_values = var.prometheus_operator_values != null ? var.prometheus_operator_values : [yamlencode({
+    grafana = {
+      enabled = false
+    }
+  })]
+}
+
 module "prometheus_operator" {
   count  = var.enable_prometheus_operator == true ? 1 : 0
   source = "./modules/prometheus-operator"
@@ -122,7 +140,7 @@ module "prometheus_operator" {
   release_name     = var.prometheus_operator_release_name
   settings         = var.prometheus_operator_settings
   timeout          = var.prometheus_operator_timeout
-  values           = var.prometheus_operator_values
+  values           = local.prometheus_operator_values
 }
 
 module "pulsar_operator" {

@@ -1,0 +1,13 @@
+# Mesh-wide configuration: Envoy access logging
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: default
+  {{- if .Values.rootNamespace }}
+  namespace: {{ .Values.rootNamespace }}
+  {{- end }}
+  labels:
+  {{- include "mesh.labels" . | nindent 4 }}
+spec:
+  accessLogging:
+  - {}

@@ -1,0 +1,15 @@
+ 
+# override for the Istio root namespace
+rootNamespace:
+
+# ingress gateway configuration
+ingressGateway:
+  tlsCertificate:
+    name: istio-ingressgateway-tls
+    secretName: istio-ingressgateway-tls
+    dnsNames: []
+    issuerRef: {}
+    privateKey:
+      algorithm: RSA
+      size: 2048
+    renewBefore: "168h0m0s"
