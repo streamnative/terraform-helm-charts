@@ -1,0 +1,19 @@
+
+# Authorization Policy for Prometheus Server - Allow Kiali
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "kiali.fullname" . }}-prometheus
+  labels:
+  {{- include "kiali.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+      component: server
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Release.Namespace }}/sa/kiali-service-account

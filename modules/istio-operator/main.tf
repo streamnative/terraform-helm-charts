@@ -150,6 +150,10 @@ locals {
           ingress = {
             enabled = false
           }
+          pod_labels = {
+            "service.istio.io/canonical-name": "kiali"
+            "service.istio.io/canonical-revision": local.kiali_operator_chart_version
+          }
         }
         istio_labels = {
           app_label_name = "service.istio.io/canonical-name"
@@ -158,12 +162,21 @@ locals {
         kiali_feature_flags = {
           istio_injection_action = false
           istio_upgrade_action = false
+          ui_defaults = {
+            metrics_per_refresh = "10m"
+          }
         }
         external_services = {
           istio = {
             config_map_name = "istio-${local.istio_revision_tag}"
             istiod_deployment_name = "istiod-${local.istio_revision_tag}"
             root_namespace = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
+          }
+          prometheus = {
+            url = "http://prometheus-server.${local.istio_system_namespace}.svc.cluster.local"
+          }
+          tracing = {
+            enabled = false
           }
         }
       }

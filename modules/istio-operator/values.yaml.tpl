@@ -24,6 +24,7 @@ controlPlane:
         proxyMetadata:
           ISTIO_META_DNS_CAPTURE: "true"
           ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+      enablePrometheusMerge: false
     components:
       cni:
         enabled: true
