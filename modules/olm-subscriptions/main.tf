@@ -71,6 +71,18 @@ resource "helm_release" "olm_subscriptions" {
     type  = "string"
   }
 
+  set {
+    name  = "sn_operator_registry"
+    value = var.sn_operator_registry
+    type  = "string"
+  }
+
+  set {
+    name  = "components.sn_operator"
+    value = var.enable_sn_operator
+    type  = "string"
+  }
+
   dynamic "set" {
     for_each = local.settings
     content {

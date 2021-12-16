@@ -80,6 +80,8 @@ No modules.
 | <a name="input_settings"></a> [settings](#input\_settings) | Additional settings which will be passed to the Helm chart values. | `map(any)` | `null` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Time in seconds to wait for any individual kubernetes operation. | `number` | `null` | no |
 | <a name="input_values"></a> [values](#input\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")`. | `any` | `null` | no |
+| <a name="input_enable_sn_operator"></a> [enable\_sn\_operator](#input\_enable\_sn\_operator) | Whether to enable SN Operator | `bool` | `"false"` | no |
+| <a name="input_sn_operator_registry"></a> [sn\_operator\_registry](#input\_sn\_operator\_registry) | SN Operator's registry | `string` | `""` | no |
 
 ## Outputs
 

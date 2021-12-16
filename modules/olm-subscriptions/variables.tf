@@ -81,6 +81,18 @@ variable "timeout" {
   type        = number
 }
 
+variable "enable_sn_operator" {
+  default     = false
+  description = "Whether to enable en operator."
+  type        = bool
+}
+
+variable "sn_operator_registry" {
+  default     = ""
+  description = "SN Operator's registry."
+  type        = string
+}
+
 variable "values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
