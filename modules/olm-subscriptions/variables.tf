@@ -93,30 +93,6 @@ variable "sn_operator_registry" {
   type        = string
 }
 
-variable "sn_operator_registry_username" {
-  default     = ""
-  description = "SN Operator's registry username."
-  type        = string
-}
-
-variable "sn_operator_registry_credential" {
-  default     = ""
-  description = "SN Operator's registry password."
-  type        = string
-}
-
-variable "sn_operator_catalog_sa" {
-  default     = ""
-  description = "OLM catalog's service account"
-  type        = string
-}
-
-variable "sn_operator_controller_sa" {
-  default     = ""
-  description = "SN Operator's service account"
-  type        = string
-}
-
 variable "values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
