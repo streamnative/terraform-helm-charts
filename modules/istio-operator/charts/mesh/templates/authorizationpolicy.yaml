@@ -1,0 +1,30 @@
+# Mesh-wide configuration: disallow access by default
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: default-deny
+  {{- if .Values.rootNamespace }}
+  namespace: {{ .Values.rootNamespace }}
+  {{- end }}
+  labels:
+  {{- include "mesh.labels" . | nindent 4 }}
+spec:
+  action: ALLOW
+
+---
+# Istio gateway: allow inbound traffic
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: istio-ingressgateway
+  {{- if .Values.rootNamespace }}
+  namespace: {{ .Values.rootNamespace }}
+  {{- end }}
+  labels:
+  {{- include "mesh.labels" . | nindent 4 }}
+spec:
+  rules:
+    - {}
+  selector:
+    matchLabels:
+      cloud.streamnative.io/role: istio-ingressgateway

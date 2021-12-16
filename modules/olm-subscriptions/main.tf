@@ -23,28 +23,45 @@ terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
-      version = "2.2.0"
+      version = ">=2.2.0"
     }
   }
 }
+locals {
+  atomic            = var.atomic != null ? var.atomic : true
+  chart_name        = var.chart_name != null ? var.chart_name : "${path.module}/chart"
+  chart_repository  = var.chart_repository != null ? var.chart_repository : null
+  chart_version     = var.chart_version != null ? var.chart_version : null
+  cleanup_on_fail   = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  install_namespace = var.install_namespace != null ? var.install_namespace : "sn-system"
+  olm_namespace     = var.olm_namespace != null ? var.olm_namespace : "olm"
+  release_name      = var.release_name != null ? var.release_name : "olm-subscriptions"
+  settings          = var.settings != null ? var.settings : {}
+  timeout           = var.timeout != null ? var.timeout : 120
+  values            = var.values != null ? var.values : []
+}
+
 
 resource "helm_release" "olm_subscriptions" {
-  atomic          = var.atomic
-  chart           = "${path.module}/chart"
-  cleanup_on_fail = var.cleanup_on_fail
-  namespace       = var.namespace
-  name            = var.release_name
-  timeout         = var.timeout
+  atomic          = local.atomic
+  chart           = local.chart_name
+  cleanup_on_fail = local.cleanup_on_fail
+  namespace       = local.olm_namespace
+  name            = local.release_name
+  repository      = local.chart_repository
+  timeout         = local.timeout
+  version         = local.chart_version
+  values          = local.values
 
   set {
-    name  = "catalog_namespace"
-    value = var.catalog_namespace
+    name  = "olm_namespace"
+    value = local.olm_namespace
     type  = "string"
   }
 
   set {
     name  = "install_namespace"
-    value = var.namespace
+    value = local.install_namespace
     type  = "string"
   }
 
@@ -67,7 +84,7 @@ resource "helm_release" "olm_subscriptions" {
   }
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = local.settings
     content {
       name  = set.key
       value = set.value
@@ -78,12 +95,12 @@ resource "helm_release" "olm_subscriptions" {
 resource "null_resource" "olm_registry_secret" {
   count = var.enable_sn_operator ? 1 : 0
   triggers = {
-    namespace = var.namespace
+    olm_namespace = var.olm_namespace
     sn_operator_registry_username = var.sn_operator_registry_username
     sn_operator_registry_credential = var.sn_operator_registry_credential
   }
   provisioner "local-exec" {
-    command = "kubectl create secret docker-registry cloudsmith-access -n ${var.catalog_namespace} --docker-server=docker.cloudsmith.io --docker-username=${var.sn_operator_registry_username} --docker-password=${var.sn_operator_registry_credential}"
+    command = "kubectl create secret docker-registry cloudsmith-access -n ${var.olm_namespace} --docker-server=docker.cloudsmith.io --docker-username=${var.sn_operator_registry_username} --docker-password=${var.sn_operator_registry_credential}"
   }
   depends_on = [
     helm_release.olm_subscriptions
@@ -93,11 +110,11 @@ resource "null_resource" "olm_registry_secret" {
 resource "null_resource" "patch_olm_sa" {
   count = var.enable_sn_operator ? 1 : 0
   triggers = {
-    olm_namespace = var.catalog_namespace
+    olm_namespace = var.olm_namespace
     sn_operator_catalog_sa = var.sn_operator_catalog_sa
   }
   provisioner "local-exec" {
-    command = "kubectl patch serviceaccount ${var.sn_operator_catalog_sa} -n ${var.catalog_namespace} -p '{\"imagePullSecrets\": [{\"name\": \"cloudsmith-access\"}]}'"
+    command = "kubectl patch serviceaccount ${var.sn_operator_catalog_sa} -n ${var.olm_namespace} -p '{\"imagePullSecrets\": [{\"name\": \"cloudsmith-access\"}]}'"
   }
   depends_on = [
     helm_release.olm_subscriptions,
@@ -108,12 +125,12 @@ resource "null_resource" "patch_olm_sa" {
 resource "null_resource" "controller_manager_registry_secret" {
   count = var.enable_sn_operator ? 1 : 0
   triggers = {
-    olm_namespace = var.catalog_namespace
+    install_namespace = var.install_namespace
     sn_operator_registry_username = var.sn_operator_registry_username
     sn_operator_registry_credential = var.sn_operator_registry_credential
   }
   provisioner "local-exec" {
-    command = "kubectl create secret docker-registry cloudsmith-access -n ${var.namespace} --docker-server=docker.cloudsmith.io --docker-username=${var.sn_operator_registry_username} --docker-password=${var.sn_operator_registry_credential}"
+    command = "kubectl create secret docker-registry cloudsmith-access -n ${var.install_namespace} --docker-server=docker.cloudsmith.io --docker-username=${var.sn_operator_registry_username} --docker-password=${var.sn_operator_registry_credential}"
   }
   depends_on = [
     helm_release.olm_subscriptions
@@ -123,11 +140,11 @@ resource "null_resource" "controller_manager_registry_secret" {
 resource "null_resource" "patch_controller_manager_sa" {
   count = var.enable_sn_operator ? 1 : 0
   triggers = {
-    namespace = var.namespace
+    install_namespace = var.install_namespace
     sn_operator_controller_sa = var.sn_operator_controller_sa
   }
   provisioner "local-exec" {
-    command = "kubectl patch serviceaccount ${var.sn_operator_controller_sa} -n ${var.namespace} -p '{\"imagePullSecrets\": [{\"name\": \"cloudsmith-access\"}]}'"
+    command = "kubectl patch serviceaccount ${var.sn_operator_controller_sa} -n ${var.install_namespace} -p '{\"imagePullSecrets\": [{\"name\": \"cloudsmith-access\"}]}'"
   }
   depends_on = [
     helm_release.olm_subscriptions,

@@ -27,6 +27,6 @@ spec:
   channel: {{ .Values.sn_operator.channel }}
   installPlanApproval: {{ .Values.sn_operator.approval }}
   source: {{ .Values.sn_operator.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.sn_operator.name }}
 {{- end }}

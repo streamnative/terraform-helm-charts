@@ -13,13 +13,25 @@ variable "enable_function_mesh_operator" {
 
 variable "enable_istio_operator" {
   default     = false
-  description = "Enables the Istio Operator. Set to \"true\" by default, but disabled if OLM is enabled."
+  description = "Enables the Istio Operator. Set to \"false\" by default."
+  type        = bool
+}
+
+variable "enable_kiali_operator" {
+  default     = false
+  description = "Enables the Kiali Operator. Set to \"false\" by default."
+  type        = bool
+}
+
+variable "enable_otel_collector" {
+  default     = false
+  description = "Enables Open Telemetry. Set to \"false\" by default."
   type        = bool
 }
 
 variable "enable_prometheus_operator" {
   default     = true
-  description = "Enables the Prometheus Operator. Set to \"true\" by default, but disabled if OLM is enabled."
+  description = "Enables the Prometheus Operator and other components via kube-stack-prometheus. Set to \"true\" by default."
   type        = bool
 }
 
@@ -50,31 +62,31 @@ variable "enable_victoria_metrics_stack" {
 variable "enable_victoria_metrics_auth" {
   default     = false
   description = "Enables the Victoria Metrics VMAuth on the EKS cluster. Disabled by default"
+  type        = bool
+}
+
+### Top-level Variables
+
+#######
+### Networking
+#######
+
+variable "service_domain" {
+  default     = null
+  description = "The DNS domain for external service endpoints. This must be set when enabling Istio or else the deployment will fail."
+  type        = string
 }
 
 ### Sub-module Variables
 
-variable "function_mesh_operator_chart_name" {
-  default     = "function-mesh-operator"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
+#######
+### Namespace Management
+#######
 
-variable "function_mesh_operator_chart_repository" {
-  default     = "https://charts.streamnative.io"
-  description = "The repository containing the Helm chart to install"
-  type        = string
-}
-
-variable "function_mesh_operator_chart_version" {
-  default     = "0.1.7"
-  description = "The version of the Helm chart to install"
-  type        = string
-}
-
-variable "function_mesh_operator_cleanup_on_fail" {
-  default     = true
-  description = "Allow deletion of new resources created in this upgrade when upgrade fails"
+### Function Mesh
+variable "create_function_mesh_operator_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment."
   type        = bool
 }
 
@@ -84,57 +96,66 @@ variable "function_mesh_operator_namespace" {
   type        = string
 }
 
-variable "function_mesh_operator_release_name" {
-  default     = "function-mesh-operator"
-  description = "The name of the helm release"
-  type        = string
-}
-
-variable "function_mesh_operator_settings" {
-  default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
-}
-
-variable "function_mesh_operator_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
-}
-
-variable "istio_operator_cleanup_on_fail" {
+### Istio
+variable "create_istio_operator_namespace" {
   default     = true
-  description = "Allow deletion of new resources created in this upgrade when upgrade fails"
+  description = "Create a namespace for the deployment. Defaults to \"true\"."
+  type        = bool
+}
+
+variable "create_istio_system_namespace" {
+  default     = false
+  description = "Create a namespace where istio components will be installed."
   type        = bool
 }
 
 variable "istio_operator_namespace" {
-  default     = "sn-system"
-  description = "The namespace used for the operator deployment"
-  type        = string
-}
-
-variable "istio_operator_release_name" {
   default     = "istio-operator"
-  description = "The name of the helm release"
+  description = "The namespace used for the Istio operator deployment"
   type        = string
 }
 
-variable "istio_operator_settings" {
-  default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
+variable "istio_system_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the Istio components."
+  type        = string
 }
 
-variable "istio_operator_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
+### Kiali
+variable "create_kiali_operator_namespace" {
+  default     = true
+  description = "Create a namespace for the deployment."
+  type        = bool
 }
 
-variable "olm_catalog_namespace" {
-  default     = "olm"
-  description = "The namespace used for the OLM catalog services"
+variable "kiali_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the Kiali operator."
+  type        = string
+}
+
+variable "kiali_operator_namespace" {
+  default     = "kiali-operator"
+  description = "The namespace used for the Kiali operator deployment"
+  type        = string
+}
+
+### OLM
+variable "create_olm_install_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment. Defaults to \"true\"."
+  type        = bool
+}
+
+variable "create_olm_namespace" {
+  default     = true
+  description = "Whether or not to create the namespace used for OLM and its resources. Defaults to \"true\"."
+  type        = bool
+}
+
+variable "olm_install_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for installing the operators managed by OLM"
   type        = string
 }
 
@@ -144,51 +165,23 @@ variable "olm_namespace" {
   type        = string
 }
 
-variable "olm_operators_namespace" {
-  default     = "operators"
-  description = "The namespace where OLM will install the operators"
-  type        = string
-}
-
-variable "olm_settings" {
+### Otel
+variable "create_otel_collector_namespace" {
   default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
+  description = "Wether or not to create the namespace used for the Otel Collector."
+  type        = bool
 }
 
-variable "olm_registry" {
-  default     = ""
-  description = "The registry containing StreamNative's operator catalog images"
+variable "otel_collector_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the Otel Collector."
   type        = string
 }
 
-variable "olm_subscription_settings" {
+### Prometheus
+variable "create_prometheus_operator_namespace" {
   default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
-}
-
-variable "prometheus_operator_chart_name" {
-  default     = "kube-prometheus-stack"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "prometheus_operator_chart_repository" {
-  default     = "https://prometheus-community.github.io/helm-charts"
-  description = "The repository containing the Helm chart to install"
-  type        = string
-}
-
-variable "prometheus_operator_chart_version" {
-  default     = "19.2.2"
-  description = "The version of the Helm chart to install"
-  type        = string
-}
-
-variable "prometheus_operator_cleanup_on_fail" {
-  default     = true
-  description = "Allow deletion of new resources created in this upgrade when upgrade fails"
+  description = "Create a namespace for the deployment."
   type        = bool
 }
 
@@ -198,45 +191,10 @@ variable "prometheus_operator_namespace" {
   type        = string
 }
 
-variable "prometheus_operator_release_name" {
-  default     = "kube-prometheus-stack"
-  description = "The name of the helm release"
-  type        = string
-}
-
-variable "prometheus_operator_settings" {
-  default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
-}
-
-variable "prometheus_operator_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
-}
-
-variable "pulsar_operator_chart_name" {
-  default     = "pulsar-operator"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "pulsar_operator_chart_repository" {
-  default     = "https://charts.streamnative.io"
-  description = "The repository containing the Helm chart to install"
-  type        = string
-}
-
-variable "pulsar_operator_chart_version" {
-  default     = "0.7.2"
-  description = "The version of the Helm chart to install"
-  type        = string
-}
-
-variable "pulsar_operator_cleanup_on_fail" {
-  default     = true
-  description = "Allow deletion of new resources created in this upgrade when upgrade fails"
+### Pulsar
+variable "create_pulsar_operator_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment."
   type        = bool
 }
 
@@ -246,45 +204,10 @@ variable "pulsar_operator_namespace" {
   type        = string
 }
 
-variable "pulsar_operator_release_name" {
-  default     = "pulsar-operator"
-  description = "The name of the helm release"
-  type        = string
-}
-
-variable "pulsar_operator_settings" {
-  default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
-}
-
-variable "pulsar_operator_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
-}
-
-variable "vault_operator_chart_name" {
-  default     = "vault-operator"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "vault_operator_chart_repository" {
-  default     = "https://kubernetes-charts.banzaicloud.com"
-  description = "The repository containing the Helm chart to install"
-  type        = string
-}
-
-variable "vault_operator_chart_version" {
-  default     = "1.13.2"
-  description = "The version of the Helm chart to install"
-  type        = string
-}
-
-variable "vault_operator_cleanup_on_fail" {
-  default     = true
-  description = "Allow deletion of new resources created in this upgrade when upgrade fails"
+### Vault
+variable "create_vault_operator_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment."
   type        = bool
 }
 
@@ -294,104 +217,36 @@ variable "vault_operator_namespace" {
   type        = string
 }
 
-variable "vault_operator_release_name" {
-  default     = "vault-operator"
-  description = "The name of the helm release"
-  type        = string
-}
-
-variable "vault_operator_settings" {
-  default     = null
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
-}
-
-variable "vault_operator_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
-}
-
-variable "vector_agent_chart_name" {
-  default     = "vector-agent"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "vector_agent_chart_repository" {
-  default     = "https://helm.vector.dev"
-  description = "The repository containing the Helm chart to install. See https://github.com/timberio/vector/tree/master/distribution/helm/vector-agent for available configuration options"
-  type        = string
-}
-
-variable "vector_agent_create_namespace" {
-  default     = true
-  description = "Create a namespace for the operator. Defaults to \"true\", as it's recommended to install Vector into its own namespace"
+### Vector
+variable "create_vector_agent_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment"
   type        = bool
 }
 
-variable "vector_agent_chart_version" {
-  default     = "0.17.0"
-  description = "The version of the Helm chart to install. See"
-  type        = string
-}
-
 variable "vector_agent_namespace" {
-  default     = "vector"
+  default     = "sn-system"
   description = "The namespace used for the operator deployment. Defaults to \"vector\" (recommended)"
   type        = string
 }
 
-variable "vector_agent_release_name" {
-  default     = "vector-agent"
-  description = "The name of the helm release"
-  type        = string
-}
 
-variable "vector_agent_settings" {
-  default     = {}
-  description = "Additional settings which will be passed to the Helm chart values"
-  type        = map(any)
-}
-
-variable "vector_agent_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
-}
-
-variable "vector_agent_values" {
-  default     = []
-  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
-}
-
-variable "victoria_metrics_chart_repository" {
-  default     = "https://victoriametrics.github.io/helm-charts/"
-  description = "The repository containing the Helm chart to install. See https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack for available configuration options"
-  type        = string
-}
-
-variable "victoria_metrics_timeout" {
-  default     = 200
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
-}
-
-variable "victoria_metrics_stack_chart_name" {
-  default     = "victoria-metrics-k8s-stack"
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "victoria_metrics_stack_create_namespace" {
-  default     = true
-  description = "Create a namespace for the operator. Defaults to \"true\""
+### VictoriaMetrics
+variable "create_victoria_metrics_auth_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment."
   type        = bool
 }
 
-variable "victoria_metrics_stack_chart_version" {
-  default     = "0.4.5"
-  description = "The version of the Helm chart to install. See"
+variable "create_victoria_metrics_stack_namespace" {
+  default     = false
+  description = "Create a namespace for the deployment."
+  type        = bool
+}
+
+variable "victoria_metrics_auth_namespace" {
+  default     = "sn-system"
+  description = "The namespace used for the operator deployment"
   type        = string
 }
 
@@ -401,60 +256,514 @@ variable "victoria_metrics_stack_namespace" {
   type        = string
 }
 
+###########################
+### Sub-module Variables
+### Most variables inherit the default values from their submodule, hence the use of `null` defaults
+###########################
+
+#######
+### Function Mesh Settings
+#######
+variable "function_mesh_operator_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "function_mesh_operator_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "function_mesh_operator_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "function_mesh_operator_release_name" {
+  default     = null
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "function_mesh_operator_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "function_mesh_operator_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "function_mesh_operator_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### Istio Settings
+#######
+
+
+variable "istio_operator_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "istio_operator_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "istio_operator_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "istio_mesh_id" {
+  default     = null
+  description = "The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environments. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
+variable "istio_cluster_name" {
+  default     = null
+  description = "The name of the kubernetes cluster where Istio is being configured. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
+variable "istio_network" {
+  default     = null
+  description = "The name of network used for the Istio deployment."
+  type        = string
+}
+
+variable "istio_profile" {
+  default     = null
+  description = "The path or name for an Istio profile to load. Set to the profile \"default\" if not specified."
+  type        = string
+}
+
+variable "istio_operator_release_name" {
+  default     = null
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "istio_revision_tag" {
+  default     = null
+  description = "The revision tag value use for the Istio label \"istio.io/rev\". Defaults to \"sn-stable\"."
+  type        = string
+}
+
+variable "istio_operator_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "istio_operator_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "istio_trust_domain" {
+  default     = null
+  description = "The trust domain used for the Istio operator, which corresponds to the root of a system. This is required when \"enable_istio_operator\" is set to \"true\"."
+  type        = string
+}
+
+variable "istio_operator_values" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+}
+
+#######
+### Kiali Settings
+#######
+variable "create_kiali_cr" {
+  default     = null
+  description = "Create a Kiali CR for the Kiali deployment."
+  type        = bool
+}
+
+variable "kiali_operator_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "kiali_operator_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "kiali_operator_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "kiali_operator_release_name" {
+  default     = null
+  description = "The name of the Kiali release"
+  type        = string
+}
+
+variable "kiali_operator_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "kiali_operator_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### OLM Settings
+#######
+variable "olm_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "olm_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+variable "olm_registry" {
+  description = "The registry containing StreamNative's operator catalog images"
+  type        = string
+}
+
+variable "olm_subscription_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "olm_subscription_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### OpenTelemetry Collector Settings
+#######
+variable "otel_collector_chart_name" {
+  default     = null
+  description = "The name of the helm chart to install."
+  type        = string
+}
+
+variable "otel_collector_chart_repository" {
+  default     = null
+  description = "The repository containing the helm chart to install."
+  type        = string
+}
+
+variable "otel_collector_chart_version" {
+  default     = null
+  description = "The version of the helm chart to install."
+  type        = string
+}
+
+variable "otel_collector_image_version" {
+  default     = null
+  description = "The version of the OpenTelemetry Collector image to use."
+  type        = string
+}
+
+variable "otel_collector_release_name" {
+  default     = null
+  description = "The name of the Helm release."
+  type        = string
+}
+
+variable "otel_collector_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "otel_collector_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "otel_collector_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### Prometheus Settings
+#######
+variable "prometheus_operator_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "prometheus_operator_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "prometheus_operator_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "prometheus_operator_release_name" {
+  default     = null
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "prometheus_operator_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "prometheus_operator_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "prometheus_operator_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### Pulsar Settings
+#######
+variable "pulsar_operator_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "pulsar_operator_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "pulsar_operator_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "pulsar_operator_release_name" {
+  default     = null
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "pulsar_operator_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "pulsar_operator_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "pulsar_operator_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### Vault Settings
+#######
+variable "vault_operator_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "vault_operator_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install"
+  type        = string
+}
+
+variable "vault_operator_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "vault_operator_release_name" {
+  default     = null
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "vault_operator_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "vault_operator_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "vault_operator_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+#######
+### Vector Settings
+#######
+variable "vector_agent_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "vector_agent_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install. See https://github.com/timberio/vector/tree/master/distribution/helm/vector-agent for available configuration options"
+  type        = string
+}
+
+variable "vector_agent_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
+variable "vector_agent_release_name" {
+  default     = null
+  description = "The name of the helm release"
+  type        = string
+}
+
+variable "vector_agent_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "vector_agent_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "vector_agent_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
+}
+
+
+
+#######
+### VictioriaMetrics Settings
+#######
+variable "victoria_metrics_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "victoria_metrics_stack_chart_name" {
+  default     = null
+  description = "The name of the Helm chart to install"
+  type        = string
+}
+
+variable "victoria_metrics_stack_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install. See https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack for available configuration options"
+  type        = string
+}
+
+variable "victoria_metrics_stack_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
+  type        = string
+}
+
 variable "victoria_metrics_stack_release_name" {
-  default     = "vmstack"
+  default     = null
   description = "The name of the helm release"
   type        = string
 }
 
 variable "victoria_metrics_stack_settings" {
-  default     = {}
-  description = "Additional settings which will be passed to the Helm chart values"
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
   type        = map(any)
 }
 
 variable "victoria_metrics_stack_values" {
-  default     = []
+  default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
 }
 
 variable "victoria_metrics_auth_chart_name" {
-  default     = "victoria-metrics-auth"
+  default     = null
   description = "The name of the Helm chart to install"
   type        = string
 }
 
-variable "victoria_metrics_auth_create_namespace" {
-  default     = true
-  description = "Create a namespace for the operator. Defaults to \"true\""
-  type        = bool
-}
-
-variable "victoria_metrics_auth_chart_version" {
-  default     = "0.2.31"
-  description = "The version of the Helm chart to install. See"
+variable "victoria_metrics_auth_chart_repository" {
+  default     = null
+  description = "The repository containing the Helm chart to install."
   type        = string
 }
 
-variable "victoria_metrics_auth_namespace" {
-  default     = "sn-system"
-  description = "The namespace used for the operator deployment"
+variable "victoria_metrics_auth_chart_version" {
+  default     = null
+  description = "The version of the Helm chart to install. Set to the submodule default."
   type        = string
 }
 
 variable "victoria_metrics_auth_release_name" {
-  default     = "vmauth"
+  default     = null
   description = "The name of the helm release"
   type        = string
 }
 
 variable "victoria_metrics_auth_settings" {
-  default     = {}
-  description = "Additional settings which will be passed to the Helm chart values"
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
   type        = map(any)
 }
 
 variable "victoria_metrics_auth_values" {
-  default     = []
+  default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
 }

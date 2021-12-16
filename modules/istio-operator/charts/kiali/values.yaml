@@ -1,0 +1,10 @@
+ 
+gatewaySelector: {}
+gatewayTls:
+  mode: SIMPLE
+gatewayHosts: []
+
+kialiHost: kiali
+kialiSelector:
+  app.kubernetes.io/name: kiali
+  app.kubernetes.io/instance: kiali

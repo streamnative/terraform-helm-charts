@@ -27,6 +27,6 @@ spec:
   channel: {{ .Values.zookeeper.channel }}
   installPlanApproval: {{ .Values.zookeeper.approval }}  
   source: {{ .Values.zookeeper.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.zookeeper.name }}
 {{- end }}

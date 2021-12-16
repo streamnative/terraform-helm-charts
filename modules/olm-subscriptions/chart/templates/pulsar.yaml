@@ -27,6 +27,6 @@ spec:
   channel: {{ .Values.pulsar.channel }}
   installPlanApproval: {{ .Values.pulsar.approval }}  
   source: {{ .Values.pulsar.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.pulsar.name }}
 {{- end }}

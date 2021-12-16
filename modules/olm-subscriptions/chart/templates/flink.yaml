@@ -27,6 +27,6 @@ spec:
   channel: {{ .Values.flink.channel }}
   installPlanApproval: {{ .Values.flink.approval }}  
   source: {{ .Values.flink.source }}
-  sourceNamespace: {{ .Values.catalog_namespace }}
+  sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flink.name }}
 {{- end }}

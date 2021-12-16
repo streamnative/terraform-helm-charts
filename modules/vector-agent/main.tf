@@ -1,17 +1,62 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+terraform {
+  required_version = ">=1.0.0"
+
+  required_providers {
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">=2.2.0"
+    }
+  }
+}
+
+locals {
+  atomic           = var.atomic != null ? var.atomic : true
+  chart_name       = var.chart_name != null ? var.chart_name : "vector-agent"
+  chart_repository = var.chart_repository != null ? var.chart_repository : "https://helm.vector.dev"
+  chart_version    = var.chart_version != null ? var.chart_version : "0.18.1"
+  cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+
+  create_namespace = var.create_namespace != null ? var.create_namespace : true
+  namespace        = var.namespace != null ? var.namespace : "sn-system"
+  release_name     = var.release_name != null ? var.release_name : "vector-agent"
+  settings         = var.settings != null ? var.settings : {}
+  timeout          = var.timeout != null ? var.timeout : 120
+  values           = var.values != null ? var.values : []
+}
+
 resource "helm_release" "vector_agent" {
-  atomic           = var.atomic
-  chart            = var.chart_name
-  cleanup_on_fail  = var.cleanup_on_fail
-  create_namespace = var.create_namespace
-  name             = var.release_name
-  namespace        = var.namespace
-  repository       = var.chart_repository
-  timeout          = var.timeout
-  version          = var.chart_version
-  values           = var.values
+  atomic          = local.atomic
+  chart           = local.chart_name
+  cleanup_on_fail = local.cleanup_on_fail
+
+  name       = local.release_name
+  namespace  = local.namespace
+  repository = local.chart_repository
+  timeout    = local.timeout
+  version    = local.chart_version
+  values     = local.values
 
   dynamic "set" {
-    for_each = var.settings
+    for_each = local.settings
     content {
       name  = set.key
       value = set.value

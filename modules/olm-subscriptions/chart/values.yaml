@@ -17,17 +17,18 @@
 # under the License.
 #
 
-catalog_namespace: olm
+olm_namespace: olm
 install_namespace: sn-system
 operator_group: sn-operators
 
 sn_registry: ""
 sn_operator_registry: ""
+sn_registry_secret: "cloudsmith"
 
 components:
   bookkeeper: true
   functionMesh: true
-  prometheus: true
+  prometheus: false # Prometheus isn't receiving regular updates from the community operators project. This will eventually be removed altogether in favor of the kube-stack-prometheus chart
   pulsar: true
   flink: true
   flinkSql: true
