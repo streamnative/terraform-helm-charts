@@ -37,13 +37,25 @@ spec:
           number: 20001
           
 ---
+# Authorization Policy for Kiali 
+#  - Allow everyone to access the API port
+#  - Allow prometheus to access the metrics port
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: {{ include "kiali.fullname" . }}
 spec:
   rules:
-    - {}
+    - to:
+        - operation:
+            ports: ["20001"]
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Release.Namespace }}/sa/prometheus-server
+      to:
+        - operation:
+            ports: ["9090"]
   selector:
     matchLabels:
       {{- toYaml .Values.kialiSelector | nindent 6 }}

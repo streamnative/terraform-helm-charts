@@ -25,8 +25,14 @@ terraform {
       source  = "hashicorp/helm"
       version = ">=2.2.0"
     }
+
+    time = {
+      source = "hashicorp/time"
+      version = ">=0.7.2"
+    }
   }
 }
+
 
 locals {
   atomic          = var.atomic != null ? var.atomic : true
@@ -54,11 +60,11 @@ locals {
   # Kiali Operator Settings
   create_kiali_cr                 = var.create_kiali_cr != null ? var.create_kiali_cr : true
   create_kiali_operator_namespace = var.create_kiali_operator_namespace != null ? var.create_kiali_operator_namespace : true
-  kiali_operator_chart_name                = var.kiali_operator_chart_name != null ? var.kiali_operator_chart_name : "kiali-operator"
-  kiali_operator_chart_repository          = var.kiali_operator_chart_repository != null ? var.kiali_operator_chart_repository : "https://kiali.org/helm-charts"
-  kiali_operator_chart_version             = var.kiali_operator_chart_version != null ? var.kiali_operator_chart_version : "1.44.0"
+  kiali_operator_chart_name       = var.kiali_operator_chart_name != null ? var.kiali_operator_chart_name : "kiali-operator"
+  kiali_operator_chart_repository = var.kiali_operator_chart_repository != null ? var.kiali_operator_chart_repository : "https://kiali.org/helm-charts"
+  kiali_operator_chart_version    = var.kiali_operator_chart_version != null ? var.kiali_operator_chart_version : "1.44.0"
   kiali_operator_release_name     = var.kiali_operator_release_name != null ? var.kiali_operator_release_name : "kiali-operator"
-  kiali_operator_settings                  = var.kiali_operator_settings != null ? var.kiali_operator_settings : {}
+  kiali_operator_settings         = var.kiali_operator_settings != null ? var.kiali_operator_settings : {}
   kiali_operator_namespace        = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
   kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "sn-system"
   kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali"
@@ -115,13 +121,19 @@ locals {
   mesh_values = yamlencode({
     ingressGateway = {
       tlsCertificate = {
-        name = var.istio_gateway_certificate_name
+        name       = var.istio_gateway_certificate_name
         secretName = var.istio_gateway_certificate_name
-        dnsNames = var.istio_gateway_certificate_hosts
-        issuerRef = var.istio_gateway_certificate_issuer
+        dnsNames   = var.istio_gateway_certificate_hosts
+        issuerRef  = var.istio_gateway_certificate_issuer
       }
     }
   })
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [resource.helm_release.istio_operator]
+
+  create_duration = "30s"
 }
 
 resource "helm_release" "mesh" {
@@ -135,14 +147,14 @@ resource "helm_release" "mesh" {
   values          = [local.mesh_values]
 
   depends_on = [
-    resource.helm_release.istio_operator
+    time_sleep.wait_30_seconds
   ]
 }
 
 locals {
   kiali_operator_values = var.kiali_operator_values != null ? var.kiali_operator_values : yamlencode({
     cr = {
-      create = local.create_kiali_cr
+      create    = local.create_kiali_cr
       namespace = local.kiali_namespace
       spec = {
         deployment = {
@@ -150,20 +162,33 @@ locals {
           ingress = {
             enabled = false
           }
+          pod_labels = {
+            "service.istio.io/canonical-name" : "kiali"
+            "service.istio.io/canonical-revision" : local.kiali_operator_chart_version
+          }
         }
         istio_labels = {
-          app_label_name = "service.istio.io/canonical-name"
+          app_label_name     = "service.istio.io/canonical-name"
           version_label_name = "service.istio.io/canonical-revision"
         }
         kiali_feature_flags = {
           istio_injection_action = false
-          istio_upgrade_action = false
+          istio_upgrade_action   = false
+          ui_defaults = {
+            metrics_per_refresh = "10m"
+          }
         }
         external_services = {
           istio = {
-            config_map_name = "istio-${local.istio_revision_tag}"
+            config_map_name        = "istio-${local.istio_revision_tag}"
             istiod_deployment_name = "istiod-${local.istio_revision_tag}"
-            root_namespace = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
+            root_namespace         = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
+          }
+          prometheus = {
+            url = "http://prometheus-server.${local.istio_system_namespace}.svc.cluster.local"
+          }
+          tracing = {
+            enabled = false
           }
         }
       }
@@ -182,7 +207,7 @@ resource "helm_release" "kiali_operator" {
   repository       = local.kiali_operator_chart_repository
   timeout          = local.timeout
   version          = local.kiali_operator_chart_version
-  values          = [local.kiali_operator_values]
+  values           = [local.kiali_operator_values]
 
   dynamic "set" {
     for_each = local.kiali_operator_settings
@@ -202,16 +227,16 @@ locals {
     gatewaySelector = {
       "cloud.streamnative.io/role" = "istio-ingressgateway"
     }
-    gatewayTls       = {
+    gatewayTls = {
       mode           = "SIMPLE"
       credentialName = local.kiali_gateway_tls_secret
     }
-    gatewayHosts     = local.kiali_gateway_hosts
-    kialiSelector    = {
+    gatewayHosts = local.kiali_gateway_hosts
+    kialiSelector = {
       "app.kubernetes.io/name"     = "kiali" # A constant
       "app.kubernetes.io/instance" = "kiali" # Kiali CR name
     }
-    kialiHost        = "kiali.${local.kiali_namespace}.svc.cluster.local"
+    kialiHost = "kiali.${local.kiali_namespace}.svc.cluster.local"
   })
 }
 
