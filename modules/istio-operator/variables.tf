@@ -105,10 +105,10 @@ variable "istio_gateway_certificate_hosts" {
 variable "istio_gateway_certificate_issuer" {
   default     = null
   description = "The certificate issuer for the Istio gateway TLS certificate."
-  type        = object({
+  type = object({
     group = string
-    kind = string
-    name = string
+    kind  = string
+    name  = string
   })
 }
 

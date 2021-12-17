@@ -20,7 +20,7 @@
 resource "kubernetes_manifest" "clusterrole_scaling_prometheus" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRole"
+    "kind"       = "ClusterRole"
     "metadata" = {
       "name" = "scaling-prometheus"
     }
@@ -90,9 +90,9 @@ resource "kubernetes_manifest" "clusterrole_scaling_prometheus" {
 resource "kubernetes_manifest" "serviceaccount_sn_system_scaling_prometheus" {
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "ServiceAccount"
+    "kind"       = "ServiceAccount"
     "metadata" = {
-      "name" = "scaling-prometheus"
+      "name"      = "scaling-prometheus"
       "namespace" = var.scaling_prometheus_namespace
     }
   }
@@ -101,19 +101,19 @@ resource "kubernetes_manifest" "serviceaccount_sn_system_scaling_prometheus" {
 resource "kubernetes_manifest" "clusterrolebinding_scaling_prometheus" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRoleBinding"
+    "kind"       = "ClusterRoleBinding"
     "metadata" = {
       "name" = "scaling-prometheus"
     }
     "roleRef" = {
       "apiGroup" = "rbac.authorization.k8s.io"
-      "kind" = "ClusterRole"
-      "name" = "scaling-prometheus"
+      "kind"     = "ClusterRole"
+      "name"     = "scaling-prometheus"
     }
     "subjects" = [
       {
-        "kind" = "ServiceAccount"
-        "name" = "scaling-prometheus"
+        "kind"      = "ServiceAccount"
+        "name"      = "scaling-prometheus"
         "namespace" = var.scaling_prometheus_namespace
       },
     ]
@@ -128,9 +128,9 @@ resource "kubernetes_manifest" "secret_sn_system_scaling_conf" {
   computed_fields = ["stringData"]
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "Secret"
+    "kind"       = "Secret"
     "metadata" = {
-      "name" = "scaling-conf"
+      "name"      = "scaling-conf"
       "namespace" = var.scaling_prometheus_namespace
     }
     "stringData" = {
@@ -194,37 +194,37 @@ resource "kubernetes_manifest" "secret_sn_system_scaling_conf" {
 resource "kubernetes_manifest" "prometheus_sn_system_scaling_prometheus" {
   manifest = {
     "apiVersion" = "monitoring.coreos.com/v1"
-    "kind" = "Prometheus"
+    "kind"       = "Prometheus"
     "metadata" = {
-      "name" = "scaling-prometheus"
+      "name"      = "scaling-prometheus"
       "namespace" = var.scaling_prometheus_namespace
     }
     "spec" = {
       "additionalScrapeConfigs" = {
-        "key" = "scrape.yaml"
+        "key"  = "scrape.yaml"
         "name" = "scaling-conf"
       }
       "evaluationInterval" = var.scaling_prometheus_evaluation_interval
-      "image" = "prom/prometheus"
+      "image"              = "prom/prometheus"
       "podMetadata" = {
         "labels" = {
-          "app" = "prometheus"
+          "app"                        = "prometheus"
           "cloud.streamnative.io/role" = "scaling-prometheus"
         }
       }
       "replicas" = var.scaling_prometheus_replicas
       "resources" = {
         "limits" = {
-          "cpu" = var.scaling_prometheus_cpu_limit
+          "cpu"    = var.scaling_prometheus_cpu_limit
           "memory" = var.scaling_prometheus_memory_limit
         }
       }
-      "retention" = var.scaling_prometheus_retention_period
+      "retention"      = var.scaling_prometheus_retention_period
       "scrapeInterval" = var.scaling_prometheus_scrape_interval
       "securityContext" = {
-        "fsGroup" = 2000
+        "fsGroup"      = 2000
         "runAsNonRoot" = true
-        "runAsUser" = 1000
+        "runAsUser"    = 1000
       }
       "serviceAccountName" = "scaling-prometheus"
       "serviceMonitorSelector" = {
@@ -240,16 +240,16 @@ resource "kubernetes_manifest" "prometheus_sn_system_scaling_prometheus" {
 resource "kubernetes_manifest" "service_sn_system_scaling_prometheus" {
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "Service"
+    "kind"       = "Service"
     "metadata" = {
-      "name" = "scaling-prometheus"
+      "name"      = "scaling-prometheus"
       "namespace" = var.scaling_prometheus_namespace
     }
     "spec" = {
       "ports" = [
         {
-          "port" = 9090
-          "protocol" = "TCP"
+          "port"       = 9090
+          "protocol"   = "TCP"
           "targetPort" = 9090
         },
       ]
@@ -263,7 +263,7 @@ resource "kubernetes_manifest" "service_sn_system_scaling_prometheus" {
 
 # generate a private key for internal issuer's cert
 resource "tls_private_key" "private_key" {
-  algorithm   = "RSA"
+  algorithm = "RSA"
 }
 
 # generate a self-signed cert for internal issuer
@@ -272,7 +272,7 @@ resource "tls_self_signed_cert" "issuer_cert" {
   private_key_pem = tls_private_key.private_key.private_key_pem
 
   subject {
-    common_name  = "CA Issuer"
+    common_name = "CA Issuer"
   }
 
   validity_period_hours = 87600
@@ -294,9 +294,9 @@ resource "kubernetes_manifest" "secret_issuer_cert" {
   computed_fields = ["stringData"]
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "Secret"
+    "kind"       = "Secret"
     "metadata" = {
-      "name" = "issuer-cert"
+      "name"      = "issuer-cert"
       "namespace" = var.cert_manager_namespace
     }
     "stringData" = {
@@ -315,7 +315,7 @@ resource "kubernetes_manifest" "secret_issuer_cert" {
 resource "kubernetes_manifest" "clusterissuer_ca_issuer" {
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "ClusterIssuer"
+    "kind"       = "ClusterIssuer"
     "metadata" = {
       "name" = "ca-issuer"
     }
@@ -335,9 +335,9 @@ resource "kubernetes_manifest" "clusterissuer_ca_issuer" {
 resource "kubernetes_manifest" "certificate_sn_system_custom_metrics_server" {
   manifest = {
     "apiVersion" = "cert-manager.io/v1"
-    "kind" = "Certificate"
+    "kind"       = "Certificate"
     "metadata" = {
-      "name" = "custom-metrics-server"
+      "name"      = "custom-metrics-server"
       "namespace" = var.metric_server_namespace
     }
     "spec" = {
@@ -348,8 +348,8 @@ resource "kubernetes_manifest" "certificate_sn_system_custom_metrics_server" {
       ]
       "issuerRef" = {
         "group" = "cert-manager.io"
-        "kind" = "ClusterIssuer"
-        "name" = "ca-issuer"
+        "kind"  = "ClusterIssuer"
+        "name"  = "ca-issuer"
       }
       "secretName" = "custom-metrics-server"
     }
@@ -363,9 +363,9 @@ resource "kubernetes_manifest" "certificate_sn_system_custom_metrics_server" {
 resource "kubernetes_manifest" "serviceaccount_sn_system_custom_metrics_apiserver" {
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "ServiceAccount"
+    "kind"       = "ServiceAccount"
     "metadata" = {
-      "name" = "custom-metrics-apiserver"
+      "name"      = "custom-metrics-apiserver"
       "namespace" = var.metric_server_namespace
     }
   }
@@ -374,19 +374,19 @@ resource "kubernetes_manifest" "serviceaccount_sn_system_custom_metrics_apiserve
 resource "kubernetes_manifest" "clusterrolebinding_custom_metrics_system_auth_delegator" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRoleBinding"
+    "kind"       = "ClusterRoleBinding"
     "metadata" = {
       "name" = "custom-metrics:system:auth-delegator"
     }
     "roleRef" = {
       "apiGroup" = "rbac.authorization.k8s.io"
-      "kind" = "ClusterRole"
-      "name" = "system:auth-delegator"
+      "kind"     = "ClusterRole"
+      "name"     = "system:auth-delegator"
     }
     "subjects" = [
       {
-        "kind" = "ServiceAccount"
-        "name" = "custom-metrics-apiserver"
+        "kind"      = "ServiceAccount"
+        "name"      = "custom-metrics-apiserver"
         "namespace" = var.metric_server_namespace
       },
     ]
@@ -396,7 +396,7 @@ resource "kubernetes_manifest" "clusterrolebinding_custom_metrics_system_auth_de
 resource "kubernetes_manifest" "clusterrole_custom_metrics_server_resources" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRole"
+    "kind"       = "ClusterRole"
     "metadata" = {
       "name" = "custom-metrics-server-resources"
     }
@@ -420,19 +420,19 @@ resource "kubernetes_manifest" "clusterrole_custom_metrics_server_resources" {
 resource "kubernetes_manifest" "clusterrolebinding_hpa_controller_custom_metrics" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRoleBinding"
+    "kind"       = "ClusterRoleBinding"
     "metadata" = {
       "name" = "hpa-controller-custom-metrics"
     }
     "roleRef" = {
       "apiGroup" = "rbac.authorization.k8s.io"
-      "kind" = "ClusterRole"
-      "name" = "custom-metrics-server-resources"
+      "kind"     = "ClusterRole"
+      "name"     = "custom-metrics-server-resources"
     }
     "subjects" = [
       {
-        "kind" = "ServiceAccount"
-        "name" = "horizontal-pod-autoscaler"
+        "kind"      = "ServiceAccount"
+        "name"      = "horizontal-pod-autoscaler"
         "namespace" = "kube-system"
       },
     ]
@@ -442,20 +442,20 @@ resource "kubernetes_manifest" "clusterrolebinding_hpa_controller_custom_metrics
 resource "kubernetes_manifest" "rolebinding_kube_system_custom_metrics_auth_reader" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "RoleBinding"
+    "kind"       = "RoleBinding"
     "metadata" = {
-      "name" = "custom-metrics-auth-reader"
+      "name"      = "custom-metrics-auth-reader"
       "namespace" = var.metric_server_namespace
     }
     "roleRef" = {
       "apiGroup" = "rbac.authorization.k8s.io"
-      "kind" = "Role"
-      "name" = "extension-apiserver-authentication-reader"
+      "kind"     = "Role"
+      "name"     = "extension-apiserver-authentication-reader"
     }
     "subjects" = [
       {
-        "kind" = "ServiceAccount"
-        "name" = "custom-metrics-apiserver"
+        "kind"      = "ServiceAccount"
+        "name"      = "custom-metrics-apiserver"
         "namespace" = var.metric_server_namespace
       },
     ]
@@ -465,7 +465,7 @@ resource "kubernetes_manifest" "rolebinding_kube_system_custom_metrics_auth_read
 resource "kubernetes_manifest" "clusterrole_custom_metrics_resource_reader" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRole"
+    "kind"       = "ClusterRole"
     "metadata" = {
       "name" = "custom-metrics-resource-reader"
     }
@@ -492,19 +492,19 @@ resource "kubernetes_manifest" "clusterrole_custom_metrics_resource_reader" {
 resource "kubernetes_manifest" "clusterrolebinding_custom_metrics_resource_reader" {
   manifest = {
     "apiVersion" = "rbac.authorization.k8s.io/v1"
-    "kind" = "ClusterRoleBinding"
+    "kind"       = "ClusterRoleBinding"
     "metadata" = {
       "name" = "custom-metrics-resource-reader"
     }
     "roleRef" = {
       "apiGroup" = "rbac.authorization.k8s.io"
-      "kind" = "ClusterRole"
-      "name" = "custom-metrics-resource-reader"
+      "kind"     = "ClusterRole"
+      "name"     = "custom-metrics-resource-reader"
     }
     "subjects" = [
       {
-        "kind" = "ServiceAccount"
-        "name" = "custom-metrics-apiserver"
+        "kind"      = "ServiceAccount"
+        "name"      = "custom-metrics-apiserver"
         "namespace" = var.metric_server_namespace
       },
     ]
@@ -514,12 +514,12 @@ resource "kubernetes_manifest" "clusterrolebinding_custom_metrics_resource_reade
 resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
   manifest = {
     "apiVersion" = "apps/v1"
-    "kind" = "Deployment"
+    "kind"       = "Deployment"
     "metadata" = {
       "labels" = {
         "app" = "custom-metrics-apiserver"
       }
-      "name" = "custom-metrics-apiserver"
+      "name"      = "custom-metrics-apiserver"
       "namespace" = var.metric_server_namespace
     }
     "spec" = {
@@ -550,27 +550,27 @@ resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
                 "--config=/etc/adapter/config.yaml",
               ]
               "image" = "k8s.gcr.io/prometheus-adapter/prometheus-adapter:v0.9.0"
-              "name" = "custom-metrics-apiserver"
+              "name"  = "custom-metrics-apiserver"
               "ports" = [
                 {
                   "containerPort" = 6443
-                  "protocol" = "TCP"
+                  "protocol"      = "TCP"
                 },
               ]
               "volumeMounts" = [
                 {
                   "mountPath" = "/var/run/serving-cert"
-                  "name" = "volume-serving-cert"
-                  "readOnly" = true
+                  "name"      = "volume-serving-cert"
+                  "readOnly"  = true
                 },
                 {
                   "mountPath" = "/etc/adapter/"
-                  "name" = "config"
-                  "readOnly" = true
+                  "name"      = "config"
+                  "readOnly"  = true
                 },
                 {
                   "mountPath" = "/tmp"
-                  "name" = "tmp-vol"
+                  "name"      = "tmp-vol"
                 },
               ]
             },
@@ -583,11 +583,11 @@ resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
                 "secretName" = "custom-metrics-server"
                 "items" = [
                   {
-                    "key" = "tls.crt",
+                    "key"  = "tls.crt",
                     "path" = "serving.crt"
                   },
                   {
-                    "key" = "tls.key",
+                    "key"  = "tls.key",
                     "path" = "serving.key"
                   }
                 ]
@@ -601,7 +601,7 @@ resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
             },
             {
               "emptyDir" = {}
-              "name" = "tmp-vol"
+              "name"     = "tmp-vol"
             },
           ]
         }
@@ -613,16 +613,16 @@ resource "kubernetes_manifest" "deployment_sn_system_custom_metrics_apiserver" {
 resource "kubernetes_manifest" "service_sn_system_custom_metrics_apiserver" {
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "Service"
+    "kind"       = "Service"
     "metadata" = {
-      "name" = "custom-metrics-apiserver"
+      "name"      = "custom-metrics-apiserver"
       "namespace" = var.metric_server_namespace
     }
     "spec" = {
       "ports" = [
         {
-          "port" = 443
-          "protocol" = "TCP"
+          "port"       = 443
+          "protocol"   = "TCP"
           "targetPort" = 6443
         },
       ]
@@ -636,19 +636,19 @@ resource "kubernetes_manifest" "service_sn_system_custom_metrics_apiserver" {
 resource "kubernetes_manifest" "apiservice_v1beta1_custom_metrics_k8s_io" {
   manifest = {
     "apiVersion" = "apiregistration.k8s.io/v1beta1"
-    "kind" = "APIService"
+    "kind"       = "APIService"
     "metadata" = {
       "name" = "v1beta1.custom.metrics.k8s.io"
     }
     "spec" = {
-      "group" = "custom.metrics.k8s.io"
-      "groupPriorityMinimum" = 100
+      "group"                 = "custom.metrics.k8s.io"
+      "groupPriorityMinimum"  = 100
       "insecureSkipTLSVerify" = true
       "service" = {
-        "name" = "custom-metrics-apiserver"
+        "name"      = "custom-metrics-apiserver"
         "namespace" = var.metric_server_namespace
       }
-      "version" = "v1beta1"
+      "version"         = "v1beta1"
       "versionPriority" = 100
     }
   }
@@ -657,19 +657,19 @@ resource "kubernetes_manifest" "apiservice_v1beta1_custom_metrics_k8s_io" {
 resource "kubernetes_manifest" "apiservice_v1beta2_custom_metrics_k8s_io" {
   manifest = {
     "apiVersion" = "apiregistration.k8s.io/v1beta1"
-    "kind" = "APIService"
+    "kind"       = "APIService"
     "metadata" = {
       "name" = "v1beta2.custom.metrics.k8s.io"
     }
     "spec" = {
-      "group" = "custom.metrics.k8s.io"
-      "groupPriorityMinimum" = 100
+      "group"                 = "custom.metrics.k8s.io"
+      "groupPriorityMinimum"  = 100
       "insecureSkipTLSVerify" = true
       "service" = {
-        "name" = "custom-metrics-apiserver"
+        "name"      = "custom-metrics-apiserver"
         "namespace" = var.metric_server_namespace
       }
-      "version" = "v1beta2"
+      "version"         = "v1beta2"
       "versionPriority" = 200
     }
   }
@@ -747,7 +747,7 @@ resource "kubernetes_manifest" "configmap_sn_system_adapter_config" {
     }
     "kind" = "ConfigMap"
     "metadata" = {
-      "name" = "adapter-config"
+      "name"      = "adapter-config"
       "namespace" = var.metric_server_namespace
     }
   }

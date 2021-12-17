@@ -58,11 +58,11 @@ module "istio_operator" {
   istio_gateway_certificate_name  = "istio-ingressgateway-tls"
   istio_gateway_certificate_hosts = ["*.${var.service_domain}"]
   istio_gateway_certificate_issuer = {
-      group = "cert-manager.io"
-      kind = "ClusterIssuer"
-      name = "external"
+    group = "cert-manager.io"
+    kind  = "ClusterIssuer"
+    name  = "external"
   }
-  istio_values                    = var.istio_operator_values
+  istio_values = var.istio_operator_values
 
   kiali_operator_chart_name       = var.kiali_operator_chart_name
   kiali_operator_chart_repository = var.kiali_operator_chart_repository
