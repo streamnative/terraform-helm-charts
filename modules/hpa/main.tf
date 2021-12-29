@@ -478,6 +478,7 @@ resource "kubernetes_manifest" "clusterrole_custom_metrics_resource_reader" {
           "pods",
           "nodes",
           "nodes/stats",
+          "configmaps"
         ]
         "verbs" = [
           "get",
