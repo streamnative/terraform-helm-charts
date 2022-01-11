@@ -446,6 +446,7 @@ variable "olm_values" {
 }
 
 variable "olm_registry" {
+  default     = null
   description = "The registry containing StreamNative's operator catalog images"
   type        = string
 }

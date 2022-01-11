@@ -65,6 +65,7 @@ variable "settings" {
 }
 
 variable "registry" {
+  default     = null
   description = "The registry containing StreamNative's operator catalog images. This is required."
   type        = string
 }
