@@ -32,7 +32,7 @@ locals {
   atomic           = var.atomic != null ? var.atomic : true
   chart_name       = var.chart_name != null ? var.chart_name : "pulsar-operator"
   chart_repository = var.chart_repository != null ? var.chart_repository : "https://charts.streamnative.io"
-  chart_version    = var.chart_version != null ? var.chart_version : "0.8.11"
+  chart_version    = var.chart_version != null ? var.chart_version : "0.8.17"
   cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
   create_namespace = var.create_namespace != null ? var.create_namespace : true
   namespace        = var.namespace != null ? var.namespace : "sn-system"
