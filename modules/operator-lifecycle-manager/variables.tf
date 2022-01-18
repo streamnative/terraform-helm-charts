@@ -55,7 +55,7 @@ variable "cleanup_on_fail" {
 }
 
 variable "create_install_namespace" {
-  default     = null
+  default     =  null
   description = "Create a namespace for the deployment."
   type        = bool
 }
