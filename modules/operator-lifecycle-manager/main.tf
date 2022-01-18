@@ -51,7 +51,7 @@ locals {
 }
 
 resource "kubernetes_namespace" "olm_install" {
-  count = var.create_install_namespace ? 1 : 0
+  count = local.create_install_namespace ? 1 : 0
   metadata {
     name = local.install_namespace
   }
