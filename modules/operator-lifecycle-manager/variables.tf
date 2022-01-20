@@ -68,7 +68,7 @@ variable "create_olm_namespace" {
 
 variable "install_namespace" {
   default     = null
-  description = "The namespace where OLM will install the operators."
+  description = "The namespace where OLM will install the operators, can't be the same as olm_namespace."
   type        = string
 }
 

@@ -48,7 +48,7 @@ variable "cleanup_on_fail" {
 
 variable "install_namespace" {
   default     = null
-  description = "The namespace used for installing the operators managed by OLM."
+  description = "The namespace used for installing the operators managed by OLM, should match install_namespace when installing OLM."
   type        = string
 }
 
