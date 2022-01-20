@@ -24,8 +24,8 @@ metadata:
   name: {{ .Values.bookkeeper.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.bookkeeper.channel }}
-  installPlanApproval: {{ .Values.bookkeeper.approval }}  
+  channel: {{ .Values.bookkeeper.channel | default .Values.channel }}
+  installPlanApproval: {{ .Values.bookkeeper.approval | default .Values.approval }}
   source: {{ .Values.bookkeeper.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.bookkeeper.name }}

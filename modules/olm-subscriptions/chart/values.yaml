@@ -21,9 +21,9 @@ olm_namespace: olm
 install_namespace: sn-system
 operator_group: sn-operators
 
-sn_registry: ""
-sn_operator_registry: ""
-sn_registry_secret: "cloudsmith"
+sn_registry: "docker.cloudsmith.io/streamnative/operators/sn-catalog:latest"
+channel: stable
+approval: Automatic
 
 components:
   bookkeeper: true
@@ -36,52 +36,37 @@ components:
   sn_operator: false
 
 bookkeeper:
-  approval: Automatic
-  channel: stable
   source: sn-catalog
   name: bookkeeper-operator
 
 flink:
-  approval: Automatic
-  channel: stable
   source: sn-catalog
-  name: flink-on-k8s-operator
+  name: flink-operator
 
 flinkSql:
-  approval: Automatic
-  channel: stable
   source: sn-catalog
   name: sql-operator
 
 functionMesh:
-  approval: Automatic
-  channel: alpha
   config:
     enableWebhooks: true
     enableController: false
-  source: sn-function-mesh-catalog
+  source: sn-catalog
   name: function-mesh
 
 prometheus:
-  approval: Automatic
   channel: beta
   source: operatorhubio-catalog
   name: prometheus
 
 pulsar:
-  approval: Automatic
-  channel: stable
   source: sn-catalog
   name: pulsar-operator
 
 zookeeper:
-  approval: Automatic
-  channel: stable
   source: sn-catalog
   name: zookeeper-operator
 
 sn_operator:
-  approval: Automatic
-  channel: alpha
-  source: sn-operator-catalog
+  source: sn-catalog
   name: sn-operator
