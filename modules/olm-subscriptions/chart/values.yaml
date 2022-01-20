@@ -33,7 +33,7 @@ components:
   flink: true
   flinkSql: true
   zookeeper: true
-  sn_operator: false
+  sn_operator: true
 
 bookkeeper:
   source: sn-catalog
