@@ -36,7 +36,7 @@ locals {
   install_namespace = var.install_namespace != null ? var.install_namespace : "sn-system"
   olm_namespace     = var.olm_namespace != null ? var.olm_namespace : "olm"
   release_name      = var.release_name != null ? var.release_name : "olm-subscriptions"
-  registry          = var.registry != null ? var.registry : "docker.cloudsmith.io/streamnative/operators/registry/pulsar-operators:master"
+  channel           = var.channel != null ? var.channel : "stable"
   settings          = var.settings != null ? var.settings : {}
   timeout           = var.timeout != null ? var.timeout : 120
   values            = var.values != null ? var.values : []
@@ -67,20 +67,8 @@ resource "helm_release" "olm_subscriptions" {
   }
 
   set {
-    name  = "sn_registry"
-    value = local.registry
-    type  = "string"
-  }
-
-  set {
-    name  = "sn_operator_registry"
-    value = var.sn_operator_registry
-    type  = "string"
-  }
-
-  set {
-    name  = "components.sn_operator"
-    value = var.enable_sn_operator
+    name  = "channel"
+    value = local.channel
     type  = "string"
   }
 

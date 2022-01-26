@@ -24,8 +24,8 @@ metadata:
   name: {{ .Values.flink.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.flink.channel }}
-  installPlanApproval: {{ .Values.flink.approval }}  
+  channel: {{ .Values.flink.channel | default .Values.channel }}
+  installPlanApproval: {{ .Values.flink.approval | default .Values.approval }}  
   source: {{ .Values.flink.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flink.name }}

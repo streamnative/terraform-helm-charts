@@ -24,8 +24,8 @@ metadata:
   name: {{ .Values.flinkSql.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.flinkSql.channel }}
-  installPlanApproval: {{ .Values.flinkSql.approval }}  
+  channel: {{ .Values.flinkSql.channel | default .Values.channel }}
+  installPlanApproval: {{ .Values.flinkSql.approval | default .Values.approval }}  
   source: {{ .Values.flinkSql.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flinkSql.name }}

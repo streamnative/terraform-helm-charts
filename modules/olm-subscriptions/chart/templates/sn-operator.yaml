@@ -24,8 +24,8 @@ metadata:
   name: {{ .Values.sn_operator.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.sn_operator.channel }}
-  installPlanApproval: {{ .Values.sn_operator.approval }}
+  channel: {{ .Values.sn_operator.channel | default .Values.channel }}
+  installPlanApproval: {{ .Values.sn_operator.approval | default .Values.approval }}
   source: {{ .Values.sn_operator.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.sn_operator.name }}

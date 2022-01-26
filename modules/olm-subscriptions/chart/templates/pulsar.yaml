@@ -24,8 +24,8 @@ metadata:
   name: {{ .Values.pulsar.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.pulsar.channel }}
-  installPlanApproval: {{ .Values.pulsar.approval }}  
+  channel: {{ .Values.pulsar.channel | default .Values.channel }}
+  installPlanApproval: {{ .Values.pulsar.approval | default .Values.approval }}  
   source: {{ .Values.pulsar.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.pulsar.name }}

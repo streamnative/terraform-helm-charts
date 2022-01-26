@@ -25,7 +25,7 @@ metadata:
   namespace: {{ .Values.install_namespace }} 
 spec:
   channel: {{ .Values.prometheus.channel }}
-  installPlanApproval: {{ .Values.prometheus.approval }}  
+  installPlanApproval: {{ .Values.prometheus.approval | default .Values.approval }}  
   source: {{ .Values.prometheus.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.prometheus.name }}

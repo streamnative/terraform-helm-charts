@@ -70,6 +70,12 @@ variable "registry" {
   type        = string
 }
 
+variable "channel" {
+  default     = null
+  description = "The channel to subscribe to. This is required."
+  type        = string
+}
+
 variable "release_name" {
   default     = null
   description = "The name of the helm release."
@@ -80,18 +86,6 @@ variable "timeout" {
   default     = null
   description = "Time in seconds to wait for any individual kubernetes operation."
   type        = number
-}
-
-variable "enable_sn_operator" {
-  default     = false
-  description = "Whether to enable en operator."
-  type        = bool
-}
-
-variable "sn_operator_registry" {
-  default     = ""
-  description = "SN Operator's registry."
-  type        = string
 }
 
 variable "values" {
