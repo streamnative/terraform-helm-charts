@@ -16,7 +16,7 @@ controlPlane:
           # kube-prometheus-stack
           ## Admission Webhook jobs do not terminate as expected with istio-proxy
           - matchExpressions:
-            - {key: app, operator: In, values: [kube-prometheus-stack-admission-create,kube-prometheus-stack-admission-patch]}
+            - {key: app, operator: In, values: [kube-prometheus-stack-admission-create,kube-prometheus-stack-admission-patch,kube-prometheus-stack-operator,sn-operator,flink-operator]}
 
     meshConfig:
       trustDomain: ${trust_domain}
