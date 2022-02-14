@@ -54,6 +54,12 @@ resource "helm_release" "prometheus_operator" {
   version          = local.chart_version
   values           = local.values
 
+  set {
+    name = "prometheusOperator.podAnnotations.traffic\\.sidecar\\.istio\\.io/excludeInboundPorts"
+    value = "10250"
+    type  = "string"
+  }
+
   dynamic "set" {
     for_each = local.settings
     content {
