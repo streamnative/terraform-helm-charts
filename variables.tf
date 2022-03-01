@@ -165,15 +165,15 @@ variable "olm_namespace" {
   type        = string
 }
 
-variable "olm_use_istio" {
+variable "olm_enable_istio" {
   default     = false
   description = "Apply Istio authorization policies for OLM operators. Defaults to \"false\"."
   type        = bool
 }
 
-variable "olm_istio_root_namespace" {
+variable "olm_istio_system_namespace" {
   default     = "istio-system"
-  description = "The Istio root namespace for applying mesh-wide authorization policies."
+  description = "The namespace for Istio authorization policies. Set to the Istio root namespace for cluster-wide policies."
   type        = string
 }
 

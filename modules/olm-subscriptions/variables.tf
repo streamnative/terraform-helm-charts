@@ -82,9 +82,9 @@ variable "enable_istio" {
   type        = bool
 }
 
-variable "istio_root_namespace" {
+variable "istio_system_namespace" {
   default     = null
-  description = "The namespace to install Istio authorization policies into."
+  description = "The namespace for Istio authorization policies. Set to the Istio root namespace for cluster-wide policies."
   type        = string
 }
 

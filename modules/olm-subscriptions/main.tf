@@ -28,20 +28,20 @@ terraform {
   }
 }
 locals {
-  atomic               = var.atomic != null ? var.atomic : true
-  chart_name           = var.chart_name != null ? var.chart_name : "${path.module}/chart"
-  chart_repository     = var.chart_repository != null ? var.chart_repository : null
-  chart_version        = var.chart_version != null ? var.chart_version : null
-  cleanup_on_fail      = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
-  install_namespace    = var.install_namespace != null ? var.install_namespace : "sn-system"
-  olm_namespace        = var.olm_namespace != null ? var.olm_namespace : "olm"
-  release_name         = var.release_name != null ? var.release_name : "olm-subscriptions"
-  enable_istio         = var.enable_istio != null ? var.enable_istio : false
-  istio_root_namespace = var.istio_root_namespace != null ? var.istio_root_namespace : "istio-system"
-  channel              = var.channel != null ? var.channel : "stable"
-  settings             = var.settings != null ? var.settings : {}
-  timeout              = var.timeout != null ? var.timeout : 120
-  values               = var.values != null ? var.values : []
+  atomic                 = var.atomic != null ? var.atomic : true
+  chart_name             = var.chart_name != null ? var.chart_name : "${path.module}/chart"
+  chart_repository       = var.chart_repository != null ? var.chart_repository : null
+  chart_version          = var.chart_version != null ? var.chart_version : null
+  cleanup_on_fail        = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  install_namespace      = var.install_namespace != null ? var.install_namespace : "sn-system"
+  olm_namespace          = var.olm_namespace != null ? var.olm_namespace : "olm"
+  release_name           = var.release_name != null ? var.release_name : "olm-subscriptions"
+  enable_istio           = var.enable_istio != null ? var.enable_istio : false
+  istio_system_namespace = var.istio_system_namespace != null ? var.istio_system_namespace : "istio-system"
+  channel                = var.channel != null ? var.channel : "stable"
+  settings               = var.settings != null ? var.settings : {}
+  timeout                = var.timeout != null ? var.timeout : 120
+  values                 = var.values != null ? var.values : []
 }
 
 resource "helm_release" "olm_subscriptions" {
@@ -81,7 +81,7 @@ resource "helm_release" "olm_subscriptions" {
 
   set {
     name  = "istio.rootNamespace"
-    value = local.istio_root_namespace
+    value = local.istio_system_namespace
     type  = "string"
   }
 
