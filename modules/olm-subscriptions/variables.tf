@@ -76,6 +76,18 @@ variable "channel" {
   type        = string
 }
 
+variable "enable_istio" {
+  default     = null
+  description = "Enable Istio support. Assumes that the Istio CRDs are available."
+  type        = bool
+}
+
+variable "istio_root_namespace" {
+  default     = null
+  description = "The namespace to install Istio authorization policies into."
+  type        = string
+}
+
 variable "release_name" {
   default     = null
   description = "The name of the helm release."
