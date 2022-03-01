@@ -165,6 +165,18 @@ variable "olm_namespace" {
   type        = string
 }
 
+variable "olm_enable_istio" {
+  default     = false
+  description = "Apply Istio authorization policies for OLM operators. Defaults to \"false\"."
+  type        = bool
+}
+
+variable "olm_istio_system_namespace" {
+  default     = "istio-system"
+  description = "The namespace for Istio authorization policies. Set to the Istio root namespace for cluster-wide policies."
+  type        = string
+}
+
 ### Otel
 variable "create_otel_collector_namespace" {
   default     = null

@@ -93,11 +93,13 @@ module "olm_subscriptions" {
   count  = var.enable_olm ? 1 : 0
   source = "./modules/olm-subscriptions"
 
-  olm_namespace     = var.olm_namespace
-  install_namespace = var.olm_install_namespace
-  settings          = var.olm_subscription_settings
-  registry          = var.olm_registry
-  values            = var.olm_subscription_values
+  olm_namespace          = var.olm_namespace
+  install_namespace      = var.olm_install_namespace
+  enable_istio           = var.olm_enable_istio
+  istio_system_namespace = var.olm_istio_system_namespace
+  settings               = var.olm_subscription_settings
+  registry               = var.olm_registry
+  values                 = var.olm_subscription_values
 
   depends_on = [
     module.olm
