@@ -14,27 +14,33 @@ olm:
     pullPolicy: Always
   service:
     internalPort: 8080
+    externalPort: metrics
+  # tlsSecret: olm-operator-serving-cert
+  # clientCASecret: pprof-serving-cert
   nodeSelector:
     kubernetes.io/os: linux
   resources:
     requests:
-     cpu: 20m
-     memory: 320Mi
+     cpu: 10m
+     memory: 160Mi
 
 catalog:
   replicaCount: 1
-  commandArgs: -configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
+  commandArgs: --configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
   image:
     ref: quay.io/operator-framework/olm:master
     pullPolicy: Always
   service:
     internalPort: 8080
+    externalPort: metrics
+  # tlsSecret: catalog-operator-serving-cert
+  # clientCASecret: pprof-serving-cert
   nodeSelector:
     kubernetes.io/os: linux
   resources:
     requests:
-     cpu: 20m
-     memory: 160Mi
+     cpu: 10m
+     memory: 80Mi
 
 package:
   replicaCount: 2
@@ -49,8 +55,8 @@ package:
     kubernetes.io/os: linux
   resources:
     requests:
-     cpu: 20m
-     memory: 100Mi
+     cpu: 10m
+     memory: 50Mi
 
 monitoring:
   enabled: false
