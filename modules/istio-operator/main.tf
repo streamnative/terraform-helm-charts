@@ -62,11 +62,11 @@ locals {
   create_kiali_operator_namespace = var.create_kiali_operator_namespace != null ? var.create_kiali_operator_namespace : true
   kiali_operator_chart_name       = var.kiali_operator_chart_name != null ? var.kiali_operator_chart_name : "kiali-operator"
   kiali_operator_chart_repository = var.kiali_operator_chart_repository != null ? var.kiali_operator_chart_repository : "https://kiali.org/helm-charts"
-  kiali_operator_chart_version    = var.kiali_operator_chart_version != null ? var.kiali_operator_chart_version : "1.44.0"
+  kiali_operator_chart_version    = var.kiali_operator_chart_version != null ? var.kiali_operator_chart_version : "1.45.0"
   kiali_operator_release_name     = var.kiali_operator_release_name != null ? var.kiali_operator_release_name : "kiali-operator"
   kiali_operator_settings         = var.kiali_operator_settings != null ? var.kiali_operator_settings : {}
   kiali_operator_namespace        = var.kiali_operator_namespace != null ? var.kiali_operator_namespace : "kiali-operator"
-  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : "sn-system"
+  kiali_namespace                 = var.kiali_namespace != null ? var.kiali_namespace : local.istio_system_namespace
   kiali_release_name              = var.kiali_release_name != null ? var.kiali_release_name : "kiali"
   kiali_gateway_hosts             = var.kiali_gateway_hosts != null ? var.kiali_gateway_hosts : []
   kiali_gateway_tls_secret        = var.kiali_gateway_tls_secret != null ? var.kiali_gateway_tls_secret : "kiali"
