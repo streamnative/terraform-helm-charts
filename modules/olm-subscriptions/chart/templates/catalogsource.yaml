@@ -22,6 +22,8 @@ kind: CatalogSource
 metadata:
   name: sn-catalog
   namespace: {{ .Values.olm_namespace }}
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
 spec:
   displayName: StreamNative Operators
   image: {{ .Values.sn_registry }}
