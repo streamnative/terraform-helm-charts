@@ -127,6 +127,9 @@ locals {
     grafana = {
       enabled = false
     }
+    prometheus = {
+      enabled = false
+    }
   })]
 }
 
