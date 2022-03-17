@@ -238,7 +238,7 @@ variable "create_vector_agent_namespace" {
 
 variable "vector_agent_namespace" {
   default     = "sn-system"
-  description = "The namespace used for the operator deployment. Defaults to \"vector\" (recommended)"
+  description = "The namespace used for the operator deployment."
   type        = string
 }
 
@@ -687,6 +687,42 @@ variable "vector_agent_settings" {
   default     = null
   description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
   type        = map(any)
+}
+
+variable "vector_sink_endpoint" {
+  default     = null
+  description = "The endpoint to which Vector will send logs."
+  type        = string
+}
+
+variable "vector_sink_name" {
+  default     = null
+  description = "The name of the vector sink."
+  type        = string
+}
+
+variable "vector_sink_oauth_audience" {
+  default     = null
+  description = "The OAuth audience for the sink authorization config."
+  type        = string
+}
+
+variable "vector_sink_oauth_credentials_url" {
+  default     = null
+  description = "The OAuth credentials URL for the sink authorization config."
+  type        = string
+}
+
+variable "vector_sink_oauth_issuer_url" {
+  default     = null
+  description = "The OAuth issuer URL for the sink authorization config."
+  type        = string
+}
+
+variable "vector_sink_topic" {
+  default     = null
+  description = "The topic for the sink to which Vector will send logs."
+  type        = string
 }
 
 variable "vector_agent_timeout" {

@@ -44,7 +44,7 @@ locals {
   create_istio_operator_namespace = var.create_istio_operator_namespace != null ? var.create_istio_operator_namespace : true
   istio_chart_name                = var.istio_chart_name != null ? var.istio_chart_name : "istio-operator"
   istio_chart_repository          = var.istio_chart_repository != null ? var.istio_chart_repository : "https://stevehipwell.github.io/helm-charts/"
-  istio_chart_version             = var.istio_chart_version != null ? var.istio_chart_version : "2.4.0"
+  istio_chart_version             = var.istio_chart_version != null ? var.istio_chart_version : "2.5.2"
   istio_cluster_name              = var.istio_cluster_name != null ? var.istio_cluster_name : null
   istio_mesh_id                   = var.istio_mesh_id != null ? var.istio_mesh_id : null
   istio_network                   = var.istio_network != null ? var.istio_network : "network1"

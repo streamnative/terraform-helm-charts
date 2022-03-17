@@ -127,6 +127,9 @@ locals {
     grafana = {
       enabled = false
     }
+    prometheus = {
+      enabled = false
+    }
   })]
 }
 
@@ -179,15 +182,21 @@ module "vector_agent" {
   count  = var.enable_vector_agent ? 1 : 0
   source = "./modules/vector-agent"
 
-  chart_name       = var.vector_agent_chart_name
-  chart_repository = var.vector_agent_chart_repository
-  chart_version    = var.vector_agent_chart_version
-  create_namespace = var.create_vector_agent_namespace
-  namespace        = var.vector_agent_namespace
-  release_name     = var.vector_agent_release_name
-  settings         = var.vector_agent_settings
-  timeout          = var.vector_agent_timeout
-  values           = var.vector_agent_values
+  chart_name                 = var.vector_agent_chart_name
+  chart_repository           = var.vector_agent_chart_repository
+  chart_version              = var.vector_agent_chart_version
+  create_namespace           = var.create_vector_agent_namespace
+  namespace                  = var.vector_agent_namespace
+  release_name               = var.vector_agent_release_name
+  settings                   = var.vector_agent_settings
+  sink_endpoint              = var.vector_sink_endpoint
+  sink_name                  = var.vector_sink_name
+  sink_oauth_audience        = var.vector_sink_oauth_audience
+  sink_oauth_credentials_url = var.vector_sink_oauth_credentials_url
+  sink_oauth_issuer_url      = var.vector_sink_oauth_issuer_url
+  sink_topic                 = var.vector_sink_topic
+  timeout                    = var.vector_agent_timeout
+  values                     = var.vector_agent_values
 }
 
 module "victoria_metrics" {
