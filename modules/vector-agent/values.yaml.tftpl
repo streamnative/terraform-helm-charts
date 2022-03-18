@@ -1,7 +1,6 @@
 image:
   repository: docker.cloudsmith.io/streamnative/cloud-tools/vector 
   pullPolicy: IfNotPresent
-  # Overrides the image tag, the default is `{image.version}-{image.base}`.
   tag: "0.18.0-debian"
 customConfig:
   data_dir: /vector-data-dir
@@ -33,3 +32,5 @@ customConfig:
           issuer_url: ${sink_oauth_issuer_url}
       healthcheck:
         enabled: true
+psp:
+  enabled: true

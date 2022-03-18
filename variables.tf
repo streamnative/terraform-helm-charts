@@ -53,15 +53,9 @@ variable "enable_vector_agent" {
   type        = bool
 }
 
-variable "enable_victoria_metrics_stack" {
+variable "enable_vmagent" {
   default     = false
   description = "Enables the Victoria Metrics stack on the EKS cluster. Disabled by default"
-  type        = bool
-}
-
-variable "enable_victoria_metrics_auth" {
-  default     = false
-  description = "Enables the Victoria Metrics VMAuth on the EKS cluster. Disabled by default"
   type        = bool
 }
 
@@ -232,7 +226,7 @@ variable "vault_operator_namespace" {
 ### Vector
 variable "create_vector_agent_namespace" {
   default     = false
-  description = "Create a namespace for the deployment"
+  description = "Create a namespace for the deployment."
   type        = bool
 }
 
@@ -242,29 +236,16 @@ variable "vector_agent_namespace" {
   type        = string
 }
 
-
-### VictoriaMetrics
-variable "create_victoria_metrics_auth_namespace" {
+### Victoria Metrics
+variable "create_vmagent_namespace" {
   default     = false
   description = "Create a namespace for the deployment."
   type        = bool
 }
 
-variable "create_victoria_metrics_stack_namespace" {
-  default     = false
-  description = "Create a namespace for the deployment."
-  type        = bool
-}
-
-variable "victoria_metrics_auth_namespace" {
+variable "vmagent_namespace" {
   default     = "sn-system"
-  description = "The namespace used for the operator deployment"
-  type        = string
-}
-
-variable "victoria_metrics_stack_namespace" {
-  default     = "sn-system"
-  description = "The namespace used for the operator deployment"
+  description = "The namespace used for the operator deployment."
   type        = string
 }
 
@@ -709,7 +690,8 @@ variable "vector_sink_oauth_audience" {
 
 variable "vector_sink_oauth_credentials_url" {
   default     = null
-  description = "The OAuth credentials URL for the sink authorization config."
+  description = "A base64 encoded string containing the OAuth credentials URL for the sink authorization config."
+  sensitive   = true
   type        = string
 }
 
@@ -736,83 +718,104 @@ variable "vector_agent_values" {
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
 }
 
-
-
 #######
 ### VictioriaMetrics Settings
 #######
-variable "victoria_metrics_timeout" {
+variable "vmagent_basicauth_enabled" {
   default     = null
-  description = "Time in seconds to wait for any individual kubernetes operation"
-  type        = number
+  description = "Enable basic auth for remote write endpoint. Requires providing a username and base64 encoded password."
+  type        = bool
 }
 
-variable "victoria_metrics_stack_chart_name" {
+variable "vmagent_basicauth_username" {
+  default     = null
+  description = "If basic auth is enabled, provate the username for the VMAgent client"
+  sensitive   = true
+  type        = string
+}
+
+variable "vmagent_basicauth_password" {
+  default     = null
+  description = "If basic auth is enabled, provide the base64 encoded password to use for the VMAgent client connection"
+  sensitive   = true
+  type        = string
+}
+
+variable "vmagent_chart_name" {
   default     = null
   description = "The name of the Helm chart to install"
   type        = string
 }
 
-variable "victoria_metrics_stack_chart_repository" {
-  default     = null
-  description = "The repository containing the Helm chart to install. See https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-k8s-stack for available configuration options"
-  type        = string
-}
-
-variable "victoria_metrics_stack_chart_version" {
-  default     = null
-  description = "The version of the Helm chart to install. Set to the submodule default."
-  type        = string
-}
-
-variable "victoria_metrics_stack_release_name" {
-  default     = null
-  description = "The name of the helm release"
-  type        = string
-}
-
-variable "victoria_metrics_stack_settings" {
-  default     = null
-  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
-  type        = map(any)
-}
-
-variable "victoria_metrics_stack_values" {
-  default     = null
-  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
-}
-
-variable "victoria_metrics_auth_chart_name" {
-  default     = null
-  description = "The name of the Helm chart to install"
-  type        = string
-}
-
-variable "victoria_metrics_auth_chart_repository" {
+variable "vmagent_chart_repository" {
   default     = null
   description = "The repository containing the Helm chart to install."
   type        = string
 }
 
-variable "victoria_metrics_auth_chart_version" {
+variable "vmagent_chart_version" {
   default     = null
   description = "The version of the Helm chart to install. Set to the submodule default."
   type        = string
 }
 
-variable "victoria_metrics_auth_release_name" {
+variable "vmagent_oauth2_enabled" {
+  default     = null
+  description = "Enable OAuth2 authentication for remote write endpoint. Requires providing a client id and secret."
+  type        = bool
+}
+
+variable "vmagent_oauth2_client_id" {
+  default     = null
+  description = "If OAuth2 is enabled, provide the client id for the VMAgent client"
+  sensitive   = true
+  type        = string
+}
+
+variable "vmagent_oauth2_client_secret" {
+  default     = null
+  description = "If OAuth2 is enabled, provide a base64 encoded secret to use for the VMAgent client connection."
+  sensitive   = true
+  type        = string
+}
+
+variable "vmagent_oauth2_token_url" {
+  default     = null
+  description = "If OAuth2 is enabled, provide the token url to use for the VMAgent client connection"
+  type        = string
+}
+
+variable "vmagent_release_name" {
   default     = null
   description = "The name of the helm release"
   type        = string
 }
 
-variable "victoria_metrics_auth_settings" {
+variable "vmagent_remote_write_urls" {
+  default     = null
+  description = "A list of URL(s) for the remote write endpoint(s)."
+  type        = list(string)
+}
+
+variable "vmagent_settings" {
   default     = null
   description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
   type        = map(any)
 }
 
-variable "victoria_metrics_auth_values" {
+variable "vmagent_pods_scrape_namespaces" {
+  default     = null
+  description = "A list of additional namespaces to scrape pod metrics. Defaults to \"sn-system\"."
+  type        = list(string)
+}
+
+variable "vmagent_timeout" {
+  default     = null
+  description = "Time in seconds to wait for any individual kubernetes operation"
+  type        = number
+}
+
+variable "vmagent_values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
 }

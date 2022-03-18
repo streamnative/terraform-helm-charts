@@ -98,7 +98,8 @@ variable "sink_oauth_audience" {
 
 variable "sink_oauth_credentials_url" {
   default     = null
-  description = "The OAuth credentials URL for the sink authorization config."
+  description = "A base64 encoded string containing the OAuth credentials URL for the sink authorization config."
+  sensitive   = true
   type        = string
 }
 

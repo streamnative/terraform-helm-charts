@@ -58,11 +58,11 @@ resource "helm_release" "vector_agent" {
   timeout         = local.timeout
   version         = local.chart_version
 
-  values = coalescelist(local.values, [templatefile("${path.module}/values.yaml.tpl", {
+  values = coalescelist(local.values, [templatefile("${path.module}/values.yaml.tftpl", {
     sink_name                  = local.sink_name
     sink_endpoint              = local.sink_endpoint
     sink_oauth_audience        = local.sink_oauth_audience
-    sink_oauth_credentials_url = local.sink_oauth_credentials_url
+    sink_oauth_credentials_url = base64decode(local.sink_oauth_credentials_url)
     sink_oauth_issuer_url      = local.sink_oauth_issuer_url
     sink_topic                 = local.sink_topic
     })]

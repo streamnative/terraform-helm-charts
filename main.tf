@@ -199,27 +199,26 @@ module "vector_agent" {
   values                     = var.vector_agent_values
 }
 
-module "victoria_metrics" {
-  count  = var.enable_victoria_metrics_stack || var.enable_victoria_metrics_auth ? 1 : 0
-  source = "./modules/victoria-metrics"
+module "vmagent" {
+  count  = var.enable_vmagent ? 1 : 0
+  source = "./modules/victoria-metrics-agent"
 
-  create_vmauth_namespace  = var.create_victoria_metrics_auth_namespace
-  create_vmstack_namespace = var.create_victoria_metrics_stack_namespace
-  enable_vmauth            = var.enable_victoria_metrics_auth
-  enable_vmstack           = var.enable_victoria_metrics_stack
-  timeout                  = var.victoria_metrics_timeout
-  vmauth_chart_name        = var.victoria_metrics_auth_chart_name
-  vmauth_chart_repository  = var.victoria_metrics_auth_chart_repository
-  vmauth_chart_version     = var.victoria_metrics_auth_chart_version
-  vmauth_namespace         = var.victoria_metrics_auth_namespace
-  vmauth_release_name      = var.victoria_metrics_auth_release_name
-  vmauth_settings          = var.victoria_metrics_auth_settings
-  vmauth_values            = var.victoria_metrics_auth_values
-  vmstack_chart_name       = var.victoria_metrics_stack_chart_name
-  vmstack_chart_repository = var.victoria_metrics_stack_chart_repository
-  vmstack_chart_version    = var.victoria_metrics_stack_chart_version
-  vmstack_namespace        = var.victoria_metrics_stack_namespace
-  vmstack_release_name     = var.victoria_metrics_stack_release_name
-  vmstack_settings         = var.victoria_metrics_stack_settings
-  vmstack_values           = var.victoria_metrics_stack_values
+  basicauth_enabled      = var.vmagent_basicauth_enabled
+  basicauth_username     = var.vmagent_basicauth_username
+  basicauth_password     = var.vmagent_basicauth_password
+  chart_name             = var.vmagent_chart_name
+  chart_repository       = var.vmagent_chart_repository
+  chart_version          = var.vmagent_chart_version
+  create_namespace       = var.create_vmagent_namespace
+  namespace              = var.vmagent_namespace
+  oauth2_enabled         = var.vmagent_oauth2_enabled
+  oauth2_client_id       = var.vmagent_oauth2_client_id
+  oauth2_client_secret   = var.vmagent_oauth2_client_secret
+  oauth2_token_url       = var.vmagent_oauth2_token_url
+  release_name           = var.vmagent_release_name
+  remote_write_urls      = var.vmagent_remote_write_urls
+  settings               = var.vmagent_settings
+  pods_scrape_namespaces = var.vmagent_pods_scrape_namespaces
+  timeout                = var.vmagent_timeout
+  values                 = var.vmagent_values
 }
