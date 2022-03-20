@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Values.catalog_namespace }}
 spec:
   sourceType: grpc
-  image: quay.io/operatorhubio/catalog:latest
+  image: {{ include "olm.upstreamOperatorCatalogImage" . }}
   displayName: Community Operators
   publisher: OperatorHub.io
   updateStrategy:

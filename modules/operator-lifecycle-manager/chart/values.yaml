@@ -7,10 +7,20 @@ writeStatusName: '""'
 imagestream: false
 debug: true
 installType: upstream
+
+image:
+  registry: quay.io
+  repository: operator-framework
+  name: olm
+  tag: v0.20.0
+  pullSecrets: []
+  # - name: gcr-test
+
 olm:
   replicaCount: 1
   image:
-    ref: quay.io/operator-framework/olm:master
+    # if you want to use a specified image, you can set ref to override the common image
+    # ref: quay.io/operator-framework/olm:master
     pullPolicy: Always
   service:
     internalPort: 8080
@@ -28,7 +38,7 @@ catalog:
   replicaCount: 1
   commandArgs: --configmapServerImage=quay.io/operator-framework/configmap-operator-registry:latest
   image:
-    ref: quay.io/operator-framework/olm:master
+    # ref: quay.io/operator-framework/olm:master
     pullPolicy: Always
   service:
     internalPort: 8080
@@ -47,7 +57,8 @@ package:
   maxUnavailable: 1
   maxSurge: 1
   image:
-    ref: quay.io/operator-framework/olm:master
+    # if you want to use a specified image, you can set ref to override the common image
+    # ref: quay.io/operator-framework/olm:master
     pullPolicy: Always
   service:
     internalPort: 5443
@@ -57,6 +68,14 @@ package:
     requests:
      cpu: 10m
      memory: 50Mi
+
+upstreamOperator:
+  # catalog image for the upstream operator
+  image:
+    # ref: quay.io/operatorhubio/catalog:latest
+    repository: operatorhubio
+    name: catalog
+    tag: latest
 
 monitoring:
   enabled: false
