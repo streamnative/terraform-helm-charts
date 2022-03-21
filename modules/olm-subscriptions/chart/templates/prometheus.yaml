@@ -29,4 +29,6 @@ spec:
   source: {{ .Values.prometheus.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.prometheus.name }}
+  config:
+    resources: {{ include "subscription.prometheusResources" . }}
 {{- end }}

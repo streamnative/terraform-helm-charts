@@ -29,6 +29,8 @@ spec:
   source: {{ .Values.zookeeper.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.zookeeper.name }}
+  config:
+    resources: {{ include "subscription.zookeeperResources" . }}
 
 ---
 {{- if and .Values.istio.enabled }}

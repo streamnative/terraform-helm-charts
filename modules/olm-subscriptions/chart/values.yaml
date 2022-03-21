@@ -39,17 +39,30 @@ components:
   zookeeper: true
   sn_operator: true
 
+subscriptionConfig:
+  resources:
+    requests:
+      cpu: 20m
+      mem: 16Mi
+    limits:
+      cpu: 200m
+      mem: 256Mi
+
+
 bookkeeper:
   source: sn-catalog
   name: bookkeeper-operator
+  config: {}
 
 flink:
   source: sn-catalog
   name: flink-operator
+  config: {}
 
 flinkSql:
   source: sn-catalog
   name: sql-operator
+  config: {}
 
 functionMesh:
   config:
@@ -62,15 +75,19 @@ prometheus:
   channel: beta
   source: operatorhubio-catalog
   name: prometheus
+  config: {}
 
 pulsar:
   source: sn-catalog
   name: pulsar-operator
+  config: {}
 
 zookeeper:
   source: sn-catalog
   name: zookeeper-operator
+  config: {}
 
 sn_operator:
   source: sn-catalog
   name: sn-operator
+  config: {}

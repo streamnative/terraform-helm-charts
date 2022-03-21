@@ -29,7 +29,8 @@ spec:
   source: {{ .Values.bookkeeper.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.bookkeeper.name }}
-
+  config:
+    resources: {{ include "subscription.bookkeeperResources" . }}
 ---
 {{- if and .Values.istio.enabled }}
 apiVersion: security.istio.io/v1beta1
