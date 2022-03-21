@@ -12,6 +12,8 @@ controlPlane:
           clusterName: ${cluster_name}
         network: ${network}
       sidecarInjectorWebhook:
+        injectedAnnotations:
+          cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
         neverInjectSelector:
           # kube-prometheus-stack
           ## Admission Webhook jobs do not terminate as expected with istio-proxy
