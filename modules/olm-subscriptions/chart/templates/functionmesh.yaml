@@ -31,6 +31,7 @@ spec:
       value: "{{ .Values.functionMesh.config.enableWebhooks }}"
     - name: ENABLE_FUNCTION_MESH_CONTROLLER
       value: "{{ .Values.functionMesh.config.enableController }}"
+    resources: {{ include "subscription.functionMeshResources" . }}
   installPlanApproval: {{ .Values.functionMesh.approval | default .Values.approval }}  
   source: {{ .Values.functionMesh.source }}
   sourceNamespace: {{ .Values.olm_namespace }}

@@ -29,4 +29,6 @@ spec:
   source: {{ .Values.sn_operator.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.sn_operator.name }}
+  config:
+    resources: {{ include "subscription.snOperatorResources" . }}
 {{- end }}

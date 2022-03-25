@@ -104,3 +104,27 @@ variable "values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
 }
+
+variable "subscription_cpu_requests" {
+  default     = null
+  description = "The cpu requests of subscription."
+  type        = string
+}
+
+variable "subscription_mem_requests" {
+  default     = null
+  description = "The mem requests of subscription."
+  type        = string
+}
+
+variable "subscription_cpu_limits" {
+  default     = null
+  description = "The cpu limits of subscription."
+  type        = string
+}
+
+variable "subscription_mem_limits" {
+  default     = null
+  description = "The mem limits of subscription."
+  type        = string
+}

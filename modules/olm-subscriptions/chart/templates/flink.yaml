@@ -29,4 +29,6 @@ spec:
   source: {{ .Values.flink.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flink.name }}
+  config:
+    resources: {{ include "subscription.flinkResources" . }}
 {{- end }}

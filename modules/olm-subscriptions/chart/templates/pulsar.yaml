@@ -29,6 +29,8 @@ spec:
   source: {{ .Values.pulsar.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.pulsar.name }}
+  config:
+    resources: {{ include "subscription.pulsarResources" . }}
 
 ---
 {{- if and .Values.istio.enabled }}
