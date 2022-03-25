@@ -97,7 +97,7 @@ resource "helm_release" "olm_subscriptions" {
   }
 
   set {
-    name  = "subscriptionConfig.resources.requests.mem"
+    name  = "subscriptionConfig.resources.requests.memory"
     value = local.subscription_mem_requests
     type  = "string"
   }
@@ -109,7 +109,7 @@ resource "helm_release" "olm_subscriptions" {
   }
 
   set {
-    name  = "subscriptionConfig.resources.limits.mem"
+    name  = "subscriptionConfig.resources.limits.memory"
     value = local.subscription_mem_limits
     type  = "string"
   }

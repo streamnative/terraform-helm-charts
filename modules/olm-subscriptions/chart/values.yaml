@@ -43,10 +43,10 @@ subscriptionConfig:
   resources:
     requests:
       cpu: 20m
-      mem: 16Mi
+      memory: 16Mi
     limits:
       cpu: 200m
-      mem: 256Mi
+      memory: 256Mi
 
 
 bookkeeper:
