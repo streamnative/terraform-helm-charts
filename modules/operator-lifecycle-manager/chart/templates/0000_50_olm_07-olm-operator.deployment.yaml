@@ -18,6 +18,10 @@ spec:
         app: olm-operator
     spec:
       serviceAccountName: olm-operator-serviceaccount
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- toYaml .Values.image.pullSecrets | nindent 6 }}
+      {{- end }}
       containers:
         - name: olm-operator
           command:
@@ -51,7 +55,7 @@ spec:
           - --tls-key
           - {{ .Values.olm.tlsKeyPath }}
           {{- end }}
-          image: {{ .Values.olm.image.ref }}
+          image: {{ include "olm.image" . }}
           imagePullPolicy: {{ .Values.olm.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.olm.service.internalPort }}
