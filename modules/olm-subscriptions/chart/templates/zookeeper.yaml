@@ -31,6 +31,14 @@ spec:
   name: {{ .Values.zookeeper.name }}
   config:
     resources: {{ include "subscription.zookeeperResources" . }}
+    {{- if .Values.zookeeper.config.env }}
+    env:
+    {{- toYaml .Values.zookeeper.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.zookeeper.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.zookeeper.config.envFrom | nindent 4 }}
+    {{- end }}
 
 ---
 {{- if and .Values.istio.enabled }}

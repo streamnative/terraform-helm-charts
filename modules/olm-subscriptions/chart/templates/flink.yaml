@@ -31,4 +31,13 @@ spec:
   name: {{ .Values.flink.name }}
   config:
     resources: {{ include "subscription.flinkResources" . }}
+    {{- if .Values.flink.config.env }}
+    env:
+    {{- toYaml .Values.flink.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.flink.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.flink.config.envFrom | nindent 4 }}
+    {{- end }}
+
 {{- end }}

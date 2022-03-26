@@ -31,4 +31,12 @@ spec:
   name: {{ .Values.prometheus.name }}
   config:
     resources: {{ include "subscription.prometheusResources" . }}
+    {{- if .Values.prometheus.config.env }}
+    env:
+    {{- toYaml .Values.prometheus.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.prometheus.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.prometheus.config.envFrom | nindent 4 }}
+    {{- end }}
 {{- end }}

@@ -31,6 +31,14 @@ spec:
   name: {{ .Values.pulsar.name }}
   config:
     resources: {{ include "subscription.pulsarResources" . }}
+    {{- if .Values.pulsar.config.env }}
+    env:
+    {{- toYaml .Values.pulsar.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.pulsar.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.pulsar.config.envFrom | nindent 4 }}
+    {{- end }}
 
 ---
 {{- if and .Values.istio.enabled }}
