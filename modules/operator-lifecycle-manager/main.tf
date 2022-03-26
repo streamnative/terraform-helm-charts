@@ -48,6 +48,10 @@ locals {
   settings                 = var.settings != null ? var.settings : {}
   timeout                  = var.timeout != null ? var.timeout : 120
   values                   = var.values != null ? var.values : []
+  image_registry           = var.image_registry != null ? var.image_registry : "quay.io"
+  image_repository         = var.image_repository != null ? var.image_repository : "operator-framework"
+  image_name               = var.image_name != null ? var.image_name : "olm"
+  image_tag                = var.image_tag != null ? var.image_tag : "v0.20.0"
 }
 
 resource "kubernetes_namespace" "olm_install" {
@@ -91,6 +95,30 @@ resource "helm_release" "operator_lifecycle_manager" {
     value = local.create_install_namespace ? kubernetes_namespace.olm_install[0].id : local.install_namespace
     type  = "string"
   }
+
+  set {
+    name  = "image.registry"
+    value = local.image_registry
+    type  = "string"
+  }
+
+  set {
+    name  = "image.repository"
+    value = local.image_repository
+    type  = "string"
+  }
+
+  set {
+    name  = "image.name"
+    value = local.image_name
+    type  = "string"
+  }
+  set {
+    name  = "image.tag"
+    value = local.image_tag
+    type  = "string"
+  }
+
 
   dynamic "set" {
     for_each = local.settings

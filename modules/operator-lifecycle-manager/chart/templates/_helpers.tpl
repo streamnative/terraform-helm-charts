@@ -14,3 +14,60 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create the default image name for olm, catalog and package.
+use quay.io/operator-framework/olm:v0.20.0 as default if related values are empty
+*/}}
+{{- define "olm.defaultImageName" -}}
+{{- $registry := default "quay.io" .Values.image.registry }}
+{{- $repository := default "operator-framework" .Values.image.repository }}
+{{- $name := default "olm" .Values.image.name }}
+{{- $tag := default "v0.20.0" .Values.image.tag  }}
+{{- printf "%s/%s/%s:%s" $registry $repository $name $tag }}
+{{- end }}
+
+{{/*
+Create the name of olm image
+*/}}
+{{- define "olm.image" -}}
+{{- if .Values.olm.image.ref }}
+{{- printf "%s" .Values.olm.image.ref }}
+{{- else }}
+{{- printf "%s" (include "olm.defaultImageName" . ) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of catalog image
+*/}}
+{{- define "olm.catalogImage" -}}
+{{- if .Values.catalog.image.ref }}
+{{- printf "%s" .Values.catalog.image.ref }}
+{{- else }}
+{{- printf "%s" (include "olm.defaultImageName" . ) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of package image
+*/}}
+{{- define "olm.packageImage" -}}
+{{- if .Values.package.image.ref }}
+{{- printf "%s" .Values.package.image.ref }}
+{{- else }}
+{{- printf "%s" (include "olm.defaultImageName" . ) }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of upstream operator catalog image
+*/}}
+{{- define "olm.upstreamOperatorCatalogImage" -}}
+{{- if .Values.upstreamOperator.image.ref }}
+{{- printf "%s" .Values.upstreamOperator.image.ref }}
+{{- else }}
+{{- $registry := default .Values.image.registry "quay.io" }}
+{{- printf "%s/%s/%s:%s" $registry .Values.upstreamOperator.image.repository .Values.upstreamOperator.image.name .Values.upstreamOperator.image.tag }}
+{{- end }}
+{{- end }}

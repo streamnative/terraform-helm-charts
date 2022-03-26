@@ -31,6 +31,10 @@ spec:
         secret:
           secretName: {{ .Values.catalog.clientCASecret }}
       {{- end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- toYaml .Values.image.pullSecrets | nindent 6 }}
+      {{- end }}
       containers:
         - name: catalog-operator
           {{- if or .Values.catalog.tlsSecret .Values.catalog.clientCASecret }}
@@ -61,7 +65,7 @@ spec:
           - {{ .Values.catalog.opmImageArgs }}
           {{- end }}
           - --util-image
-          -  {{ .Values.catalog.image.ref }}
+          - {{ include "olm.catalogImage" . }}
           {{- if .Values.writeStatusNameCatalog }}
           - --writeStatusName
           - {{ .Values.writeStatusNameCatalog }}
@@ -76,7 +80,7 @@ spec:
           - --client-ca
           - /profile-collector-cert/tls.crt
           {{- end }}
-          image: {{ .Values.catalog.image.ref }}
+          image: {{ include "olm.catalogImage" . }}
           imagePullPolicy: {{ .Values.catalog.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.olm.service.internalPort }}

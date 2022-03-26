@@ -43,6 +43,10 @@ No modules.
 | <a name="input_cleanup_on_fail"></a> [cleanup\_on\_fail](#input\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails | `bool` | `null` | no |
 | <a name="input_create_install_namespace"></a> [create\_install\_namespace](#input\_create\_install\_namespace) | Create a namespace for the deployment. | `bool` | `null` | no |
 | <a name="input_create_olm_namespace"></a> [create\_olm\_namespace](#input\_create\_olm\_namespace) | Whether or not to create the namespace used for OLM and its resources. | `bool` | `null` | no |
+| <a name="input_image_name"></a> [image\_name](#input\_image\_name) | The repository olm image name | `string` | `null` | no |
+| <a name="input_image_registry"></a> [image\_registry](#input\_image\_registry) | The registry name of olm image | `string` | `null` | no |
+| <a name="input_image_repository"></a> [image\_repository](#input\_image\_repository) | The repository name of olm image | `string` | `null` | no |
+| <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | The tag name of olm image | `string` | `null` | no |
 | <a name="input_install_namespace"></a> [install\_namespace](#input\_install\_namespace) | The namespace where OLM will install the operators. | `string` | `null` | no |
 | <a name="input_olm_namespace"></a> [olm\_namespace](#input\_olm\_namespace) | The namespace used by OLM and its resources | `string` | `null` | no |
 | <a name="input_release_name"></a> [release\_name](#input\_release\_name) | The name of the helm release | `string` | `null` | no |
