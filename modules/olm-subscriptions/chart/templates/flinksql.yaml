@@ -31,4 +31,12 @@ spec:
   name: {{ .Values.flinkSql.name }}
   config:
     resources: {{ include "subscription.flinkSQLResources" . }}
+    {{- if .Values.flinkSql.config.env }}
+    env:
+    {{- toYaml .Values.flinkSql.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.flinkSql.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.flinkSql.config.envFrom | nindent 4 }}
+    {{- end }}
 {{- end }}

@@ -53,6 +53,12 @@ bookkeeper:
   source: sn-catalog
   name: bookkeeper-operator
   config: {}
+  #  env:
+  #  - name: BOOK
+  #    value: bookeeper
+  #  envFrom:
+  #  - secretRef:
+  #      name: book-secret
 
 flink:
   source: sn-catalog

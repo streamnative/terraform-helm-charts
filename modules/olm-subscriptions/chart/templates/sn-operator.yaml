@@ -31,4 +31,12 @@ spec:
   name: {{ .Values.sn_operator.name }}
   config:
     resources: {{ include "subscription.snOperatorResources" . }}
+    {{- if .Values.sn_operator.config.env }}
+    env:
+    {{- toYaml .Values.sn_operator.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.sn_operator.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.sn_operator.config.envFrom | nindent 4 }}
+    {{- end }}
 {{- end }}

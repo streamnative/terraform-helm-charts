@@ -31,6 +31,14 @@ spec:
   name: {{ .Values.bookkeeper.name }}
   config:
     resources: {{ include "subscription.bookkeeperResources" . }}
+    {{- if .Values.bookkeeper.config.env }}
+    env:
+    {{- toYaml .Values.bookkeeper.config.env | nindent 4 }}
+    {{- end }}
+    {{- if .Values.bookkeeper.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.bookkeeper.config.envFrom | nindent 4 }}
+    {{- end }}
 ---
 {{- if and .Values.istio.enabled }}
 apiVersion: security.istio.io/v1beta1
