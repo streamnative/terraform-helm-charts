@@ -29,15 +29,18 @@ spec:
   source: {{ .Values.sn_operator.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.sn_operator.name }}
-  {{- if or .Values.tolerations .Values.sn_operator.resources }}
   config:
     {{- if .Values.tolerations }}
     tolerations:
 {{ toYaml .Values.tolerations | indent 4 }}
     {{- end }}
-    {{- if .Values.sn_operator.resources }}
-    resources:
-{{ toYaml .Values.sn_operator.resources | indent 6 }}
+    resources: {{ include "subscription.snOperatorResources" . }}
+    {{- if .Values.sn_operator.config.env }}
+    env:
+    {{- toYaml .Values.sn_operator.config.env | nindent 4 }}
     {{- end }}
-  {{- end }}
+    {{- if .Values.sn_operator.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.sn_operator.config.envFrom | nindent 4 }}
+    {{- end }}
 {{- end }}

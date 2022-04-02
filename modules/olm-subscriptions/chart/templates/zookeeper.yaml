@@ -29,15 +29,37 @@ spec:
   source: {{ .Values.zookeeper.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.zookeeper.name }}
-  {{- if or .Values.tolerations .Values.zookeeper.resources }}
   config:
     {{- if .Values.tolerations }}
     tolerations:
 {{ toYaml .Values.tolerations | indent 4 }}
     {{- end }}
-    {{- if .Values.zookeeper.resources }}
-    resources:
-{{ toYaml .Values.zookeeper.resources | indent 6 }}
+    resources: {{ include "subscription.zookeeperResources" . }}
+    {{- if .Values.zookeeper.config.env }}
+    env:
+    {{- toYaml .Values.zookeeper.config.env | nindent 4 }}
     {{- end }}
-  {{- end }}
+    {{- if .Values.zookeeper.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.zookeeper.config.envFrom | nindent 4 }}
+    {{- end }}
+---
+{{- if and .Values.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Values.zookeeper.name }}
+  namespace: {{ .Values.istio.rootNamespace }}
+spec:
+  selector:
+    matchLabels:
+      # well-known labels
+      cloud.streamnative.io/app: pulsar
+      cloud.streamnative.io/component: zookeeper
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/{{ .Values.install_namespace }}/sa/zookeeper-operator-controller-manager"]
+{{- end }}
 {{- end }}

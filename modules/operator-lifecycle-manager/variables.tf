@@ -55,7 +55,7 @@ variable "cleanup_on_fail" {
 }
 
 variable "create_install_namespace" {
-  default     =  null
+  default     = null
   description = "Create a namespace for the deployment."
   type        = bool
 }
@@ -99,4 +99,29 @@ variable "timeout" {
 variable "values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+
+variable "image_registry" {
+  default     = null
+  description = "The registry name of olm image"
+  type        = string
+}
+
+variable "image_repository" {
+  default     = null
+  description = "The repository name of olm image"
+  type        = string
+}
+
+variable "image_name" {
+  default     = null
+  description = "The repository olm image name"
+  type        = string
+}
+
+variable "image_tag" {
+  default     = null
+  description = "The tag name of olm image"
+  type        = string
 }

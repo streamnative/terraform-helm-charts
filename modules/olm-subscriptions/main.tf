@@ -27,21 +27,27 @@ terraform {
     }
   }
 }
-locals {
-  atomic            = var.atomic != null ? var.atomic : true
-  chart_name        = var.chart_name != null ? var.chart_name : "${path.module}/chart"
-  chart_repository  = var.chart_repository != null ? var.chart_repository : null
-  chart_version     = var.chart_version != null ? var.chart_version : null
-  cleanup_on_fail   = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
-  install_namespace = var.install_namespace != null ? var.install_namespace : "sn-system"
-  olm_namespace     = var.olm_namespace != null ? var.olm_namespace : "olm"
-  release_name      = var.release_name != null ? var.release_name : "olm-subscriptions"
-  channel           = var.channel != null ? var.channel : "stable"
-  settings          = var.settings != null ? var.settings : {}
-  timeout           = var.timeout != null ? var.timeout : 120
-  values            = var.values != null ? var.values : []
-}
 
+locals {
+  atomic                    = var.atomic != null ? var.atomic : true
+  chart_name                = var.chart_name != null ? var.chart_name : "${path.module}/chart"
+  chart_repository          = var.chart_repository != null ? var.chart_repository : null
+  chart_version             = var.chart_version != null ? var.chart_version : null
+  cleanup_on_fail           = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  install_namespace         = var.install_namespace != null ? var.install_namespace : "sn-system"
+  olm_namespace             = var.olm_namespace != null ? var.olm_namespace : "olm"
+  release_name              = var.release_name != null ? var.release_name : "olm-subscriptions"
+  enable_istio              = var.enable_istio != null ? var.enable_istio : false
+  istio_system_namespace    = var.istio_system_namespace != null ? var.istio_system_namespace : "istio-system"
+  channel                   = var.channel != null ? var.channel : "stable"
+  settings                  = var.settings != null ? var.settings : {}
+  timeout                   = var.timeout != null ? var.timeout : 120
+  values                    = var.values != null ? var.values : []
+  subscription_cpu_requests = var.subscription_cpu_requests != null ? var.subscription_cpu_requests : "20m"
+  subscription_mem_requests = var.subscription_mem_requests != null ? var.subscription_mem_requests : "16Mi"
+  subscription_cpu_limits   = var.subscription_cpu_limits != null ? var.subscription_cpu_limits : "200m"
+  subscription_mem_limits   = var.subscription_mem_limits != null ? var.subscription_mem_limits : "256Mi"
+}
 
 resource "helm_release" "olm_subscriptions" {
   atomic          = local.atomic
@@ -69,6 +75,42 @@ resource "helm_release" "olm_subscriptions" {
   set {
     name  = "channel"
     value = local.channel
+    type  = "string"
+  }
+
+  set {
+    name  = "istio.enabled"
+    value = local.enable_istio
+    type  = "auto"
+  }
+
+  set {
+    name  = "istio.rootNamespace"
+    value = local.istio_system_namespace
+    type  = "string"
+  }
+
+  set {
+    name  = "subscriptionConfig.resources.requests.cpu"
+    value = local.subscription_cpu_requests
+    type  = "string"
+  }
+
+  set {
+    name  = "subscriptionConfig.resources.requests.memory"
+    value = local.subscription_mem_requests
+    type  = "string"
+  }
+
+  set {
+    name  = "subscriptionConfig.resources.limits.cpu"
+    value = local.subscription_cpu_limits
+    type  = "string"
+  }
+
+  set {
+    name  = "subscriptionConfig.resources.limits.memory"
+    value = local.subscription_mem_limits
     type  = "string"
   }
 

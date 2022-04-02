@@ -78,6 +78,43 @@ variable "settings" {
   type        = map(any)
 }
 
+variable "sink_endpoint" {
+  default     = null
+  description = "The endpoint to which Vector will send logs."
+  type        = string
+}
+
+variable "sink_name" {
+  default     = null
+  description = "The name of the vector sink."
+  type        = string
+}
+
+variable "sink_oauth_audience" {
+  default     = null
+  description = "The OAuth audience for the sink authorization config."
+  type        = string
+}
+
+variable "sink_oauth_credentials_url" {
+  default     = null
+  description = "A base64 encoded string containing the OAuth credentials URL for the sink authorization config."
+  sensitive   = true
+  type        = string
+}
+
+variable "sink_oauth_issuer_url" {
+  default     = null
+  description = "The OAuth issuer URL for the sink authorization config."
+  type        = string
+}
+
+variable "sink_topic" {
+  default     = null
+  description = "The topic for the sink to which Vector will send logs."
+  type        = string
+}
+
 variable "timeout" {
   default     = null
   description = "Time in seconds to wait for any individual kubernetes operation."

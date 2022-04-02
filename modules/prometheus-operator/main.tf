@@ -32,7 +32,7 @@ locals {
   atomic           = var.atomic != null ? var.atomic : true
   chart_name       = var.chart_name != null ? var.chart_name : "kube-prometheus-stack"
   chart_repository = var.chart_repository != null ? var.chart_repository : "https://prometheus-community.github.io/helm-charts"
-  chart_version    = var.chart_version != null ? var.chart_version : "21.0.0"
+  chart_version    = var.chart_version != null ? var.chart_version : "33.2.1"
   cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
   create_namespace = var.create_namespace != null ? var.create_namespace : true
   namespace        = var.namespace != null ? var.namespace : "monitoring"
@@ -53,6 +53,12 @@ resource "helm_release" "prometheus_operator" {
   timeout          = local.timeout
   version          = local.chart_version
   values           = local.values
+
+  set {
+    name = "prometheusOperator.podAnnotations.traffic\\.sidecar\\.istio\\.io/excludeInboundPorts"
+    value = "10250"
+    type  = "string"
+  }
 
   dynamic "set" {
     for_each = local.settings

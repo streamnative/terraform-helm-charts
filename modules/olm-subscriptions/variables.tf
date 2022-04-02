@@ -76,6 +76,18 @@ variable "channel" {
   type        = string
 }
 
+variable "enable_istio" {
+  default     = null
+  description = "Enable Istio support. Assumes that the Istio CRDs are available."
+  type        = bool
+}
+
+variable "istio_system_namespace" {
+  default     = null
+  description = "The namespace for Istio authorization policies. Set to the Istio root namespace for cluster-wide policies."
+  type        = string
+}
+
 variable "release_name" {
   default     = null
   description = "The name of the helm release."
@@ -91,4 +103,28 @@ variable "timeout" {
 variable "values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
+}
+
+variable "subscription_cpu_requests" {
+  default     = null
+  description = "The cpu requests of subscription."
+  type        = string
+}
+
+variable "subscription_mem_requests" {
+  default     = null
+  description = "The mem requests of subscription."
+  type        = string
+}
+
+variable "subscription_cpu_limits" {
+  default     = null
+  description = "The cpu limits of subscription."
+  type        = string
+}
+
+variable "subscription_mem_limits" {
+  default     = null
+  description = "The mem limits of subscription."
+  type        = string
 }

@@ -29,15 +29,18 @@ spec:
   source: {{ .Values.flinkSql.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flinkSql.name }}
-  {{- if or .Values.tolerations .Values.flinkSql.resources }}
   config:
     {{- if .Values.tolerations }}
     tolerations:
 {{ toYaml .Values.tolerations | indent 4 }}
     {{- end }}
-    {{- if .Values.flinkSql.resources }}
-    resources:
-{{ toYaml .Values.flinkSql.resources | indent 6 }}
+    resources: {{ include "subscription.flinkSQLResources" . }}
+    {{- if .Values.flinkSql.config.env }}
+    env:
+    {{- toYaml .Values.flinkSql.config.env | nindent 4 }}
     {{- end }}
-  {{- end }}
+    {{- if .Values.flinkSql.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.flinkSql.config.envFrom | nindent 4 }}
+    {{- end }}
 {{- end }}

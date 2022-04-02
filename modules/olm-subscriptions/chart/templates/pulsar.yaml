@@ -29,15 +29,37 @@ spec:
   source: {{ .Values.pulsar.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.pulsar.name }}
-  {{- if or .Values.tolerations .Values.pulsar.resources }}
   config:
     {{- if .Values.tolerations }}
     tolerations:
 {{ toYaml .Values.tolerations | indent 4 }}
     {{- end }}
-    {{- if .Values.pulsar.resources }}
-    resources:
-{{ toYaml .Values.pulsar.resources | indent 6 }}
+    resources: {{ include "subscription.pulsarResources" . }}
+    {{- if .Values.pulsar.config.env }}
+    env:
+    {{- toYaml .Values.pulsar.config.env | nindent 4 }}
     {{- end }}
-  {{- end }}
+    {{- if .Values.pulsar.config.envFrom }}
+    envFrom:
+    {{- toYaml .Values.pulsar.config.envFrom | nindent 4 }}
+    {{- end }}
+---
+{{- if and .Values.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Values.pulsar.name }}
+  namespace: {{ .Values.istio.rootNamespace }}
+spec:
+  selector:
+    matchLabels:
+      # well-known labels
+      cloud.streamnative.io/app: pulsar
+      cloud.streamnative.io/component: broker
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/{{ .Values.install_namespace }}/sa/pulsar-operator-controller-manager"]
+{{- end }}
 {{- end }}

@@ -78,6 +78,10 @@ No modules.
 | <a name="input_registry"></a> [registry](#input\_registry) | The registry containing StreamNative's operator catalog images. This is required. | `string` | n/a | yes |
 | <a name="input_release_name"></a> [release\_name](#input\_release\_name) | The name of the helm release. | `string` | `null` | no |
 | <a name="input_settings"></a> [settings](#input\_settings) | Additional settings which will be passed to the Helm chart values. | `map(any)` | `null` | no |
+| <a name="input_subscription_cpu_limits"></a> [subscription\_cpu\_limits](#input\_subscription\_cpu\_limits) | The cpu limits of subscription. | `string` | `null` | no |
+| <a name="input_subscription_cpu_requests"></a> [subscription\_cpu\_requests](#input\_subscription\_cpu\_requests) | The cpu requests of subscription. | `string` | `null` | no |
+| <a name="input_subscription_mem_limits"></a> [subscription\_mem\_limits](#input\_subscription\_mem\_limits) | The mem limits of subscription. | `string` | `null` | no |
+| <a name="input_subscription_mem_requests"></a> [subscription\_mem\_requests](#input\_subscription\_mem\_requests) | The mem requests of subscription. | `string` | `null` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Time in seconds to wait for any individual kubernetes operation. | `number` | `null` | no |
 | <a name="input_values"></a> [values](#input\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")`. | `any` | `null` | no |
 | <a name="input_enable_sn_operator"></a> [enable\_sn\_operator](#input\_enable\_sn\_operator) | Whether to enable SN Operator | `bool` | `"false"` | no |

@@ -27,6 +27,10 @@ approval: Automatic
 
 tolerations: []
 
+istio:
+  enabled: false
+  rootNamespace: istio-system
+
 components:
   bookkeeper: true
   functionMesh: true
@@ -37,23 +41,38 @@ components:
   zookeeper: true
   sn_operator: true
 
-bookkeeper:
+subscriptionConfig:
   resources:
+    requests:
+      cpu: 20m
+      memory: 16Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+
+bookkeeper:
   source: sn-catalog
   name: bookkeeper-operator
+  config: {}
+  #  env:
+  #  - name: BOOK
+  #    value: bookeeper
+  #  envFrom:
+  #  - secretRef:
+  #      name: book-secret
 
 flink:
-  resources:
   source: sn-catalog
   name: flink-operator
+  config: {}
 
 flinkSql:
-  resources:
   source: sn-catalog
   name: sql-operator
+  config: {}
 
 functionMesh:
-  resources:
   config:
     enableWebhooks: true
     enableController: false
@@ -61,22 +80,22 @@ functionMesh:
   name: function-mesh
 
 prometheus:
-  resources:
   channel: beta
   source: operatorhubio-catalog
   name: prometheus
+  config: {}
 
 pulsar:
-  resources:
   source: sn-catalog
   name: pulsar-operator
+  config: {}
 
 zookeeper:
-  resources:
   source: sn-catalog
   name: zookeeper-operator
+  config: {}
 
 sn_operator:
-  resources:
   source: sn-catalog
   name: sn-operator
+  config: {}

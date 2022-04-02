@@ -1,0 +1,456 @@
+deployment:
+  enabled: false
+
+statefulset:
+  enabled: true
+  updateStrategy: 
+    type: RollingUpdate
+
+remoteWriteUrls:
+  %{ for url in remote_write_urls ~}
+- ${url}
+  %{ endfor ~}
+
+basicauth:
+  enabled: ${basicauth_enabled}
+  username: ${basicauth_username}
+  password: ${basicauth_password}
+
+Oauth2:
+  enabled: ${oauth2_enabled}
+  clientID: ${oauth2_client_id}
+  clientSecret: ${oauth2_client_secret}
+  tokenUrl: ${oauth2_token_url}
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1000Mi
+  limits:
+    cpu: 1
+    memory: 4096Mi
+
+persistence:
+  enabled: true
+  size: 50Gi
+
+extraArgs:
+  envflag.enable: "true"
+  envflag.prefix: VM_
+  loggerFormat: json
+  # promscrape.maxScrapeSize: "167772160"
+  promscrape.suppressDuplicateScrapeTargetErrors: "true"
+
+config:
+  global:
+    scrape_interval: 30s
+  scrape_configs:
+  - job_name: kube-apiserver
+    honor_labels: true
+    kubernetes_sd_configs:
+    - role: endpoints
+      namespaces:
+        names:
+        - default
+    scheme: https
+    tls_config:
+      insecure_skip_verify: false
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      server_name: kubernetes
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_service_label_component
+      regex: apiserver
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_service_label_provider
+      regex: kubernetes
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_endpoint_port_name
+      regex: https
+    - source_labels:
+      - __meta_kubernetes_endpoint_address_target_kind
+      - __meta_kubernetes_endpoint_address_target_name
+      separator: ;
+      regex: Node;(.*)
+      replacement: ${1}
+      target_label: node
+    - source_labels:
+      - __meta_kubernetes_endpoint_address_target_kind
+      - __meta_kubernetes_endpoint_address_target_name
+      separator: ;
+      regex: Pod;(.*)
+      replacement: ${1}
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+      - __meta_kubernetes_service_name
+      target_label: service
+    - target_label: endpoint
+      replacement: https
+  - job_name: sn-system/kube-state-metrics/0
+    honor_labels: true
+    kubernetes_sd_configs:
+    - role: endpoints
+      namespaces:
+        names:
+        - sn-system
+    relabel_configs:
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_service_label_app_kubernetes_io_instance
+      regex: kube-state-metrics
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_service_label_app_kubernetes_io_name
+      regex: kube-state-metrics
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_endpoint_port_name
+      regex: http
+    - source_labels:
+      - __meta_kubernetes_endpoint_address_target_kind
+      - __meta_kubernetes_endpoint_address_target_name
+      separator: ;
+      regex: Node;(.*)
+      replacement: ${1}
+      target_label: node
+    - source_labels:
+      - __meta_kubernetes_endpoint_address_target_kind
+      - __meta_kubernetes_endpoint_address_target_name
+      separator: ;
+      regex: Pod;(.*)
+      replacement: ${1}
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+      - __meta_kubernetes_service_name
+      target_label: service
+    - source_labels:
+      - __meta_kubernetes_service_name
+      target_label: job
+      replacement: ${1}
+    - target_label: endpoint
+      replacement: http
+  - job_name: sn-system/vmagent/0
+    honor_labels: true
+    kubernetes_sd_configs:
+    - role: endpoints
+      namespaces:
+        names:
+        - sn-system
+    metrics_path: /metrics
+    relabel_configs:
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_service_label_app_kubernetes_io_name
+      regex: vmagent
+    - action: keep
+      source_labels:
+      - __meta_kubernetes_endpoint_port_name
+      regex: http
+    - source_labels:
+      - __meta_kubernetes_endpoint_address_target_kind
+      - __meta_kubernetes_endpoint_address_target_name
+      separator: ;
+      regex: Node;(.*)
+      replacement: ${1}
+      target_label: node
+    - source_labels:
+      - __meta_kubernetes_endpoint_address_target_kind
+      - __meta_kubernetes_endpoint_address_target_name
+      separator: ;
+      regex: Pod;(.*)
+      replacement: ${1}
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+      - __meta_kubernetes_service_name
+      target_label: service
+    - source_labels:
+      - __meta_kubernetes_service_label_app_kubernetes_io_name
+      target_label: job
+      replacement: ${1}
+    - target_label: endpoint
+      replacement: http
+  - job_name: sncloud-pods
+    honor_labels: true
+    honor_timestamps: true
+    kubernetes_sd_configs:
+    - role: pod
+      namespaces:
+        names:
+        %{ for ns in pods_scrape_namespaces }
+         - ${ns}
+        %{ endfor }
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    scheme: http
+    relabel_configs:
+    - source_labels:
+      - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+      - __meta_kubernetes_pod_container_name
+      target_label: container
+    - source_labels:
+      - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      separator: ;
+      regex: "true"
+      action: keep
+    - source_labels:
+      - __meta_kubernetes_pod_annotation_prometheus_io_port
+      separator: ;
+      regex: .*
+      action: keep
+    - source_labels:
+      - __meta_kubernetes_pod_container_port_name
+      separator: ;
+      regex: metrics|http|http-metrics
+      action: keep
+    - source_labels:
+      - __meta_kubernetes_pod_phase
+      separator: ;
+      regex: Running
+      replacement: $1
+      action: keep
+    - source_labels:
+      - __meta_kubernetes_pod_label_app
+      separator: ;
+      regex: node-exporter
+      action: drop
+    - source_labels:
+      - __meta_kubernetes_pod_label_app_kubernetes_io_name
+      separator: ;
+      regex: vector
+      action: drop
+    - source_labels:
+      - __meta_kubernetes_pod_annotation_prometheus_io_path
+      target_label: __metrics_path__
+      regex: (.+)
+      action: replace
+    - source_labels:
+      - __address__
+      - __meta_kubernetes_pod_annotation_prometheus_io_port
+      separator: ;
+      target_label: __address__
+      regex: ([^:]+);(.*)
+      replacement: $1:$2
+      action: replace
+    - separator: ;
+      regex: __meta_kubernetes_pod_label_(.+)
+      replacement: $1
+      action: labelmap
+    - source_labels:
+      - __meta_kubernetes_namespace
+      separator: ;
+      target_label: kubernetes_namespace
+      regex: (.*)
+      replacement: $1
+      action: replace
+    - source_labels:
+      - __meta_kubernetes_pod_name
+      separator: ;
+      target_label: kubernetes_pod_name
+      regex: (.*)
+      replacement: $1
+      action: replace
+    - source_labels:
+      - __meta_kubernetes_pod_node_name
+      separator: ;
+      target_label: kubernetes_node
+      regex: (.*)
+      replacement: $1
+      action: replace
+    - source_labels:
+        - __meta_kubernetes_pod_label_component
+      action: replace
+      regex: (.*)
+      target_label: job
+    - source_labels:
+        - __meta_kubernetes_pod_label_cloud_streamnative_io_component
+      action: replace
+      regex: (.*)
+      target_label: job
+  - job_name: sncloud-pods-tls
+    honor_timestamps: true
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    kubernetes_sd_configs:
+    - role: pod
+      namespaces:
+        own_namespace: false
+        names:
+        %{ for ns in pods_scrape_namespaces }
+        - ${ns}
+        %{ endfor }
+    metrics_path: /metrics
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrapetls]
+      separator: ;
+      regex: "true"
+      replacement: $1
+      action: keep
+    - source_labels: [__meta_kubernetes_pod_container_init]
+      regex: "true"
+      action: drop
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+      action: keep_if_equal
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+      separator: ;
+      regex: (.+)
+      target_label: __metrics_path__
+      replacement: $1
+      action: replace
+    - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+      separator: ;
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      target_label: __address__
+      replacement: $1:$2
+      action: replace
+    - separator: ;
+      regex: __meta_kubernetes_pod_label_(.+)
+      replacement: $1
+      action: labelmap
+    - source_labels: [__meta_kubernetes_namespace]
+      separator: ;
+      regex: (.*)
+      target_label: kubernetes_namespace
+      replacement: $1
+      action: replace
+    - source_labels: [__meta_kubernetes_pod_label_component]
+      separator: ;
+      regex: (\S+)
+      target_label: job
+      replacement: $1
+      action: replace
+    - source_labels: [__meta_kubernetes_pod_label_cloud_streamnative_io_component]
+      separator: ;
+      regex: (\S+)
+      target_label: job
+      replacement: $1
+      action: replace
+    - source_labels: [__meta_kubernetes_pod_name]
+      separator: ;
+      regex: (.*)
+      target_label: kubernetes_pod_name
+      replacement: $1
+      action: replace
+    - separator: ;
+      regex: (.*)
+      target_label: mon_poolmember
+      replacement: VMagentNAME
+      action: replace
+  - job_name: node-exporter
+    honor_labels: true
+    honor_timestamps: true
+    kubernetes_sd_configs:
+    - role: pod
+      namespaces:
+        names:
+        - sn-system
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    scheme: http
+    relabel_configs:
+    - source_labels:
+      - __meta_kubernetes_namespace
+      target_label: namespace
+    - source_labels:
+      - __meta_kubernetes_pod_container_name
+      target_label: container
+    - source_labels:
+      - __meta_kubernetes_pod_name
+      target_label: pod
+    - source_labels:
+      - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      separator: ;
+      regex: "true"
+      action: keep
+    - source_labels:
+      - __meta_kubernetes_pod_annotation_prometheus_io_port
+      separator: ;
+      regex: .*
+      action: keep
+    - source_labels:
+      - __meta_kubernetes_pod_label_app
+      separator: ;
+      regex: node-exporter
+      action: keep
+    - source_labels:
+      - __address__
+      - __meta_kubernetes_pod_annotation_prometheus_io_port
+      separator: ;
+      target_label: __address__
+      regex: ([^:]+);(.*)
+      replacement: $1:$2
+      action: replace
+  - job_name: cadvisor
+    honor_labels: true
+    honor_timestamps: true
+    kubernetes_sd_configs:
+    - role: node
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    metrics_path: /metrics/cadvisor
+    scheme: http
+    relabel_configs:
+    - source_labels:
+      - __meta_kubernetes_node_name
+      target_label: node
+    - regex: __meta_kubernetes_node_label_(.+)
+      action: labelmap
+    - source_labels:
+      - __address__
+      separator: ;
+      target_label: __address__
+      regex: ([^:]+)(?::\d+)?
+      replacement: $1:10255
+      action: replace
+  - job_name: kubelet
+    honor_labels: true
+    kubernetes_sd_configs:
+    - role: node
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    metrics_path: /metrics
+    scheme: http
+    relabel_configs:
+    - source_labels:
+      - __meta_kubernetes_node_name
+      target_label: node
+    - regex: __meta_kubernetes_node_label_(.+)
+      action: labelmap
+    - source_labels:
+      - __address__
+      separator: ;
+      target_label: __address__
+      regex: ([^:]+)(?::\d+)?
+      replacement: $1:10255
+      action: replace
