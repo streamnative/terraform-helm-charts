@@ -30,6 +30,10 @@ spec:
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.bookkeeper.name }}
   config:
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
     resources: {{ include "subscription.bookkeeperResources" . }}
     {{- if .Values.bookkeeper.config.env }}
     env:

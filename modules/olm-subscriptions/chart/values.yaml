@@ -25,6 +25,8 @@ sn_registry: "docker.cloudsmith.io/streamnative/operators/sn-catalog:latest"
 channel: stable
 approval: Automatic
 
+tolerations: []
+
 istio:
   enabled: false
   rootNamespace: istio-system

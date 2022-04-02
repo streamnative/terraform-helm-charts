@@ -30,6 +30,10 @@ spec:
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.sn_operator.name }}
   config:
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
     resources: {{ include "subscription.snOperatorResources" . }}
     {{- if .Values.sn_operator.config.env }}
     env:

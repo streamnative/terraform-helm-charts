@@ -31,6 +31,10 @@ spec:
       value: "{{ .Values.functionMesh.config.enableWebhooks }}"
     - name: ENABLE_FUNCTION_MESH_CONTROLLER
       value: "{{ .Values.functionMesh.config.enableController }}"
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
     {{- if .Values.functionMesh.config.env }}
     {{- toYaml .Values.functionMesh.config.env | nindent 4 }}
     {{- end }}
