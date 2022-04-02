@@ -27,6 +27,11 @@ spec:
   image: {{ .Values.sn_registry }}
   publisher: StreamNative.io
   sourceType: grpc
+  {{- if .Values.tolerations }}
+  grpcPodConfig:
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+  {{- end }}
   updateStrategy:
     registryPoll:
       interval: 10m0s

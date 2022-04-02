@@ -29,4 +29,15 @@ spec:
   source: {{ .Values.pulsar.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.pulsar.name }}
+  {{- if or .Values.tolerations .Values.pulsar.resources }}
+  config:
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
+    {{- if .Values.pulsar.resources }}
+    resources:
+{{ toYaml .Values.pulsar.resources | indent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end }}

@@ -25,6 +25,8 @@ sn_registry: "docker.cloudsmith.io/streamnative/operators/sn-catalog:latest"
 channel: stable
 approval: Automatic
 
+tolerations: []
+
 components:
   bookkeeper: true
   functionMesh: true
@@ -36,18 +38,22 @@ components:
   sn_operator: true
 
 bookkeeper:
+  resources:
   source: sn-catalog
   name: bookkeeper-operator
 
 flink:
+  resources:
   source: sn-catalog
   name: flink-operator
 
 flinkSql:
+  resources:
   source: sn-catalog
   name: sql-operator
 
 functionMesh:
+  resources:
   config:
     enableWebhooks: true
     enableController: false
@@ -55,18 +61,22 @@ functionMesh:
   name: function-mesh
 
 prometheus:
+  resources:
   channel: beta
   source: operatorhubio-catalog
   name: prometheus
 
 pulsar:
+  resources:
   source: sn-catalog
   name: pulsar-operator
 
 zookeeper:
+  resources:
   source: sn-catalog
   name: zookeeper-operator
 
 sn_operator:
+  resources:
   source: sn-catalog
   name: sn-operator

@@ -29,4 +29,15 @@ spec:
   source: {{ .Values.prometheus.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.prometheus.name }}
+  {{- if or .Values.tolerations .Values.prometheus.resources }}
+  config:
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
+    {{- if .Values.prometheus.resources }}
+    resources:
+{{ toYaml .Values.prometheus.resources | indent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end }}

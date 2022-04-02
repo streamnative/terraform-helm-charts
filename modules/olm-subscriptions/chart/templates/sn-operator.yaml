@@ -29,4 +29,15 @@ spec:
   source: {{ .Values.sn_operator.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.sn_operator.name }}
+  {{- if or .Values.tolerations .Values.sn_operator.resources }}
+  config:
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
+    {{- if .Values.sn_operator.resources }}
+    resources:
+{{ toYaml .Values.sn_operator.resources | indent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end }}

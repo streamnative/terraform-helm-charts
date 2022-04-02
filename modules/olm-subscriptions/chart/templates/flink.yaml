@@ -29,4 +29,15 @@ spec:
   source: {{ .Values.flink.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
   name: {{ .Values.flink.name }}
+  {{- if or .Values.tolerations .Values.flink.resources }}
+  config:
+    {{- if .Values.tolerations }}
+    tolerations:
+{{ toYaml .Values.tolerations | indent 4 }}
+    {{- end }}
+    {{- if .Values.flink.resources }}
+    resources:
+{{ toYaml .Values.flink.resources | indent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end }}
