@@ -1,4 +1,4 @@
-# vector-agent
+# vitctoria-metrics-agent
 An opinionated module that installs the Victoria Metrics Agent (VMAgent) on Kubernetes via Helm. Refer to the [official documentation](https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-agent) for more information.
 
 ## Requirements
