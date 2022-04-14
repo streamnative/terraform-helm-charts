@@ -41,6 +41,37 @@ extraArgs:
   # promscrape.maxScrapeSize: "167772160"
   promscrape.suppressDuplicateScrapeTargetErrors: "true"
 
+extraVolumeMounts:
+- mountPath: /shared
+  name: shared-token
+
+extraVolumes:
+  - name: vmagent-gsa
+    secret:
+      optional: true
+      secretName: vmagent-gsa
+      items:
+      - key: client
+        path: client.json
+  - name: shared-token
+    emptyDir: {}
+
+extraContainers:
+  - name: gtoken
+    image: "docker.cloudsmith.io/streamnative/cloud-tools/gtoken:v1.10.0"
+    args: [
+      "--key-file", "/keys/client.json",
+      "--token-file", "/shared/token.dat",
+      "--audience", "\"192559831372-3b3q95dldr0qt7sq6isv2gigul2heous.apps.googleusercontent.com\""
+      "--ignore-missing-key-file"
+    ]
+    volumeMounts:
+    - mountPath: /keys
+      name: vmagent-gsa
+      readOnly: true
+    - mountPath: /shared
+      name: shared-token
+
 config:
   global:
     scrape_interval: 30s
