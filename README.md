@@ -247,6 +247,7 @@ No resources.
 | <a name="input_vmagent_basicauth_enabled"></a> [vmagent\_basicauth\_enabled](#input\_vmagent\_basicauth\_enabled) | Enable basic auth for remote write endpoint. Requires providing a username and base64 encoded password. | `bool` | `null` | no |
 | <a name="input_vmagent_basicauth_password"></a> [vmagent\_basicauth\_password](#input\_vmagent\_basicauth\_password) | If basic auth is enabled, provide the base64 encoded password to use for the VMAgent client connection | `string` | `null` | no |
 | <a name="input_vmagent_basicauth_username"></a> [vmagent\_basicauth\_username](#input\_vmagent\_basicauth\_username) | If basic auth is enabled, provate the username for the VMAgent client | `string` | `null` | no |
+| <a name="input_vmagent_gsa_audience"></a> [vmagent\_gsa\_audience](#input\_vmagent\_gsa\_audience) | If using GSA for auth to send metrics, the audience to use for token generation | `string` | `null` | no |
 | <a name="input_vmagent_chart_name"></a> [vmagent\_chart\_name](#input\_vmagent\_chart\_name) | The name of the Helm chart to install | `string` | `null` | no |
 | <a name="input_vmagent_chart_repository"></a> [vmagent\_chart\_repository](#input\_vmagent\_chart\_repository) | The repository containing the Helm chart to install. | `string` | `null` | no |
 | <a name="input_vmagent_chart_version"></a> [vmagent\_chart\_version](#input\_vmagent\_chart\_version) | The version of the Helm chart to install. Set to the submodule default. | `string` | `null` | no |

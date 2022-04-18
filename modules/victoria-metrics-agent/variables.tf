@@ -64,6 +64,13 @@ variable "basicauth_password" {
   type        = string
 }
 
+variable "gsa_audience" {
+  default     = null
+  description = "If using GSA for auth to send metrics, the audience to use for token generation"
+  sensitive   = true
+  type        = string
+}
+
 variable "create_namespace" {
   default     = null
   description = "Create a namespace for the deployment."

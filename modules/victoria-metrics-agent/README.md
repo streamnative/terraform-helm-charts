@@ -32,6 +32,7 @@ No modules.
 | <a name="input_basicauth_enabled"></a> [basicauth\_enabled](#input\_basicauth\_enabled) | Enable basic auth for remote write endpoint. Requires providing a username and base64 encoded password. | `bool` | `null` | no |
 | <a name="input_basicauth_password"></a> [basicauth\_password](#input\_basicauth\_password) | If basic auth is enabled, provide the base64 encoded password to use for the VMAgent client connection | `string` | `null` | no |
 | <a name="input_basicauth_username"></a> [basicauth\_username](#input\_basicauth\_username) | If basic auth is enabled, provate the username for the VMAgent client | `string` | `null` | no |
+| <a name="input_gsa_audience"></a> [gsa\_audience](#input\_gsa\_audience) | If using GSA for auth to send metrics, the audience to use for token generation | `string` | `null` | no |
 | <a name="input_chart_name"></a> [chart\_name](#input\_chart\_name) | The name of the Helm chart to install. Refer to https://github.com/VictoriaMetrics/helm-charts/tree/master/charts/victoria-metrics-agent | `string` | `null` | no |
 | <a name="input_chart_repository"></a> [chart\_repository](#input\_chart\_repository) | The repository containing the Helm chart to install. | `string` | `null` | no |
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | The version of the Helm chart to install. | `string` | `null` | no |

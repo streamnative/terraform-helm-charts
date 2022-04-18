@@ -44,6 +44,7 @@ locals {
 
   basicauth_enabled         = var.basicauth_enabled != null ? var.basicauth_enabled : false
   basicauth_password        = var.basicauth_password != null ? var.basicauth_password : ""
+  gsa_audience              = var.gsa_audience != null ? var.gsa_audience : ""
   basicauth_username        = var.basicauth_username != null ? var.basicauth_username : ""
   oauth2_enabled            = var.oauth2_enabled != null ? var.oauth2_enabled : false
   oauth2_client_id          = var.oauth2_client_id != null ? var.oauth2_client_id : ""
@@ -67,6 +68,7 @@ resource "helm_release" "vmagent" {
     basicauth_enabled         = local.basicauth_enabled
     basicauth_password        = base64decode(local.basicauth_password)
     basicauth_username        = local.basicauth_username
+    gsa_audience              = local.gsa_audience
     oauth2_enabled            = local.oauth2_enabled
     oauth2_client_id          = local.oauth2_client_id
     oauth2_client_secret      = base64decode(local.oauth2_client_secret)
