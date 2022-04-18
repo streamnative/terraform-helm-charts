@@ -95,6 +95,18 @@ variable "chart_version" {
   type        = string
 }
 
+variable "gtoken_image" {
+  default     = null
+  description = "The image URL to use for the gtoken container."
+  type        = string
+}
+
+variable "gtoken_image_version" {
+  default     = null
+  description = "The image version to use for the gtoken container."
+  type        = string
+}
+
 variable "namespace" {
   default     = null
   description = "The namespace used for the deployment."
