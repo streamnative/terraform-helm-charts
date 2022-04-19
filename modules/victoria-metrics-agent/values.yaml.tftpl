@@ -52,8 +52,8 @@ extraVolumes:
       optional: true
       secretName: vmagent-gsa
       items:
-      - key: client
-        path: client.json
+      - key: credentials.json
+        path: credentials.json
   - name: shared-token
     emptyDir: {}
 
@@ -61,7 +61,7 @@ extraContainers:
   - name: gtoken
     image: "docker.cloudsmith.io/streamnative/cloud-tools/gtoken:v1.10.0"
     args: [
-      "--key-file", "/keys/client.json",
+      "--key-file", "/keys/credentials.json",
       "--token-file", "/shared/token.dat",
       "--audience", "\"${gsa_audience}\""
       "--ignore-missing-key-file"
