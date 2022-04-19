@@ -59,7 +59,7 @@ extraVolumes:
 
 extraContainers:
   - name: gtoken
-    image: "docker.cloudsmith.io/streamnative/cloud-tools/gtoken:v1.10.0"
+    image: "${gtoken_image}:v${gtoken_image_version}"
     args: [
       "--key-file", "/keys/credentials.json",
       "--token-file", "/shared/token.dat",
