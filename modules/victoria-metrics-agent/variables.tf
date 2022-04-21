@@ -64,6 +64,13 @@ variable "basicauth_password" {
   type        = string
 }
 
+variable "gsa_audience" {
+  default     = null
+  description = "If using GSA for auth to send metrics, the audience to use for token generation"
+  sensitive   = true
+  type        = string
+}
+
 variable "create_namespace" {
   default     = null
   description = "Create a namespace for the deployment."
@@ -85,6 +92,18 @@ variable "chart_repository" {
 variable "chart_version" {
   default     = null
   description = "The version of the Helm chart to install."
+  type        = string
+}
+
+variable "gtoken_image" {
+  default     = null
+  description = "The image URL to use for the gtoken container."
+  type        = string
+}
+
+variable "gtoken_image_version" {
+  default     = null
+  description = "The image version to use for the gtoken container."
   type        = string
 }
 

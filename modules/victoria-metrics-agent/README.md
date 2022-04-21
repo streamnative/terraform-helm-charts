@@ -37,6 +37,9 @@ No modules.
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | The version of the Helm chart to install. | `string` | `null` | no |
 | <a name="input_cleanup_on_fail"></a> [cleanup\_on\_fail](#input\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails | `bool` | `null` | no |
 | <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | Create a namespace for the deployment. | `bool` | `null` | no |
+| <a name="input_gsa_audience"></a> [gsa\_audience](#input\_gsa\_audience) | If using GSA for auth to send metrics, the audience to use for token generation | `string` | `null` | no |
+| <a name="input_gtoken_image"></a> [gtoken\_image](#input\_gtoken\_image) | The image URL to use for the gtoken container. | `string` | `null` | no |
+| <a name="input_gtoken_image_version"></a> [gtoken\_image\_version](#input\_gtoken\_image\_version) | The image version to use for the gtoken container. | `string` | `null` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The namespace used for the deployment. | `string` | `null` | no |
 | <a name="input_oauth2_client_id"></a> [oauth2\_client\_id](#input\_oauth2\_client\_id) | If OAuth2 is enabled, provide the client id for the VMAgent client | `string` | `null` | no |
 | <a name="input_oauth2_client_secret"></a> [oauth2\_client\_secret](#input\_oauth2\_client\_secret) | If OAuth2 is enabled, provide a base64 encoded secret to use for the VMAgent client connection. | `string` | `null` | no |

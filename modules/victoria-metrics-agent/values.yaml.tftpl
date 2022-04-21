@@ -40,6 +40,38 @@ extraArgs:
   loggerFormat: json
   # promscrape.maxScrapeSize: "167772160"
   promscrape.suppressDuplicateScrapeTargetErrors: "true"
+  remoteWrite.bearerTokenFile: /shared/token.dat
+
+extraVolumeMounts:
+- mountPath: /shared
+  name: shared-token
+
+extraVolumes:
+  - name: vmagent-gsa
+    secret:
+      optional: true
+      secretName: vmagent-gsa
+      items:
+      - key: credentials.json
+        path: credentials.json
+  - name: shared-token
+    emptyDir: {}
+
+extraContainers:
+  - name: gtoken
+    image: "${gtoken_image}:v${gtoken_image_version}"
+    args: [
+      "--key-file", "/keys/credentials.json",
+      "--token-file", "/shared/token.dat",
+      "--audience", "\"${gsa_audience}\""
+      "--ignore-missing-key-file"
+    ]
+    volumeMounts:
+    - mountPath: /keys
+      name: vmagent-gsa
+      readOnly: true
+    - mountPath: /shared
+      name: shared-token
 
 config:
   global:

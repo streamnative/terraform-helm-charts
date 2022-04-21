@@ -206,6 +206,9 @@ module "vmagent" {
   basicauth_enabled      = var.vmagent_basicauth_enabled
   basicauth_username     = var.vmagent_basicauth_username
   basicauth_password     = var.vmagent_basicauth_password
+  gsa_audience           = var.vmagent_gsa_audience
+  gtoken_image           = var.vmagent_gtoken_image
+  gtoken_image_version   = var.vmagent_gtoken_image_version
   chart_name             = var.vmagent_chart_name
   chart_repository       = var.vmagent_chart_repository
   chart_version          = var.vmagent_chart_version

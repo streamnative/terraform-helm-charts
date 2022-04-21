@@ -741,6 +741,25 @@ variable "vmagent_basicauth_password" {
   type        = string
 }
 
+variable "vmagent_gsa_audience" {
+  default     = null
+  description = "If using GSA for auth to send metrics, the audience to use for token generation"
+  sensitive   = true
+  type        = string
+}
+
+variable "vmagent_gtoken_image" {
+  default     = null
+  description = "The image URL to use for the gtoken container"
+  type        = string
+}
+
+variable "vmagent_gtoken_image_version" {
+  default     = null
+  description = "The image version to use for the gtoken container"
+  type        = string
+}
+
 variable "vmagent_chart_name" {
   default     = null
   description = "The name of the Helm chart to install"

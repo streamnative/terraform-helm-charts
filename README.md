@@ -250,6 +250,7 @@ No resources.
 | <a name="input_vmagent_chart_name"></a> [vmagent\_chart\_name](#input\_vmagent\_chart\_name) | The name of the Helm chart to install | `string` | `null` | no |
 | <a name="input_vmagent_chart_repository"></a> [vmagent\_chart\_repository](#input\_vmagent\_chart\_repository) | The repository containing the Helm chart to install. | `string` | `null` | no |
 | <a name="input_vmagent_chart_version"></a> [vmagent\_chart\_version](#input\_vmagent\_chart\_version) | The version of the Helm chart to install. Set to the submodule default. | `string` | `null` | no |
+| <a name="input_vmagent_gsa_audience"></a> [vmagent\_gsa\_audience](#input\_vmagent\_gsa\_audience) | If using GSA for auth to send metrics, the audience to use for token generation | `string` | `null` | no |
 | <a name="input_vmagent_namespace"></a> [vmagent\_namespace](#input\_vmagent\_namespace) | The namespace used for the operator deployment. | `string` | `"sn-system"` | no |
 | <a name="input_vmagent_oauth2_client_id"></a> [vmagent\_oauth2\_client\_id](#input\_vmagent\_oauth2\_client\_id) | If OAuth2 is enabled, provide the client id for the VMAgent client | `string` | `null` | no |
 | <a name="input_vmagent_oauth2_client_secret"></a> [vmagent\_oauth2\_client\_secret](#input\_vmagent\_oauth2\_client\_secret) | If OAuth2 is enabled, provide a base64 encoded secret to use for the VMAgent client connection. | `string` | `null` | no |

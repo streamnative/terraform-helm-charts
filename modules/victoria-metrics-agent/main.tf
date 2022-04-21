@@ -42,14 +42,17 @@ locals {
   timeout           = var.timeout != null ? var.timeout : 120
   values            = var.values != null ? var.values : []
 
-  basicauth_enabled         = var.basicauth_enabled != null ? var.basicauth_enabled : false
-  basicauth_password        = var.basicauth_password != null ? var.basicauth_password : ""
-  basicauth_username        = var.basicauth_username != null ? var.basicauth_username : ""
-  oauth2_enabled            = var.oauth2_enabled != null ? var.oauth2_enabled : false
-  oauth2_client_id          = var.oauth2_client_id != null ? var.oauth2_client_id : ""
-  oauth2_client_secret      = var.oauth2_client_secret != null ? var.oauth2_client_secret : ""
-  oauth2_token_url          = var.oauth2_token_url != null ? var.oauth2_token_url : ""
-  pods_scrape_namespaces    = var.pods_scrape_namespaces != null ? var.pods_scrape_namespaces : ["sn-system"]
+  basicauth_enabled      = var.basicauth_enabled != null ? var.basicauth_enabled : false
+  basicauth_password     = var.basicauth_password != null ? var.basicauth_password : ""
+  gsa_audience           = var.gsa_audience != null ? var.gsa_audience : ""
+  gtoken_image           = var.gtoken_image != null ? var.gtoken_image : "docker.cloudsmith.io/streamnative/cloud-tools/gtoken"
+  gtoken_image_version   = var.gtoken_image_version != null ? var.gtoken_image_version : "v1.10.0"
+  basicauth_username     = var.basicauth_username != null ? var.basicauth_username : ""
+  oauth2_enabled         = var.oauth2_enabled != null ? var.oauth2_enabled : false
+  oauth2_client_id       = var.oauth2_client_id != null ? var.oauth2_client_id : ""
+  oauth2_client_secret   = var.oauth2_client_secret != null ? var.oauth2_client_secret : ""
+  oauth2_token_url       = var.oauth2_token_url != null ? var.oauth2_token_url : ""
+  pods_scrape_namespaces = var.pods_scrape_namespaces != null ? var.pods_scrape_namespaces : ["sn-system"]
 }
 
 resource "helm_release" "vmagent" {
@@ -64,15 +67,18 @@ resource "helm_release" "vmagent" {
   version          = local.chart_version
 
   values = coalescelist(local.values, [templatefile("${path.module}/values.yaml.tftpl", {
-    basicauth_enabled         = local.basicauth_enabled
-    basicauth_password        = base64decode(local.basicauth_password)
-    basicauth_username        = local.basicauth_username
-    oauth2_enabled            = local.oauth2_enabled
-    oauth2_client_id          = local.oauth2_client_id
-    oauth2_client_secret      = base64decode(local.oauth2_client_secret)
-    oauth2_token_url          = local.oauth2_token_url
-    pods_scrape_namespaces    = local.pods_scrape_namespaces
-    remote_write_urls         = local.remote_write_urls
+    basicauth_enabled      = local.basicauth_enabled
+    basicauth_password     = base64decode(local.basicauth_password)
+    basicauth_username     = local.basicauth_username
+    gsa_audience           = local.gsa_audience
+    gtoken_image           = local.gtoken_image
+    gtoken_image_version   = local.gtoken_image_version
+    oauth2_enabled         = local.oauth2_enabled
+    oauth2_client_id       = local.oauth2_client_id
+    oauth2_client_secret   = base64decode(local.oauth2_client_secret)
+    oauth2_token_url       = local.oauth2_token_url
+    pods_scrape_namespaces = local.pods_scrape_namespaces
+    remote_write_urls      = local.remote_write_urls
   })])
 
   dynamic "set" {
