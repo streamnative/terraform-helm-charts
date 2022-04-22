@@ -59,6 +59,12 @@ variable "enable_vmagent" {
   type        = bool
 }
 
+variable "enable_cma" {
+  default     = false
+  description = "Enables Cloud Manager Agent. Disabled by default."
+  type        = bool
+}
+
 ### Top-level Variables
 
 #######
@@ -835,6 +841,26 @@ variable "vmagent_timeout" {
 }
 
 variable "vmagent_values" {
+  default     = null
+  description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
+}
+
+#######
+### Cloud-Manager-Agent Settings
+#######
+variable "cma_namespace" {
+  default     = "sn-system"
+  description = "The namespace used by cloud-manager-agent and its resources"
+  type        = string
+}
+
+variable "cma_settings" {
+  default     = null
+  description = "Additional key value settings which will be passed to the Helm chart values, e.g. { \"namespace\" = \"kube-system\" }."
+  type        = map(any)
+}
+
+variable "cma_values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`"
 }

@@ -48,7 +48,7 @@ variable "cleanup_on_fail" {
 
 variable "namespace" {
   default     = null
-  description = "The namespace used for installing the operators managed by OLM."
+  description = "The namespace used for installing cloud-manager-agent in."
   type        = string
 }
 
