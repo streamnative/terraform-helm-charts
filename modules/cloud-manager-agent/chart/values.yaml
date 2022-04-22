@@ -39,11 +39,12 @@ rbac:
   apiVersion: v1
 
 appConfig:
-  jwt:
-    issuerURI: ""
-    audience: ""
-    usernameClaim: ""
-  extraApplicationProperties: ""
+  applicationAgentProperties:
+    raw: ""
+    kubernetesExternalSecret:
+      backendType: gcpSecretsManager
+      secretName: cloud-manager-agent-extra
+      enabled: false
   applicationProperties: |
     logging.level.org.apache=INFO
     spring.main.banner-mode=off
@@ -53,10 +54,6 @@ appConfig:
     server.address=0.0.0.0
     server.port=7943
     security.require-ssl=true
-    server.ssl.key-store-type=JKS
-    server.ssl.key-store=/streamnative-cloud/cloud-manager/tls/keystore.jks
-    server.ssl.key-store-password=changeit
-    server.ssl.key-alias=certificate
     # OAuth2 Resource Server
     spring.security.oauth2.resourceserver.jwt.issuer-uri=
     spring.security.oauth2.resourceserver.jwt.audience=
