@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 */}}
-
+{{- $jwt := .Values.appConfig.jwt -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -25,4 +25,8 @@ metadata:
   labels: {{- include "cloud-manager-agent.labels" . | nindent 4 }}
 data:
   application.properties: |
+    # OAuth2 Resource Server
+    spring.security.oauth2.resourceserver.jwt.issuer-uri={{ required "Need JWT Issuer URI" $jwt.issuerURI }}
+    spring.security.oauth2.resourceserver.jwt.audience={{ required "Need JWT Audience" $jwt.audience }}
+    spring.security.oauth2.resourceserver.jwt.username-claim={{ required "Need JWT Username Claim" $jwt.usernameClaim }}
 {{ .Values.appConfig.applicationProperties | indent 4 }}

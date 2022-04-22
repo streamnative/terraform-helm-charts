@@ -39,6 +39,10 @@ rbac:
   apiVersion: v1
 
 appConfig:
+  jwt:
+    issuerURI: ""
+    audience: ""
+    usernameClaim: ""
   extraApplicationProperties: ""
   applicationProperties: |
     logging.level.org.apache=INFO
@@ -53,10 +57,6 @@ appConfig:
     server.ssl.key-store=/streamnative-cloud/cloud-manager/tls/keystore.jks
     server.ssl.key-store-password=changeit
     server.ssl.key-alias=certificate
-    # OAuth2 Resource Server
-    spring.security.oauth2.resourceserver.jwt.issuer-uri=
-    spring.security.oauth2.resourceserver.jwt.audience=
-    spring.security.oauth2.resourceserver.jwt.username-claim=https://streamnative.io/username
     # Metrics
     management.endpoints.web.exposure.include=*
     management.metrics.tags.application=${spring.application.name}
