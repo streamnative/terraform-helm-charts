@@ -98,6 +98,7 @@ module "terraform-helm-charts" {
 
 While this pattern has [some limitations](https://github.com/hashicorp/terraform/issues/24142#issuecomment-938106778), it is a sufficient workaround for our (opinionated) needs in these modules.
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -114,6 +115,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_cloud-manager-agent"></a> [cloud-manager-agent](#module\_cloud-manager-agent) | ./modules/cloud-manager-agent | n/a |
 | <a name="module_function_mesh_operator"></a> [function\_mesh\_operator](#module\_function\_mesh\_operator) | ./modules/function-mesh-operator | n/a |
 | <a name="module_istio_operator"></a> [istio\_operator](#module\_istio\_operator) | ./modules/istio-operator | n/a |
 | <a name="module_olm"></a> [olm](#module\_olm) | ./modules/operator-lifecycle-manager | n/a |
@@ -133,6 +135,9 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cma_namespace"></a> [cma\_namespace](#input\_cma\_namespace) | The namespace used by cloud-manager-agent and its resources | `string` | `"sn-system"` | no |
+| <a name="input_cma_settings"></a> [cma\_settings](#input\_cma\_settings) | Additional key value settings which will be passed to the Helm chart values, e.g. { "namespace" = "kube-system" }. | `map(any)` | `null` | no |
+| <a name="input_cma_values"></a> [cma\_values](#input\_cma\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")` | `any` | `null` | no |
 | <a name="input_create_function_mesh_operator_namespace"></a> [create\_function\_mesh\_operator\_namespace](#input\_create\_function\_mesh\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
 | <a name="input_create_istio_operator_namespace"></a> [create\_istio\_operator\_namespace](#input\_create\_istio\_operator\_namespace) | Create a namespace for the deployment. Defaults to "true". | `bool` | `true` | no |
 | <a name="input_create_istio_system_namespace"></a> [create\_istio\_system\_namespace](#input\_create\_istio\_system\_namespace) | Create a namespace where istio components will be installed. | `bool` | `false` | no |
@@ -146,6 +151,7 @@ No resources.
 | <a name="input_create_vault_operator_namespace"></a> [create\_vault\_operator\_namespace](#input\_create\_vault\_operator\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
 | <a name="input_create_vector_agent_namespace"></a> [create\_vector\_agent\_namespace](#input\_create\_vector\_agent\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
 | <a name="input_create_vmagent_namespace"></a> [create\_vmagent\_namespace](#input\_create\_vmagent\_namespace) | Create a namespace for the deployment. | `bool` | `false` | no |
+| <a name="input_enable_cma"></a> [enable\_cma](#input\_enable\_cma) | Enables Cloud Manager Agent. Disabled by default. | `bool` | `false` | no |
 | <a name="input_enable_function_mesh_operator"></a> [enable\_function\_mesh\_operator](#input\_enable\_function\_mesh\_operator) | Enables the StreamNative Function Mesh Operator. Set to "true" by default, but disabled if OLM is enabled. | `bool` | `true` | no |
 | <a name="input_enable_istio_operator"></a> [enable\_istio\_operator](#input\_enable\_istio\_operator) | Enables the Istio Operator. Set to "false" by default. | `bool` | `false` | no |
 | <a name="input_enable_kiali_operator"></a> [enable\_kiali\_operator](#input\_enable\_kiali\_operator) | Enables the Kiali Operator. Set to "false" by default. | `bool` | `false` | no |
@@ -251,6 +257,8 @@ No resources.
 | <a name="input_vmagent_chart_repository"></a> [vmagent\_chart\_repository](#input\_vmagent\_chart\_repository) | The repository containing the Helm chart to install. | `string` | `null` | no |
 | <a name="input_vmagent_chart_version"></a> [vmagent\_chart\_version](#input\_vmagent\_chart\_version) | The version of the Helm chart to install. Set to the submodule default. | `string` | `null` | no |
 | <a name="input_vmagent_gsa_audience"></a> [vmagent\_gsa\_audience](#input\_vmagent\_gsa\_audience) | If using GSA for auth to send metrics, the audience to use for token generation | `string` | `null` | no |
+| <a name="input_vmagent_gtoken_image"></a> [vmagent\_gtoken\_image](#input\_vmagent\_gtoken\_image) | The image URL to use for the gtoken container | `string` | `null` | no |
+| <a name="input_vmagent_gtoken_image_version"></a> [vmagent\_gtoken\_image\_version](#input\_vmagent\_gtoken\_image\_version) | The image version to use for the gtoken container | `string` | `null` | no |
 | <a name="input_vmagent_namespace"></a> [vmagent\_namespace](#input\_vmagent\_namespace) | The namespace used for the operator deployment. | `string` | `"sn-system"` | no |
 | <a name="input_vmagent_oauth2_client_id"></a> [vmagent\_oauth2\_client\_id](#input\_vmagent\_oauth2\_client\_id) | If OAuth2 is enabled, provide the client id for the VMAgent client | `string` | `null` | no |
 | <a name="input_vmagent_oauth2_client_secret"></a> [vmagent\_oauth2\_client\_secret](#input\_vmagent\_oauth2\_client\_secret) | If OAuth2 is enabled, provide a base64 encoded secret to use for the VMAgent client connection. | `string` | `null` | no |
@@ -266,3 +274,4 @@ No resources.
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->
