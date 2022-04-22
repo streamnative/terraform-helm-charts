@@ -39,6 +39,10 @@ rbac:
   apiVersion: v1
 
 appConfig:
+  jwt:
+    issuerURI: ""
+    audience: ""
+    usernameClaim: ""
   extraApplicationProperties: ""
   applicationProperties: |
     logging.level.org.apache=INFO
