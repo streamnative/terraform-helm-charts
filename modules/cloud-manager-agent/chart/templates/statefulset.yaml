@@ -1,0 +1,111 @@
+{{- /*
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+*/}}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "cloud-manager-agent.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "cloud-manager-agent.labels" . | nindent 4 }}
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ include "cloud-manager-agent.fullname" . }}-headless-service
+  selector:
+    matchLabels: {{- include "cloud-manager-agent.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cloud-manager-agent.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "cloud-manager-agent.imagePullSecrets" . | indent 6 }}
+      serviceAccountName: {{ include "cloud-manager-agent.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      containers:
+      - name: agent
+        image: {{ include "cloud-manager-agent.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: agent
+            scheme: HTTPS
+        ports:
+          - containerPort: 7943
+            name: agent
+            protocol: TCP
+        volumeMounts:
+          - name: cloud-manager-agent-configmap
+            mountPath: /streamnative-cloud/cloud-manager/config/application.properties
+            subPath: application.properties
+          - name: cloud-manager-agent-configmap-profile
+            mountPath: /streamnative-cloud/cloud-manager/config/application-agent.properties
+            subPath: application-agent.properties
+          # - name: cloud-manager-agent-tls
+          #   mountPath: /streamnative-cloud/cloud-manager/tls
+          - name: data
+            mountPath: /data
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      restartPolicy: Always
+      volumes:
+        - name: cloud-manager-agent-configmap
+          configMap:
+            name: {{ include "cloud-manager-agent.fullname" . }}
+            items:
+              - key: application.properties
+                path: application.properties
+        - name: cloud-manager-agent-configmap-profile
+          secret:
+            secretName: {{ include "cloud-manager-agent.fullname" . }}-extra
+            items:
+              - key: application-default.properties
+                path: application-agent.properties
+        # - name: cloud-manager-agent-tls
+        #   secret:
+        #     secretName: ctl-tls
+        - name: data
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  updateStrategy:
+    type: RollingUpdate
