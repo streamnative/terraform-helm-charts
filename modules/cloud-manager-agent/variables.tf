@@ -75,8 +75,8 @@ variable "environment" {
   description = "Whether this is for a test, staging, or production environment."
 
   validation {
-    condition     = var.stage == "test" || var.stage == "staging" || var.stage == "production"
-    error_message = "Got an unexpected value for environment (expecting test, staging, or production)"
+    condition     = var.environment == "test" || var.environment == "staging" || var.environment == "production"
+    error_message = "Got an unexpected value for environment (expecting test, staging, or production)."
   }
 }
 

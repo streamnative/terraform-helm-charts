@@ -39,7 +39,7 @@ locals {
   settings         = var.settings != null ? var.settings : {}
   timeout          = var.timeout != null ? var.timeout : 120
   values           = var.values != null ? var.values : []
-  environment      = var.environment
+  environment      = var.environment != null ? var.environment : "production"
 }
 
 resource "helm_release" "cloud-manager-agent" {

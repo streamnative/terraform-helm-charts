@@ -870,7 +870,7 @@ variable "cma_environment" {
   description = "Whether this is for a test, staging, or production environment."
 
   validation {
-    condition     = var.stage == "test" || var.stage == "staging" || var.stage == "production"
-    error_message = "Got an unexpected value for environment (expecting test, staging, or production)"
+    condition     = var.cma_environment == "test" || var.cma_environment == "staging" || var.cma_environment == "production"
+    error_message = "Got an unexpected value for environment (expecting test, staging, or production)."
   }
 }
