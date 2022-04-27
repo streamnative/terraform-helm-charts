@@ -43,7 +43,7 @@ appConfig:
     raw: ""
     kubernetesExternalSecret:
       backendType: gcpSecretsManager
-      secretName: cloud-manager-agent-extra
+      secretName: cloud-manager-agent-extra-production
       enabled: false
   applicationProperties: |
     logging.level.org.apache=INFO

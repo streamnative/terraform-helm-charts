@@ -18,20 +18,19 @@ under the License.
 */}}
 
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "cloud-manager-agent.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels: {{- include "cloud-manager-agent.labels" . | nindent 4 }}
 spec:
-  podManagementPolicy: OrderedReady
   replicas: {{ .Values.replicaCount }}
-  serviceName: {{ include "cloud-manager-agent.fullname" . }}-headless-service
   selector:
     matchLabels: {{- include "cloud-manager-agent.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
+        service.istio.io/canonical-revision: {{ .Chart.AppVersion }}
         {{- include "cloud-manager-agent.selectorLabels" . | nindent 8 }}
       {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
@@ -55,11 +54,11 @@ spec:
         readinessProbe:
           httpGet:
             path: /actuator/health
-            port: agent
-            scheme: HTTPS
+            port: http-agent
+            scheme: HTTP
         ports:
           - containerPort: 7943
-            name: agent
+            name: http-agent
             protocol: TCP
         volumeMounts:
           - name: cloud-manager-agent-configmap
@@ -107,5 +106,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  updateStrategy:
-    type: RollingUpdate
