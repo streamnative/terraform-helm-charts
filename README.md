@@ -135,6 +135,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cma_environment"></a> [cma\_environment](#input\_cma\_environment) | Whether this is for a test, staging, or production environment. | `string` | `"production"` | no |
 | <a name="input_cma_namespace"></a> [cma\_namespace](#input\_cma\_namespace) | The namespace used by cloud-manager-agent and its resources | `string` | `"sn-system"` | no |
 | <a name="input_cma_settings"></a> [cma\_settings](#input\_cma\_settings) | Additional key value settings which will be passed to the Helm chart values, e.g. { "namespace" = "kube-system" }. | `map(any)` | `null` | no |
 | <a name="input_cma_values"></a> [cma\_values](#input\_cma\_values) | A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file("my/values.yaml")` | `any` | `null` | no |

@@ -70,6 +70,16 @@ variable "timeout" {
   type        = number
 }
 
+variable "environment" {
+  default     = "production"
+  description = "Whether this is for a test, staging, or production environment."
+
+  validation {
+    condition     = var.stage == "test" || var.stage == "staging" || var.stage == "production"
+    error_message = "Got an unexpected value for environment (expecting test, staging, or production)"
+  }
+}
+
 variable "values" {
   default     = null
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."

@@ -31,6 +31,7 @@ No modules.
 | <a name="input_chart_repository"></a> [chart\_repository](#input\_chart\_repository) | The repository to install the chart from. | `string` | `null` | no |
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | The version of the chart to install. | `string` | `null` | no |
 | <a name="input_cleanup_on_fail"></a> [cleanup\_on\_fail](#input\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails. | `bool` | `null` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Whether this is for a test, staging, or production environment. | `string` | `"production"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The namespace used for installing cloud-manager-agent in. | `string` | `null` | no |
 | <a name="input_release_name"></a> [release\_name](#input\_release\_name) | The name of the helm release. | `string` | `null` | no |
 | <a name="input_settings"></a> [settings](#input\_settings) | Additional settings which will be passed to the Helm chart values. | `map(any)` | `null` | no |

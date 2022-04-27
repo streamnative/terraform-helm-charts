@@ -128,6 +128,7 @@ module "cloud-manager-agent" {
 
   namespace              = var.cma_namespace
   settings               = var.cma_settings
+  environment            = var.environment
   values                 = var.cma_values
 }
 

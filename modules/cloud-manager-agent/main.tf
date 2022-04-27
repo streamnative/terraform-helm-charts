@@ -39,6 +39,7 @@ locals {
   settings         = var.settings != null ? var.settings : {}
   timeout          = var.timeout != null ? var.timeout : 120
   values           = var.values != null ? var.values : []
+  environment      = var.environment
 }
 
 resource "helm_release" "cloud-manager-agent" {
@@ -50,7 +51,10 @@ resource "helm_release" "cloud-manager-agent" {
   repository      = local.chart_repository
   timeout         = local.timeout
   version         = local.chart_version
-  values          = local.values
+
+  values = coalescelist(local.values, [templatefile("${path.module}/values.yaml.tftpl", {
+    environment = local.environment
+  })])
 
   dynamic "set" {
     for_each = local.settings
