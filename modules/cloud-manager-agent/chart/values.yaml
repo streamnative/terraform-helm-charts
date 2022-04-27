@@ -41,10 +41,6 @@ rbac:
 appConfig:
   applicationAgentProperties:
     raw: ""
-    kubernetesExternalSecret:
-      backendType: gcpSecretsManager
-      secretName: cloud-manager-agent-extra-production
-      enabled: false
   applicationProperties: |
     logging.level.org.apache=INFO
     spring.main.banner-mode=off
