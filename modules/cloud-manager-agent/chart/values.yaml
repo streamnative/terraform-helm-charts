@@ -1,0 +1,204 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+# Default values for cloud-manager-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  ## Reference to one or more secrets to be used when pulling images
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  imagePullSecrets: []
+
+replicaCount: 1
+
+keystore:
+  password: changeit
+  renewBefore: 168h # 7d
+
+rbac:
+  create: true
+  clusterRole: true
+  apiVersion: v1
+
+appConfig:
+  applicationAgentProperties:
+    raw: ""
+  applicationProperties: |
+    logging.level.org.apache=INFO
+    spring.main.banner-mode=off
+    spring.application.name=cloud-manager
+    spring.cloud.refresh.refreshable=none
+    management.health.probes.enabled=true
+    server.address=0.0.0.0
+    server.port=7943
+    security.require-ssl=true
+    # OAuth2 Resource Server
+    spring.security.oauth2.resourceserver.jwt.issuer-uri=
+    spring.security.oauth2.resourceserver.jwt.audience=
+    spring.security.oauth2.resourceserver.jwt.username-claim=https://streamnative.io/username
+    # Metrics
+    management.endpoints.web.exposure.include=*
+    management.metrics.tags.application=${spring.application.name}
+    management.metrics.distribution.percentiles-histogram.http.server.requests=true
+    management.metrics.distribution.percentiles.all=0.5, 0.75, 0.95, 0.98, 0.99, 0.999, 1.0
+    mybatis.type-aliases-package=io.streamnative.cloud.manager
+    # postgresql configuration
+    spring.datasource.driver-class-name=org.postgresql.Driver
+    spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/cloud_manager
+    spring.datasource.username=cloud_manager
+    spring.datasource.password=cloud_manager
+    pagehelper.helperDialect=postgresql
+    backend.directRequestBroker=true
+    # enable tls encryption
+    # keytool -import -alias test-keystore -keystore ca-certs -file certs/ca.cert.pem
+    http.client.tls.enabled=true
+    http.client.tls.keystore=keystore-file-path
+    http.client.tls.keystore.password=keystore-password
+    http.client.tls.hostname.verifier=false
+    http.client.tls.pulsar.admin.ca-certs=ca-client-path
+    # Stats interval
+    # millisecond
+    insert.stats.interval=60000
+    # millisecond
+    clear.stats.interval=300000
+    init.delay.interval=0
+    # cluster data reload
+    cluster.cache.reload.interval.ms=60000
+    # support peek message, default false
+    pulsar.peek.message=true
+    # zuul config
+    # https://cloud.spring.io/spring-cloud-static/Dalston.SR5/multi/multi__router_and_filter_zuul.html
+    # By Default Zuul adds  Authorization to be dropped headers list. Below we are manually setting it
+    zuul.sensitive-headers=Cookie,Set-Cookie
+    zuul.routes.admin.path=/admin/**
+    zuul.routes.admin.url=http://localhost:8080/admin/
+    zuul.routes.lookup.path=/lookup/**
+    zuul.routes.lookup.url=http://localhost:8080/lookup/
+    cloud.api.certificate-authority-data=
+    cloud.api.insecure-skip-tls-verify=false
+    cloud.api.host=
+    cloud.api.audience=
+    cloud.api.username-claim=https://streamnative.io/username
+    # Super token configuration, services account name cloud
+    # After create service account, use command kubectl create clusterrolebinding grant permission.
+    # For example: kubectl create clusterrolebinding cloud-cluster-admin-binding --clusterrole cluster-admin --user cloud@matrix.streamnative-dev-yyang.auth0.com
+    cloud.api.super.namespace=streamnative
+    cloud.api.super.name=cloud-ui
+    cloud.api.super.email=
+    cloud.api.super.client-id=client-id
+    cloud.api.super.client-secret=client-secret
+    pulsar.instance.host.port=443
+    cloud.api.invite.callback.host=
+    cluster.client.cache.interval.ms=120000
+    cluster.client.sync.data-to-database.ms=300000
+    stripe.default.secret.api.key=
+    stripe.default.currency=
+    stripe.default.amount=
+    stripe.default.subscription-id.claim=annotations.cloud.streamnative.io/stripe-subscription-id
+    cloud.pool.member.default.poll.interval=
+    cloud.domain.suffix=
+    cloud.create.resource.loop.default.time=
+    cloud.default.shared-pool-namespace=
+    cloud.default.shared-pool-name=
+    cloud.organization.customer.claim=annotations.cloud.streamnative.io/stripe-customer-id
+    pulsar.cluster.enable.metrics.collect=true
+    cloud.enable.multi.broker.collect=true
+    stripe.collect.pulsar.namespace.claim=
+    stripe.collect.pulsar.instance.claim=
+    stripe.product.data.in.type=dataIn
+    stripe.product.data.out.type=dataOut
+    stripe.product.data.storage.type=storage
+    stripe.product.data.compute.type=compute
+    pulsar.cluster.domain.name.claim=dnsName
+    pulsar.cluster.max.bookie.pods-number=10
+    pulsar.cluster.max.broker.pods-number=10
+    pulsar.cluster.bookie.node-spec-config.path=
+    pulsar.cluster.broker.node-spec-config.path=
+    cloud.controller.certificate-authority-data=
+    cloud.controller.insecure-skip-tls-verify=false
+    cloud.controller.host=
+    cloud.controller.token=
+    cloud.controller.cluster.claim=cloud.streamnative.io/pulsar-cluster
+    cloud.controller.instance.claim=cloud.streamnative.io/pulsar-instance
+    cloud.api.server.organization.default.type=
+    cloud.api.server.organization.default.project=
+    cloud.api.server.resend.invite.link.claim=annotations.cloud.streamnative.io/invitation-sent
+    cloud.api.server.invite.link.default.expiration=259200
+    cloud.agent.get-stats.enable=true
+    cloud.agent.default.audience.claim=aud
+    cloud.agent.default.username.suffix=
+    cloud.agent.enable=true
+    # unit ms
+    api.request.cost.default.time=1000
+
+image:
+  #gcr.io/affable-ray-226821/streamnative/cloud-manager-agent
+  #registry.ap-southeast-1.aliyuncs.com/streamnative/cloud-manager-agent
+  #598203581484.dkr.ecr.us-east-1.amazonaws.com/streamnative/cloud-manager-agent
+  repository: gcr.io/affable-ray-226821/streamnative/cloud-manager-agent
+
+  # Use tag, digest, or both
+  tag: "v2.0.5"
+  digest: "" # like sha256:ddd3bd369db87d4a4859057ba01a5fd539e88f978a866cf5048867f28339d1c8
+
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+terminationGracePeriodSeconds: 10

@@ -122,6 +122,16 @@ module "otel_collector" {
   values           = var.otel_collector_values
 }
 
+module "cloud-manager-agent" {
+  count  = var.enable_cma ? 1 : 0
+  source = "./modules/cloud-manager-agent"
+
+  namespace              = var.cma_namespace
+  settings               = var.cma_settings
+  environment            = var.cma_environment
+  values                 = var.cma_values
+}
+
 locals {
   prometheus_operator_values = var.prometheus_operator_values != null ? var.prometheus_operator_values : [yamlencode({
     grafana = {
