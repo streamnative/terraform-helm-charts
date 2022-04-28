@@ -49,6 +49,15 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       containers:
       - name: agent
+        {{ $stripeKeySecretName := .Values.appConfig.applicationAgentProperties.stripeKeySecretName }}
+        {{- if $stripeKeySecretName }}
+        env:
+        - name: STRIPE_DEFAULT_SECRET_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ $stripeKeySecretName | quote }}
+              key: {{ .Values.appConfig.applicationAgentProperties.stripeKeySecretKey | quote }}
+        {{- end }}
         image: {{ include "cloud-manager-agent.image" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         readinessProbe:
@@ -89,9 +98,6 @@ spec:
             items:
               - key: application-default.properties
                 path: application-agent.properties
-        # - name: cloud-manager-agent-tls
-        #   secret:
-        #     secretName: ctl-tls
         - name: data
           emptyDir: {}
       {{- with .Values.nodeSelector }}
