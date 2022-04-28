@@ -40,6 +40,8 @@ rbac:
 
 appConfig:
   applicationAgentProperties:
+    stripeKeySecretName: ""
+    stripeKeySecretKey: key
     raw: ""
   applicationProperties: |
     logging.level.org.apache=INFO

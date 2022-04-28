@@ -1,5 +1,21 @@
 appConfig:
   applicationAgentProperties:
-    kubernetesExternalSecret:
-      enabled: true
-      secretName: cloud-manager-agent-extra-${environment}
+    stripeKeySecretName: stripe
+%{ if environment == "test" }
+    raw: |
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.test.cloud.gcp.streamnative.dev/
+      cloud.api.audience=https://api.test.cloud.gcp.streamnative.dev
+      spring.security.oauth2.resourceserver.jwt.audience=https://api.test.cloud.gcp.streamnative.dev
+%{ else }
+%{ if environment == "staging" }
+    raw: |
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.sncloud-stg.dev/
+      cloud.api.audience=https://api.sncloud-stg.dev
+      spring.security.oauth2.resourceserver.jwt.audience=https://api.sncloud-stg.dev
+%{ else }
+    raw: |
+      spring.security.oauth2.resourceserver.jwt.issuer-uri=https://auth.streamnative.cloud/
+      cloud.api.audience=https://api.streamnative.cloud
+      spring.security.oauth2.resourceserver.jwt.audience=https://api.streamnative.cloud
+%{ endif }
+%{ endif }
