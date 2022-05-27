@@ -3,12 +3,14 @@ This is an opinionated module for installing and configuring Istio, along with t
 
 Note that this module does not install all of the services necessary for Kiali to function, such as Prometheus, Jaeger, or (in some cases) Grafana. Refer to the [official docs](https://kiali.io/docs/configuration/p8s-jaeger-grafana/) for instructions if these components do not exist on your cluster.
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.0.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.2.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >=0.7.2 |
 
 ## Providers
 
@@ -16,7 +18,7 @@ Note that this module does not install all of the services necessary for Kiali t
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >=2.2.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
-| <a name="provider_time"></a> [time](#provider\_time) | n/a |
+| <a name="provider_time"></a> [time](#provider\_time) | >=0.7.2 |
 
 ## Modules
 
@@ -53,6 +55,7 @@ No modules.
 | <a name="input_istio_gateway_certificate_hosts"></a> [istio\_gateway\_certificate\_hosts](#input\_istio\_gateway\_certificate\_hosts) | The certificate host(s) for the Istio gateway TLS certificate. | `list(string)` | `[]` | no |
 | <a name="input_istio_gateway_certificate_issuer"></a> [istio\_gateway\_certificate\_issuer](#input\_istio\_gateway\_certificate\_issuer) | The certificate issuer for the Istio gateway TLS certificate. | <pre>object({<br>    group = string<br>    kind  = string<br>    name  = string<br>  })</pre> | `null` | no |
 | <a name="input_istio_gateway_certificate_name"></a> [istio\_gateway\_certificate\_name](#input\_istio\_gateway\_certificate\_name) | The certificate name for Istio gateway TLS. | `string` | `null` | no |
+| <a name="input_istio_ingress_gateway_service_annotations"></a> [istio\_ingress\_gateway\_service\_annotations](#input\_istio\_ingress\_gateway\_service\_annotations) | Kubernetes annotations to add to the Istio IngressGateway Service. | `map(string)` | `null` | no |
 | <a name="input_istio_mesh_id"></a> [istio\_mesh\_id](#input\_istio\_mesh\_id) | The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environment. | `string` | `null` | no |
 | <a name="input_istio_network"></a> [istio\_network](#input\_istio\_network) | The network used for the Istio mesh. | `string` | `null` | no |
 | <a name="input_istio_operator_namespace"></a> [istio\_operator\_namespace](#input\_istio\_operator\_namespace) | The namespace where the Istio Operator is installed. | `string` | `null` | no |
@@ -84,3 +87,4 @@ No modules.
 ## Outputs
 
 No outputs.
+<!-- END_TF_DOCS -->
