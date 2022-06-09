@@ -55,7 +55,7 @@ resource "helm_release" "prometheus_operator" {
   values           = local.values
 
   set {
-    name = "prometheusOperator.podAnnotations.traffic\\.sidecar\\.istio\\.io/excludeInboundPorts"
+    name  = "prometheusOperator.podAnnotations.traffic\\.sidecar\\.istio\\.io/excludeInboundPorts"
     value = "10250"
     type  = "string"
   }

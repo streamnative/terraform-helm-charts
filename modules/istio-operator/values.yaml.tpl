@@ -33,10 +33,14 @@ controlPlane:
       ingressGateways:
         - name: istio-ingressgateway
           namespace: ${istio_system_namespace} 
-          enabled: true
+          enabled: true 
           label:
             cloud.streamnative.io/role: "istio-ingressgateway"
           k8s:
+            serviceAnnotations:
+%{ for k, v in ingress_gateway_service_annotations ~}
+              ${k}: "${v}"
+%{ endfor ~}
             service:
               ports:
                 - port: 15021

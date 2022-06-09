@@ -78,6 +78,12 @@ variable "istio_cluster_name" {
   type        = string
 }
 
+variable "istio_ingress_gateway_service_annotations" {
+  default     = null
+  description = "Kubernetes annotations to add to the Istio IngressGateway Service."
+  type        = map(string)
+}
+
 variable "istio_mesh_id" {
   default     = null
   description = "The ID used by the Istio mesh. This is also the ID of the StreamNative Cloud Pool used for the workload environment."

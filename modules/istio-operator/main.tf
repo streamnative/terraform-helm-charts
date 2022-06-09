@@ -27,7 +27,7 @@ terraform {
     }
 
     time = {
-      source = "hashicorp/time"
+      source  = "hashicorp/time"
       version = ">=0.7.2"
     }
   }
@@ -40,22 +40,23 @@ locals {
   timeout         = var.timeout != null ? var.timeout : 120
 
   # Istio Operator Settings
-  create_istio_system_namespace   = var.create_istio_system_namespace != null ? var.create_istio_system_namespace : true
-  create_istio_operator_namespace = var.create_istio_operator_namespace != null ? var.create_istio_operator_namespace : true
-  istio_chart_name                = var.istio_chart_name != null ? var.istio_chart_name : "istio-operator"
-  istio_chart_repository          = var.istio_chart_repository != null ? var.istio_chart_repository : "https://stevehipwell.github.io/helm-charts/"
-  istio_chart_version             = var.istio_chart_version != null ? var.istio_chart_version : "2.4.0"
-  istio_cluster_name              = var.istio_cluster_name != null ? var.istio_cluster_name : null
-  istio_mesh_id                   = var.istio_mesh_id != null ? var.istio_mesh_id : null
-  istio_network                   = var.istio_network != null ? var.istio_network : "network1"
-  istio_operator_namespace        = var.istio_operator_namespace != null ? var.istio_operator_namespace : "istio-operator"
-  istio_profile                   = var.istio_profile != null ? var.istio_profile : "default"
-  istio_release_name              = var.istio_release_name != null ? var.istio_release_name : "istio-operator"
-  istio_revision_tag              = var.istio_revision_tag != null ? var.istio_revision_tag : "default"
-  istio_settings                  = var.istio_settings != null ? var.istio_settings : {}
-  istio_system_namespace          = var.istio_system_namespace != null ? var.istio_system_namespace : "istio-system"
-  istio_trust_domain              = var.istio_trust_domain != null ? var.istio_trust_domain : "cluster.local"
-  istio_values                    = var.istio_values != null ? var.istio_values : []
+  create_istio_system_namespace             = var.create_istio_system_namespace != null ? var.create_istio_system_namespace : true
+  create_istio_operator_namespace           = var.create_istio_operator_namespace != null ? var.create_istio_operator_namespace : true
+  istio_chart_name                          = var.istio_chart_name != null ? var.istio_chart_name : "istio-operator"
+  istio_chart_repository                    = var.istio_chart_repository != null ? var.istio_chart_repository : "https://stevehipwell.github.io/helm-charts/"
+  istio_chart_version                       = var.istio_chart_version != null ? var.istio_chart_version : "2.4.0"
+  istio_cluster_name                        = var.istio_cluster_name != null ? var.istio_cluster_name : null
+  istio_ingress_gateway_service_annotations = var.istio_ingress_gateway_service_annotations != null ? var.istio_ingress_gateway_service_annotations : {}
+  istio_mesh_id                             = var.istio_mesh_id != null ? var.istio_mesh_id : null
+  istio_network                             = var.istio_network != null ? var.istio_network : "network1"
+  istio_operator_namespace                  = var.istio_operator_namespace != null ? var.istio_operator_namespace : "istio-operator"
+  istio_profile                             = var.istio_profile != null ? var.istio_profile : "default"
+  istio_release_name                        = var.istio_release_name != null ? var.istio_release_name : "istio-operator"
+  istio_revision_tag                        = var.istio_revision_tag != null ? var.istio_revision_tag : "default"
+  istio_settings                            = var.istio_settings != null ? var.istio_settings : {}
+  istio_system_namespace                    = var.istio_system_namespace != null ? var.istio_system_namespace : "istio-system"
+  istio_trust_domain                        = var.istio_trust_domain != null ? var.istio_trust_domain : "cluster.local"
+  istio_values                              = var.istio_values != null ? var.istio_values : []
 
   # Kiali Operator Settings
   create_kiali_cr                 = var.create_kiali_cr != null ? var.create_kiali_cr : true
@@ -98,13 +99,14 @@ resource "helm_release" "istio_operator" {
   version          = local.istio_chart_version
 
   values = coalescelist(local.istio_values, [templatefile("${path.module}/values.yaml.tpl", {
-    cluster_name           = local.istio_cluster_name
-    mesh_id                = local.istio_mesh_id
-    network                = local.istio_network
-    revision_tag           = local.istio_revision_tag
-    istio_system_namespace = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
-    profile                = local.istio_profile
-    trust_domain           = local.istio_trust_domain
+    cluster_name                        = local.istio_cluster_name
+    mesh_id                             = local.istio_mesh_id
+    network                             = local.istio_network
+    revision_tag                        = local.istio_revision_tag
+    istio_system_namespace              = local.create_istio_system_namespace ? kubernetes_namespace.istio_system[0].metadata[0].name : local.istio_system_namespace
+    profile                             = local.istio_profile
+    trust_domain                        = local.istio_trust_domain
+    ingress_gateway_service_annotations = local.istio_ingress_gateway_service_annotations
     })]
   )
 
