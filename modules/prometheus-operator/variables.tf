@@ -60,6 +60,12 @@ variable "create_namespace" {
   type        = bool
 }
 
+variable "install_cluster_role" {
+  default     = null
+  description = "Installs the well-known Prometheus server ClusterRole resource on the cluster."
+  type        = bool
+}
+
 variable "namespace" {
   default     = null
   description = "The namespace used for the operator deployment."
