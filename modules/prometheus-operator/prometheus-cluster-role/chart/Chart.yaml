@@ -1,0 +1,11 @@
+apiVersion: v2
+name: prometheus-cluster-role 
+description: ClusterRole for Prometheus 
+version: 0.1.0
+home: https://streamnative.io
+sources:
+- https://github.com/streamnative/terraform-helm-charts
+icon: http://pulsar.apache.org/img/pulsar.svg
+maintainers:
+- name: jrsdav
+  email: joey@streamnative.io

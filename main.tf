@@ -147,15 +147,16 @@ module "prometheus_operator" {
   count  = var.enable_prometheus_operator == true ? 1 : 0
   source = "./modules/prometheus-operator"
 
-  chart_name       = var.prometheus_operator_chart_name
-  chart_repository = var.prometheus_operator_chart_repository
-  chart_version    = var.prometheus_operator_chart_version
-  create_namespace = var.create_prometheus_operator_namespace
-  namespace        = var.prometheus_operator_namespace
-  release_name     = var.prometheus_operator_release_name
-  settings         = var.prometheus_operator_settings
-  timeout          = var.prometheus_operator_timeout
-  values           = local.prometheus_operator_values
+  chart_name           = var.prometheus_operator_chart_name
+  chart_repository     = var.prometheus_operator_chart_repository
+  chart_version        = var.prometheus_operator_chart_version
+  create_namespace     = var.create_prometheus_operator_namespace
+  install_cluster_role = var.install_prometheus_cluster_role
+  namespace            = var.prometheus_operator_namespace
+  release_name         = var.prometheus_operator_release_name
+  settings             = var.prometheus_operator_settings
+  timeout              = var.prometheus_operator_timeout
+  values               = local.prometheus_operator_values
 }
 
 module "pulsar_operator" {

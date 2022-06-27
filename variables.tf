@@ -514,6 +514,12 @@ variable "otel_collector_values" {
 #######
 ### Prometheus Settings
 #######
+variable "install_prometheus_cluster_role" {
+  default     = null
+  description = "Installs the well-known Prometheus server ClusterRole resource on the cluster."
+  type        = bool
+}
+
 variable "prometheus_operator_chart_name" {
   default     = null
   description = "The name of the Helm chart to install"

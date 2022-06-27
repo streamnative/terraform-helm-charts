@@ -29,17 +29,18 @@ terraform {
 }
 
 locals {
-  atomic           = var.atomic != null ? var.atomic : true
-  chart_name       = var.chart_name != null ? var.chart_name : "kube-prometheus-stack"
-  chart_repository = var.chart_repository != null ? var.chart_repository : "https://prometheus-community.github.io/helm-charts"
-  chart_version    = var.chart_version != null ? var.chart_version : "33.2.1"
-  cleanup_on_fail  = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
-  create_namespace = var.create_namespace != null ? var.create_namespace : true
-  namespace        = var.namespace != null ? var.namespace : "monitoring"
-  release_name     = var.release_name != null ? var.release_name : "kube-prometheus-stack"
-  settings         = var.settings != null ? var.settings : {}
-  timeout          = var.timeout != null ? var.timeout : 120
-  values           = var.values != null ? var.values : []
+  atomic               = var.atomic != null ? var.atomic : true
+  chart_name           = var.chart_name != null ? var.chart_name : "kube-prometheus-stack"
+  chart_repository     = var.chart_repository != null ? var.chart_repository : "https://prometheus-community.github.io/helm-charts"
+  chart_version        = var.chart_version != null ? var.chart_version : "33.2.1"
+  cleanup_on_fail      = var.cleanup_on_fail != null ? var.cleanup_on_fail : true
+  create_namespace     = var.create_namespace != null ? var.create_namespace : true
+  install_cluster_role = var.install_cluster_role != null ? var.install_cluster_role : true
+  namespace            = var.namespace != null ? var.namespace : "monitoring"
+  release_name         = var.release_name != null ? var.release_name : "kube-prometheus-stack"
+  settings             = var.settings != null ? var.settings : {}
+  timeout              = var.timeout != null ? var.timeout : 120
+  values               = var.values != null ? var.values : []
 }
 
 resource "helm_release" "prometheus_operator" {
@@ -67,4 +68,9 @@ resource "helm_release" "prometheus_operator" {
       value = set.value
     }
   }
+}
+
+module "prometheus_cluster_role" {
+  count  = local.install_cluster_role ? 1 : 0
+  source = "./prometheus-cluster-role"
 }
