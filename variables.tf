@@ -31,7 +31,7 @@ variable "enable_otel_collector" {
 
 variable "enable_prometheus_operator" {
   default     = false
-  description = "Enables the Prometheus Operator and other components via kube-stack-prometheus. Set to \"true\" by default."
+  description = "Enables the Prometheus Operator and other components via kube-stack-prometheus. Set to \"false\" by default. Prefer UO or customer's own o11y service."
   type        = bool
 }
 
