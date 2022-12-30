@@ -30,6 +30,10 @@ controlPlane:
     components:
       cni:
         enabled: true
+      pilot:
+        k8s:
+          podDisruptionBudget:
+            maxUnavailable: 1
       ingressGateways:
         - name: istio-ingressgateway
           namespace: ${istio_system_namespace} 
@@ -37,6 +41,8 @@ controlPlane:
           label:
             cloud.streamnative.io/role: "istio-ingressgateway"
           k8s:
+            podDisruptionBudget:
+              maxUnavailable: 1
             serviceAnnotations:
 %{ for k, v in ingress_gateway_service_annotations ~}
               ${k}: "${v}"
