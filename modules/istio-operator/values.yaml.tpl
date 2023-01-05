@@ -34,6 +34,8 @@ controlPlane:
         k8s:
           podDisruptionBudget:
             maxUnavailable: 1
+          hpaSpec:
+            minReplicas: 2
       ingressGateways:
         - name: istio-ingressgateway
           namespace: ${istio_system_namespace} 
@@ -43,6 +45,8 @@ controlPlane:
           k8s:
             podDisruptionBudget:
               maxUnavailable: 1
+            hpaSpec:
+              minReplicas: 2
             serviceAnnotations:
 %{ for k, v in ingress_gateway_service_annotations ~}
               ${k}: "${v}"
