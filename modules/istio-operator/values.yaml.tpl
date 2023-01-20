@@ -30,6 +30,8 @@ controlPlane:
     components:
       cni:
         enabled: true
+        repair:
+          enabled: true
       pilot:
         k8s:
           podDisruptionBudget:
