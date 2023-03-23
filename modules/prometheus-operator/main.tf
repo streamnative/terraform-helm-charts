@@ -41,6 +41,10 @@ locals {
   settings             = var.settings != null ? var.settings : {}
   timeout              = var.timeout != null ? var.timeout : 120
   values               = var.values != null ? var.values : []
+  alertmanager_enabled = var.alertmanager_enabled != null ? var.alertmanager_enabled : false
+  grafana_enabled      = var.grafana_enabled != null ? var.grafana_enabled : false
+  node_exporter_enabled = var.node_exporter_enabled != null ? var.node_exporter_enabled : false
+  kube_state_metrics_enabled = var.kube_state_metrics_enabled != null ? var.kube_state_metrics_enabled : false
 }
 
 resource "helm_release" "prometheus_operator" {
@@ -59,6 +63,29 @@ resource "helm_release" "prometheus_operator" {
     name  = "prometheusOperator.podAnnotations.traffic\\.sidecar\\.istio\\.io/excludeInboundPorts"
     value = "10250"
     type  = "string"
+  }
+
+  set {
+    name  = "alertmanager.enabled"
+    value = local.alertmanager_enabled
+    type  = "auto"
+  }
+  set {
+    name  = "grafana.enabled"
+    value = local.grafana_enabled
+    type  = "auto"
+  }
+
+  set {
+    name  = "nodeExporter.enabled"
+    value = local.node_exporter_enabled
+    type  = "auto"
+  }
+
+  set {
+    name  = "kubeStateMetrics.enabled"
+    value = local.kube_state_metrics_enabled
+    type  = "auto"
   }
 
   dynamic "set" {
