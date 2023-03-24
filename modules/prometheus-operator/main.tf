@@ -61,6 +61,24 @@ resource "helm_release" "prometheus_operator" {
     type  = "string"
   }
 
+  set {
+    name  = "alertmanager.enabled"
+    value = "false"
+    type  = "auto"
+  }
+
+  set {
+    name  = "nodeExporter.enabled"
+    value = "false"
+    type  = "auto"
+  }
+
+  set {
+    name  = "kubeStateMetrics.enabled"
+    value = "false"
+    type  = "auto"
+  }
+
   dynamic "set" {
     for_each = local.settings
     content {
