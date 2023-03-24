@@ -78,30 +78,6 @@ variable "release_name" {
   type        = string
 }
 
-variable "alertmanager_enabled" {
-  default     = null
-  description = "Installs alertmanager or not."
-  type        = bool
-}
-
-variable "grafana_enabled" {
-  default     = null
-  description = "Installs grafana or not."
-  type        = bool
-}
-
-variable "node_exporter_enabled" {
-  default     = null
-  description = "Installs node-exporter or not."
-  type        = bool
-}
-
-variable "kube_state_metrics_enabled" {
-  default     = null
-  description = "Installs kube-state-metrics or not."
-  type        = bool
-}
-
 variable "settings" {
   default     = {}
   description = "Additional settings which will be passed to the Helm chart values."
