@@ -95,7 +95,7 @@ resource "helm_release" "istio_operator" {
   repository       = local.istio_chart_repository
   version          = local.istio_chart_version
 
-  values = coalescelist(local.istio_values, [templatefile("${path.module}/values.yaml.tpl", {
+  values = coalescelist(local.istio_values, [templatefile("${path.module}/values.yaml.tftpl", {
     cluster_name                        = local.istio_cluster_name
     mesh_id                             = local.istio_mesh_id
     network                             = local.istio_network
