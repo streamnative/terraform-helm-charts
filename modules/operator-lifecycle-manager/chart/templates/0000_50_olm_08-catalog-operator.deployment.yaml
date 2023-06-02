@@ -99,6 +99,7 @@ spec:
           ports:
             - containerPort: {{ .Values.olm.service.internalPort }}
               name: metrics
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
