@@ -54,15 +54,23 @@ controlPlane:
             minReplicas: 2
       ingressGateways:
         - name: istio-ingressgateway
-          namespace: ${istio_system_namespace} 
-          enabled: true 
+          namespace: ${istio_system_namespace}
+          enabled: true
           label:
             cloud.streamnative.io/role: "istio-ingressgateway"
           k8s:
+            resources:
+              limits:
+                cpu: "2"
+                memory: 1Gi
+              requests:
+                cpu: "2"
+                memory: 1Gi
             podDisruptionBudget:
               maxUnavailable: 1
             hpaSpec:
-              minReplicas: 2
+              minReplicas: 3
+              maxReplicas: 20
             serviceAnnotations:
 %{ for k, v in ingress_gateway_service_annotations ~}
               ${k}: "${v}"
