@@ -1,0 +1,47 @@
+name: "TF GH Action"
+on:
+  - pull_request
+
+env:
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+
+jobs:
+  fmt:
+    name: "fmt"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1.3.2
+        with:
+          terraform_version: 0.15.x
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -recursive -write=false -check -diff .
+        continue-on-error: true
+
+  validate:
+    name: "validate"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        terraform_version: [1.0.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Setup Terraform ${{ matrix.terraform_version }}
+        uses: hashicorp/setup-terraform@v1.3.2
+        with:
+          terraform_version: ${{ matrix.terraform_version }}
+
+      - name: Terraform Validate Root
+        id: validate-root
+        run: cd "${GITHUB_WORKSPACE}" && terraform init -backend=false && AWS_REGION=us-east-1 terraform validate -no-color
+
+      - name: Terraform Validate Modules
+        id: validate-modules
+        run: for module in modules/*/; do cd "${GITHUB_WORKSPACE}/${module}" && terraform init -backend=false && AWS_REGION=us-east-1 terraform validate -no-color ; done
