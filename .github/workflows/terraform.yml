@@ -19,7 +19,6 @@ jobs:
           terraform_version: 0.15.x
 
       - name: Terraform fmt
-        id: fmt
         run: terraform fmt -recursive -write=false -check -diff .
         continue-on-error: true
 
