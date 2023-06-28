@@ -41,5 +41,4 @@ jobs:
         run: cd "${GITHUB_WORKSPACE}" && terraform init -backend=false && AWS_REGION=us-east-1 terraform validate -no-color
 
       - name: Terraform Validate Modules
-        id: validate-modules
         run: for module in modules/*/; do cd "${GITHUB_WORKSPACE}/${module}" && terraform init -backend=false && AWS_REGION=us-east-1 terraform validate -no-color ; done
