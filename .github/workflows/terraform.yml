@@ -38,7 +38,6 @@ jobs:
           terraform_version: ${{ matrix.terraform_version }}
 
       - name: Terraform Validate Root
-        id: validate-root
         run: cd "${GITHUB_WORKSPACE}" && terraform init -backend=false && AWS_REGION=us-east-1 terraform validate -no-color
 
       - name: Terraform Validate Modules
