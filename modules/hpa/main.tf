@@ -265,7 +265,6 @@ resource "tls_private_key" "private_key" {
 
 # generate a self-signed cert for internal issuer
 resource "tls_self_signed_cert" "issuer_cert" {
-  key_algorithm   = "RSA"
   private_key_pem = tls_private_key.private_key.private_key_pem
 
   subject {
