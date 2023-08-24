@@ -18,9 +18,9 @@
 This repository contains Terraform managed Helm charts used by StreamNative Platform, contained within the [modules](https://github.com/streamnative/terraform-helm-charts/tree/master/modules) directory. For more information on the Helm provider for Terraform, please refer to the [official documentation](https://registry.terraform.io/providers/hashicorp/helm/latest/docs).
 
 ## Example Usage
-The [submodules](https://github.com/streamnative/terraform-helm-charts/tree/master/modules) in this repo can be used in a standalone fashion. However, the root module (contained in the [root `main.tf` file](https://github.com/streamnative/terraform-helm-charts/blob/master/main.tf)) [composes](https://www.terraform.io/docs/language/modules/develop/composition.html) all of the submodules to be used in concert with eachother, depending on your configuration needs.
+The [submodules](https://github.com/streamnative/terraform-helm-charts/tree/master/modules) in this repo can be used in a standalone fashion. However, the root module (contained in the [root `main.tf` file](https://github.com/streamnative/terraform-helm-charts/blob/master/main.tf)) [composes](https://www.terraform.io/docs/language/modules/develop/composition.html) all of the submodules to be used in concert with each other, depending on your configuration needs.
 
-Here is a simple example on how to use the root module in this repo for the common StreamNative Platform usecase. It will installs the Vault, Prometheus, Pulsar, and Function Mesh operators:
+Here is a simple example on how to use the root module in this repo for the common StreamNative Platform use case. It will install the Vault, Prometheus, Pulsar, and Function Mesh operators:
 
 ```hcl
 data "aws_eks_cluster" "cluster" {
@@ -63,14 +63,14 @@ terraform init && terraform apply
 ## Why are all the variable defaults null?
 The submodules contained in this repo are typically composed in the root module, and as such many of a submodules variables get duplicated in the root module. 
 
-This introduces a problem where we don't want to also duplicate default values in both places, i.e. managing a default value in the root module _and_ in the submodule, as they are difficult to synchronize and have historically drifted away from eachother.
+This introduces a problem where we don't want to also duplicate default values in both places, i.e. managing a default value in the root module _and_ in the submodule, as they are difficult to synchronize and have historically drifted away from each other.
 
 In a perfect world, the approach we would like to take is:
 
 - Have the root module's variables that map to a submodule's variables default to `null`
 - Have the submodule's variables default to their expected value
 
-However when we do this, the root module _overrides_ the submodule's default value with `null`, rather than respect it and treat `null` as an omission. This unfortuately is [expected behavior](https://github.com/hashicorp/terraform/issues/24142#issuecomment-646393631) in Terraform, where `null` is actually a valid value in some module configurations (instead of being "the absence of a value", like we want it to be and also like the Terraform documentation states).
+However, when we do this, the root module _overrides_ the submodule's default value with `null`, rather than respect it and treat `null` as an omission. This unfortunately is [expected](https://github.com/hashicorp/terraform/issues/24142#issuecomment-646393631) behavior](https://github.com/hashicorp/terraform/issues/24142#issuecomment-646393631) in Terraform, where `null` is actually a valid value in some module configurations (instead of being "the absence of a value", like we want it to be and also like the Terraform documentation states).
 
 To work around this, we set the default values in _both_ the root module and submodules to `null`, then use a `locals()` configuration in the submodule to manage the expected default values. To illustrate, here is a simple example:
 
