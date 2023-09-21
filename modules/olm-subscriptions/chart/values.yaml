@@ -50,7 +50,6 @@ subscriptionConfig:
 
 
 bookkeeper:
-  channel: stable
   source: sn-catalog
   name: bookkeeper-operator
   config: {}
@@ -62,19 +61,16 @@ bookkeeper:
   #      name: book-secret
 
 flink:
-  channel: stable
   source: sn-catalog
   name: flink-operator
   config: {}
 
 flinkSql:
-  channel: stable
   source: sn-catalog
   name: sql-operator
   config: {}
 
 functionMesh:
-  channel: stable
   config:
     enableWebhooks: true
     enableController: false
@@ -88,25 +84,21 @@ prometheus:
   config: {}
 
 pulsar:
-  channel: stable
   source: sn-catalog
   name: pulsar-operator
   config: {}
 
 zookeeper:
-  channel: stable
   source: sn-catalog
   name: zookeeper-operator
   config: {}
 
 sn_operator:
-  channel: stable
   source: sn-catalog
   name: sn-operator
   config: {}
 
 elastic_cloud_eck:
-  channel: stable
   source: operatorhubio-catalog
   name: elastic-cloud-eck
   config: {}
