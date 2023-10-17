@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0](https://github.com/streamnative/terraform-helm-charts/compare/v0.8.6...v0.9.0) (2023-10-17)
+
+
+### Features
+
+* Add eck olm-subscription ([#66](https://github.com/streamnative/terraform-helm-charts/issues/66)) ([0a5dfff](https://github.com/streamnative/terraform-helm-charts/commit/0a5dfff3eafda1b058c651485060d850d7ca0c3d))
+
+
+### Bug Fixes
+
+* wrong words ([#64](https://github.com/streamnative/terraform-helm-charts/issues/64)) ([73acc1b](https://github.com/streamnative/terraform-helm-charts/commit/73acc1b6f10d63b69ba84a369e81a38504ab7359))
+
 ## [0.8.6](https://github.com/streamnative/terraform-helm-charts/compare/v0.8.5...v0.8.6) (2023-08-24)
 
 
