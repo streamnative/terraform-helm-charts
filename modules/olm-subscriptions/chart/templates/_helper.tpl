@@ -103,3 +103,14 @@ Get subscription config for zookeeper
   {{- toYaml .Values.subscriptionConfig.resources | nindent 6 }}
 {{- end }}
 {{- end }}
+
+{{/*
+Get subscription config for elastic_cloud_eck
+*/}}
+{{- define "subscription.eckResources" -}}
+{{- if .Values.elastic_cloud_eck.config.resources }}
+  {{- toYaml .Values.elastic_cloud_eck.config.resources | nindent 6 }}
+{{- else }}
+  {{- toYaml .Values.subscriptionConfig.resources | nindent 6 }}
+{{- end }}
+{{- end }}

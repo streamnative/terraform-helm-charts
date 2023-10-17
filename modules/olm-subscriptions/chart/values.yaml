@@ -37,6 +37,7 @@ components:
   flinkSql: true
   zookeeper: true
   sn_operator: true
+  elastic_cloud_eck: true
 
 subscriptionConfig:
   resources:
@@ -95,4 +96,9 @@ zookeeper:
 sn_operator:
   source: sn-catalog
   name: sn-operator
+  config: {}
+
+elastic_cloud_eck:
+  source: operatorhubio-catalog
+  name: elastic-cloud-eck
   config: {}
