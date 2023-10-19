@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/streamnative/terraform-helm-charts/compare/v0.9.0...v0.9.1) (2023-10-19)
+
+
+### Bug Fixes
+
+* elastic cloud eck default channel ([#67](https://github.com/streamnative/terraform-helm-charts/issues/67)) ([ad05049](https://github.com/streamnative/terraform-helm-charts/commit/ad05049721e272d4014913cd8a534261782b8555))
+
 ## [0.9.0](https://github.com/streamnative/terraform-helm-charts/compare/v0.8.6...v0.9.0) (2023-10-17)
 
 
