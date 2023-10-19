@@ -21,7 +21,7 @@ metadata:
   name: {{ .Values.elastic_cloud_eck.name }}
   namespace: {{ .Values.install_namespace }}
 spec:
-  channel: {{ .Values.elastic_cloud_eck.channel | default .Values.channel }}
+  channel: {{ .Values.elastic_cloud_eck.channel | default "stable" }}
   installPlanApproval: {{ .Values.elastic_cloud_eck.approval | default .Values.approval }}  
   source: {{ .Values.elastic_cloud_eck.source }}
   sourceNamespace: {{ .Values.olm_namespace }}
