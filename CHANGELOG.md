@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/streamnative/terraform-helm-charts/compare/v0.9.1...v0.10.0) (2023-11-07)
+
+
+### Features
+
+* Support specify commonName in mesh cert ([#69](https://github.com/streamnative/terraform-helm-charts/issues/69)) ([9de9835](https://github.com/streamnative/terraform-helm-charts/commit/9de98350b48a0ae642429be922581f4d2671762b))
+
 ## [0.9.1](https://github.com/streamnative/terraform-helm-charts/compare/v0.9.0...v0.9.1) (2023-10-19)
 
 
