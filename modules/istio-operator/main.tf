@@ -54,6 +54,7 @@ locals {
   istio_system_namespace                    = var.istio_system_namespace != null ? var.istio_system_namespace : "istio-system"
   istio_trust_domain                        = var.istio_trust_domain != null ? var.istio_trust_domain : "cluster.local"
   istio_values                              = var.istio_values != null ? var.istio_values : []
+  mesh_settings                             = var.mesh_settings != null ? var.mesh_settings : {}
 
   # Kiali Operator Settings
   create_kiali_cr                 = var.create_kiali_cr != null ? var.create_kiali_cr : true
@@ -144,6 +145,13 @@ resource "helm_release" "mesh" {
   cleanup_on_fail = local.cleanup_on_fail
   timeout         = local.timeout
   values          = [local.mesh_values]
+  dynamic "set" {
+    for_each = local.mesh_settings
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
 
   depends_on = [
     time_sleep.wait_30_seconds

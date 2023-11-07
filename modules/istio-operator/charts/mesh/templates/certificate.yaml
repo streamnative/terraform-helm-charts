@@ -23,6 +23,9 @@ metadata:
   labels:
   {{- include "mesh.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.ingressGateway.tlsCertificate.commonName }}
+  commonName: {{ .Values.ingressGateway.tlsCertificate.commonName }}
+  {{- end }}
   dnsNames: {{ toYaml .Values.ingressGateway.tlsCertificate.dnsNames | nindent 4 }}
   issuerRef:
     {{- toYaml .Values.ingressGateway.tlsCertificate.issuerRef | nindent 4 }}
