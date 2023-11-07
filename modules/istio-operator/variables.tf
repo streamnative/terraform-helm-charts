@@ -162,6 +162,12 @@ variable "istio_values" {
   description = "A list of values in raw YAML to be applied to the helm release. Merges with the settings input, can also be used with the `file()` function, i.e. `file(\"my/values.yaml\")`."
 }
 
+variable "mesh_settings" {
+  default     = null
+  description = "Additional settings which will be passed to the mesh Helm chart."
+  type        = map(any)
+}
+
 ### Kiali Settings
 
 variable "create_kiali_cr" {
