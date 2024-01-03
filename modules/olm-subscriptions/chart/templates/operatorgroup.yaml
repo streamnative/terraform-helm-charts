@@ -24,3 +24,12 @@ metadata:
 spec:
   targetNamespaces:
     - {{ .Values.install_namespace }}
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: true
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
