@@ -33,8 +33,8 @@ components:
   functionMesh: true
   prometheus: false # Prometheus isn't receiving regular updates from the community operators project. This will eventually be removed altogether in favor of the kube-stack-prometheus chart
   pulsar: true
-  flink: true
-  flinkSql: true
+  flink: false # not used in cloud
+  flinkSql: false # not used in cloud
   zookeeper: true
   sn_operator: true
   elastic_cloud_eck: true
