@@ -40,4 +40,22 @@ spec:
     envFrom:
     {{- toYaml .Values.sn_operator.config.envFrom | nindent 4 }}
     {{- end }}
+---
+{{- if and .Values.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Values.sn_operator.name }}
+  namespace: {{ .Values.istio.rootNamespace }}
+spec:
+  selector:
+    matchLabels:
+      # well-known labels
+      cloud.streamnative.io/app: pulsar
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/{{ .Values.install_namespace }}/sa/sn-operator-controller-manager"]
+{{- end }}
 {{- end }}
