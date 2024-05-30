@@ -1,0 +1,21 @@
+{{- if and .Values.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Values.pulsar.name }}
+  namespace: {{ .Values.istio.rootNamespace }}
+spec:
+  selector:
+    matchLabels:
+      # well-known labels
+      cloud.streamnative.io/app: pulsar
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: 
+            - "cluster.local/ns/{{ .Values.install_namespace }}/sa/sn-operator-controller-manager"
+            - "cluster.local/ns/{{ .Values.install_namespace }}/sa/zookeeper-operator-controller-manager"
+            - "cluster.local/ns/{{ .Values.install_namespace }}/sa/bookkeeper-operator-controller-manager"
+            - "cluster.local/ns/{{ .Values.install_namespace }}/sa/pulsar-operator-controller-manager"
+{{- end }}
