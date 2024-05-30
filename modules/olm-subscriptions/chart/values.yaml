@@ -37,6 +37,7 @@ components:
   flinkSql: false # not used in cloud
   zookeeper: true
   sn_operator: true
+  sn_operator_all: false
   elastic_cloud_eck: true
 
 subscriptionConfig:
@@ -96,6 +97,11 @@ zookeeper:
 sn_operator:
   source: sn-catalog
   name: sn-operator
+  config: {}
+
+sn_operator_all:
+  source: sn-catalog
+  name: sn-operator-all
   config: {}
 
 elastic_cloud_eck:
