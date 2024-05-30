@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.0](https://github.com/streamnative/terraform-helm-charts/compare/v0.10.0...v0.11.0) (2024-05-30)
+
+
+### Features
+
+* Add istio configuration for sn-operator ([#72](https://github.com/streamnative/terraform-helm-charts/issues/72)) ([a8bf092](https://github.com/streamnative/terraform-helm-charts/commit/a8bf092a77f495ce07c061d68dd71a371a622c0f))
+* support sn-operator-all deploy ([#73](https://github.com/streamnative/terraform-helm-charts/issues/73)) ([9901a65](https://github.com/streamnative/terraform-helm-charts/commit/9901a657c0b49f8076191be773450b82053523c2))
+
+
+### Bug Fixes
+
+* Disable flink operators by default ([#71](https://github.com/streamnative/terraform-helm-charts/issues/71)) ([61d23f5](https://github.com/streamnative/terraform-helm-charts/commit/61d23f5d411dbfd50b11d2b6366ac7d0b93fef00))
+
 ## [0.10.0](https://github.com/streamnative/terraform-helm-charts/compare/v0.9.1...v0.10.0) (2023-11-07)
 
 
