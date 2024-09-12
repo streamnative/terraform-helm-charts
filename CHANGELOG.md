@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/streamnative/terraform-helm-charts/compare/v0.11.0...v0.11.1) (2024-09-12)
+
+
+### Bug Fixes
+
+* Remove duplicated AuthorizationPolicy ([#75](https://github.com/streamnative/terraform-helm-charts/issues/75)) ([587c786](https://github.com/streamnative/terraform-helm-charts/commit/587c786fdb12780d57a9061bb708ebfbe20cab5b))
+
 ## [0.11.0](https://github.com/streamnative/terraform-helm-charts/compare/v0.10.0...v0.11.0) (2024-05-30)
 
 
