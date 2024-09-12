@@ -40,23 +40,4 @@ spec:
     envFrom:
     {{- toYaml .Values.pulsar.config.envFrom | nindent 4 }}
     {{- end }}
----
-{{- if and .Values.istio.enabled }}
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: {{ .Values.pulsar.name }}
-  namespace: {{ .Values.istio.rootNamespace }}
-spec:
-  selector:
-    matchLabels:
-      # well-known labels
-      cloud.streamnative.io/app: pulsar
-      cloud.streamnative.io/component: broker
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals: ["cluster.local/ns/{{ .Values.install_namespace }}/sa/pulsar-operator-controller-manager"]
-{{- end }}
 {{- end }}
